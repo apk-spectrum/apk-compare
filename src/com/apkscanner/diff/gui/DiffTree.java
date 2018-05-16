@@ -4,30 +4,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
 
-import com.apkscanner.diff.gui.DynamicTreeDemo.FileNode;
 import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkscanner.util.Log;
 
 class DiffTree extends JTree {
 	public static final Color diffcolor = new Color(224,224,255);
@@ -102,14 +91,14 @@ class DiffTree extends JTree {
 	}
 	
 	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected) {
-    	FileNode temp = (FileNode)node.getUserObject();
+		DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
     	
     	if(isExpanded(row) && !node.isLeaf()){
 			if(selected) {
 				if(selectedtree == this) {
-					return colorarray[FileNode.NODE_STATE_NOMAL+1];
+					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL+1];
 				} else{
-					return colorarray[FileNode.NODE_STATE_NOMAL];
+					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL];
 				}
 			} else {
 				return Color.white;
@@ -122,7 +111,7 @@ class DiffTree extends JTree {
 					return colorarray[temp.getState()];								
 				}
 			} else {
-				if(temp.state == FileNode.NODE_STATE_NOMAL) {
+				if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL) {
 					return Color.white;
 				} else {
 					return colorarray[temp.getState()];
@@ -141,7 +130,7 @@ class DiffTree extends JTree {
 			g.setColor(Color.WHITE);
 			Object o = getPathForRow(i).getLastPathComponent();
 		    DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
-			FileNode temp = (FileNode)node.getUserObject();
+		    DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 			
 			Color nodecolor = this.getnodeColor(i,node, (getSelectionCount() > 0 && getSelectionRows()[0] == i));
 			
@@ -166,7 +155,7 @@ class DiffTree extends JTree {
 					for(int j=i; j >=0; j--) {							
 						Object otemp = getPathForRow(j).getLastPathComponent();
 						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-						FileNode filetemp = (FileNode)nodetemp.getUserObject();
+						DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
 						if(filetemp.other != null) {
 							//Log.d(i + "  :  " + j);
 							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y;
@@ -194,8 +183,8 @@ class DiffTree extends JTree {
 			
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 			
-			if(node.getUserObject() instanceof FileNode) {
-				FileNode temp = (FileNode)node.getUserObject();
+			if(node.getUserObject() instanceof DiffTreeUserData) {
+				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 				Color nodecolor = ((DiffTree) tree).getnodeColor(row,node, selected);
 				//l.setBackground(new Color(0,0,0,0));
 				l.setBackground(nodecolor);

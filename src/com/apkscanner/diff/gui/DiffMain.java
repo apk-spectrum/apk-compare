@@ -11,14 +11,22 @@ public class DiffMain {
 	private static final ApkScanner apkScannerDiff1 = new AaptScanner(null);
 	private static final ApkScanner apkScannerDiff2 = new AaptScanner(null);
 	private static int Count =0;
+	static DynamicTreeDemo newContentPane;
+	static ApkScannerDiffListener diff1listener = new ApkScannerDiffListener();
+	static ApkScannerDiffListener diff2listener = new ApkScannerDiffListener();
+	
+	static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMFacebook/starqltedcm/DCMFacebook.apk";
+	static String diff2path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMFacebookAppManager/zeroltedcm/DCMFacebookAppManager.apk";
+
+	
     private static void createAndShowGUI() {
         // Create and set up the window.
         JFrame frame = new JFrame("APK Scanner - Diff");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create and set up the content pane.
-        DynamicTreeDemo newContentPane = new DynamicTreeDemo();
-        newContentPane.setOpaque(true); // content panes must be opaque
+        newContentPane = new DynamicTreeDemo();
+        newContentPane.setOpaque(true);
         
         frame.setContentPane(newContentPane);
         frame.setSize(1000, 800);
@@ -35,18 +43,15 @@ public class DiffMain {
     public static void main(String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-    	String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMMail/greatqltedcm/DCMMail.apk";
-    	String diff2path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMMail/greatqltedcm/DCMMail.apk";
-    	
-    	
-    	//apkScannerDiff1.openApk(diff1path);
-    	//apkScannerDiff2.openApk(diff2path);
-    	
-    	//apkScannerDiff1.setStatusListener(new ApkScannerDiffListener());
-    	//apkScannerDiff2.setStatusListener(new ApkScannerDiffListener());
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
+       
+                            	
+            	apkScannerDiff1.openApk(diff1path);
+            	apkScannerDiff1.setStatusListener(diff1listener);
+            	
+            	
             }
         });
     }
@@ -74,14 +79,14 @@ public class DiffMain {
 		@Override
 		public void onCompleted() {
 			// TODO Auto-generated method stub
-			//synchronized (this) {
-				Count ++;
-				if(Count == 2) {
-					Log.d("all complete");
-					
-				}
-			//}
-			Log.d("onComplete() " + Count);
+			if(this == diff1listener) {
+				apkScannerDiff2.openApk(diff2path);
+	        	apkScannerDiff2.setStatusListener(diff2listener);
+			} else {
+				newContentPane.createTreeNode(
+						apkScannerDiff1.getApkInfo(),
+						apkScannerDiff2.getApkInfo());
+			}
 		}
 
 		@Override

@@ -22,23 +22,17 @@
  */
 package com.apkscanner.diff.gui;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JSplitPane;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-
-import com.apkscanner.diff.gui.DynamicTreeDemo.FileNode;
 
 /**
  * A JSplitPane that uses a 1 pixel thin visible divider,
@@ -50,6 +44,8 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 */
 	private int dividerDragSize = 50;
 	Color defaultColor = new Color(234, 234, 234);
+	Color selectdefaultColor = defaultColor.darker();
+	
 	ArrayList<SplitPaintData> leftpaintdata = new ArrayList<SplitPaintData>();
 	ArrayList<SplitPaintData> rightpaintdata = new ArrayList<SplitPaintData>();
 	
@@ -196,7 +192,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 				if(leftpaintdata.get(i).endposition != 0) {
 					Path2D.Double parallelogram = new Path2D.Double();
 			        parallelogram.moveTo(0,leftpaintdata.get(i).startposition);			        
-			        if(leftpaintdata.get(i).state != FileNode.NODE_STATE_ADD
+			        if(leftpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !leftpaintdata.get(i).isleaf) parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition);			        
 			        parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition + 20);
 			        parallelogram.lineTo(0,leftpaintdata.get(i).startposition + 20);
@@ -216,7 +212,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 				if(rightpaintdata.get(i).endposition != 0) {
 					Path2D.Double parallelogram = new Path2D.Double();
 			        parallelogram.moveTo(getWidth(),rightpaintdata.get(i).startposition);
-			        if(rightpaintdata.get(i).state != FileNode.NODE_STATE_ADD
+			        if(rightpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !rightpaintdata.get(i).isleaf) parallelogram.lineTo(0, rightpaintdata.get(i).endposition);			        
 			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + 20);
 			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + 20);

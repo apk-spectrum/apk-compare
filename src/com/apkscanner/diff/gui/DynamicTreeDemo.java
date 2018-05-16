@@ -43,7 +43,9 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.diff.gui.DynamicTreeDemo.FileNode;
+import com.apkscanner.core.scanner.AaptScanner;
+import com.apkscanner.core.scanner.ApkScanner;
+import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
 
@@ -52,18 +54,21 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private DiffTree left;
     private DiffTree right;
     
-    static private SortNode leftrootNode;
-    static private SortNode rightrootNode;
+    private SortNode leftrootNode;
+    private SortNode rightrootNode;
     
-    private final DefaultTreeModel lefttreeModel;
-    private final DefaultTreeModel righttreeModel;
+    private DefaultTreeModel lefttreeModel;
+    private DefaultTreeModel righttreeModel;
     
-    JScrollPane scrollpane;
-    JScrollPane leftscrollBar;
-    JScrollPane rightscrollBar;
+    private JScrollPane scrollpane;
+    private JScrollPane leftscrollBar;
+    private JScrollPane rightscrollBar;
     
-    static JSplitPaneWithZeroSizeDivider splitPane;
+    JSplitPaneWithZeroSizeDivider splitPane;
 
+	private ApkInfo apkinfodiff1, apkinfodiff2;
+	
+    
     public DynamicTreeDemo() {
         super(new BorderLayout());
 
@@ -88,8 +93,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		};
 
 		
-		createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp"), leftrootNode);
-    	createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp2"), rightrootNode);
+		//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp"), leftrootNode);
+    	//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp2"), rightrootNode);
         
         left = new DiffTree(lefttreeModel);
         //left.setCellRenderer(new LeftTreeCellRenderer());
@@ -118,19 +123,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         DiffTree.setleftrighttree(left,right);
         DiffTree.setJSplitPane(splitPane);
         //right.setSelectionModel(left.getSelectionModel());
-        
-    	mappingtree(leftrootNode, right);
-    	mappingtree(rightrootNode, left);
-    	setfolderstate(leftrootNode);
-    	setfolderstate(rightrootNode);
+
 //        for (int row=right.getRowCount(); row>=0; row--) {
 //        	right.collapseRow(row);
 //        }
 
-    	//JScrollPane leftcom = new JScrollPane(left);
-    	
-    	//JScrollPane rightcom = new JScrollPane(right);
-        
         leftscrollBar = new JScrollPane(left,
         JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -150,22 +147,39 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		add(scrollpane, BorderLayout.CENTER);
 		
     }
-
+    public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
+    	Log.d("createTreeNode");
+    	
+    	DiffMappingTree.createTree(apkinfodiff1, leftrootNode);
+    	lefttreeModel.reload();
+    	
+    	DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
+    	righttreeModel.reload();
+    	
+    	mappingtree(leftrootNode, right);
+    	mappingtree(rightrootNode, left);
+    	setfolderstate(leftrootNode);
+    	setfolderstate(rightrootNode);
+    	
+    	//DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
+    }
+    
+    
     private void setfolderstate(SortNode rootmynode) {
     	
     	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
     	
     	while (myreenode.hasMoreElements()) {
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
-    		if((mynode.getUserObject() instanceof FileNode)) {
-	    		FileNode temp = (FileNode)mynode.getUserObject();
+    		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
+    			DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
 	    		if(temp.other == null) {
 	    			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)(new TreePath(mynode.getParent()).getLastPathComponent());
-	    			FileNode parenttemp = (FileNode)parent.getUserObject();
-	    			parenttemp.setState(FileNode.NODE_STATE_ADD);
+	    			DiffTreeUserData parenttemp = (DiffTreeUserData)parent.getUserObject();
+	    			parenttemp.setState(DiffTreeUserData.NODE_STATE_ADD);
 	    			
-	    			FileNode parentothertemp = (FileNode)((DefaultMutableTreeNode)(parenttemp.other.getLastPathComponent())).getUserObject();
-	    			parentothertemp.setState(FileNode.NODE_STATE_ADD);
+	    			DiffTreeUserData parentothertemp = (DiffTreeUserData)((DefaultMutableTreeNode)(parenttemp.other.getLastPathComponent())).getUserObject();
+	    			parentothertemp.setState(DiffTreeUserData.NODE_STATE_ADD);
 	    			
 	    		}
     		}
@@ -180,9 +194,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	while (myreenode.hasMoreElements()) {
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
     		
-    		if((mynode.getUserObject() instanceof FileNode)) {
-    			if((((FileNode)mynode.getUserObject()).me != null)) {
-    				//samebefore = ((FileNode)leftnode.getUserObject()).other;
+    		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
+    			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {
     				continue;
     			}
     		}
@@ -203,26 +216,26 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
             	if(temppath!=null ) {
             		//samebefore = temppath;
             		//left            		
-            		if(mynode.getUserObject() instanceof FileNode) {
-            			FileNode temp = (FileNode)mynode.getUserObject();
+            		if(mynode.getUserObject() instanceof DiffTreeUserData) {
+            			DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
             			temp.setotherTreepath(temppath);
 	            		temp.setmeTreepath(new TreePath(mynode.getPath()));
-	            		temp.setState(FileNode.NODE_STATE_NOMAL);
+	            		temp.setState(DiffTreeUserData.NODE_STATE_NOMAL);
             		}            		
             		//right
         			DefaultMutableTreeNode node = (DefaultMutableTreeNode)temppath.getLastPathComponent();            			
-        			if(node.getUserObject() instanceof FileNode) {
-        				FileNode temp = (FileNode)node.getUserObject();
+        			if(node.getUserObject() instanceof DiffTreeUserData) {
+        				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 	            		temp.setotherTreepath(leftTreepath);
 	            		temp.setmeTreepath(temppath);
-	            		temp.setState(FileNode.NODE_STATE_NOMAL);
+	            		temp.setState(DiffTreeUserData.NODE_STATE_NOMAL);
         			}
         		} else { //added
-            		if(mynode.getUserObject() instanceof FileNode) {
-            			FileNode temp = (FileNode)mynode.getUserObject();
+            		if(mynode.getUserObject() instanceof DiffTreeUserData) {
+            			DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
             			temp.setotherTreepath(samebefore);
 	            		temp.setmeTreepath(new TreePath(mynode.getPath()));
-	            		temp.setState(FileNode.NODE_STATE_ADD);
+	            		temp.setState(DiffTreeUserData.NODE_STATE_ADD);
             		}        			
         		}
             }
@@ -288,60 +301,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
         return path!=null;
     }
-    
-    private void createChildren(File fileRoot, SortNode node) {
-        File[] files = fileRoot.listFiles();
-        if (files == null) return;
-
-        for (File file : files) {
-        	SortNode childNode = 
-                    new SortNode(new FileNode(file));
-            node.add(childNode);
-            if (file.isDirectory()) {
-                createChildren(file, childNode);
-            }
-        }
-    }
-    
-    public class FileNode extends Object{
-        private File file;
-        TreePath me;
-        TreePath other = null;
-        int state = NODE_STATE_NOMAL;
-        
-        public static final int NODE_STATE_NOMAL = 0;
-        public static final int NODE_STATE_ADD = 2;
-        public static final int NODE_STATE_DIFF = 4;
-        
-        public FileNode(File file) {
-            this.file = file;
-        }
-        public void setmeTreepath(TreePath path) {
-        	this.me = path;
-        }
-        public void setotherTreepath(TreePath path) {
-        	this.other = path;
-        }
-                
-        @Override
-        public String toString() {
-            String name = file.getName();
-            if (name.equals("")) {
-                return file.getAbsolutePath();
-            } else {
-                return name;
-            }
-        }
-        
-        public void setState(int state) {
-        	this.state = state;
-        }
-        
-        public int getState() {
-        	return this.state;
-        }
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -362,8 +321,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getPath().getLastPathComponent();
 		
-		if(node.getUserObject() instanceof FileNode) {
-			FileNode temp =(FileNode)node.getUserObject();
+		if(node.getUserObject() instanceof DiffTreeUserData) {
+			DiffTreeUserData temp =(DiffTreeUserData)node.getUserObject();
 
 //			Log.d("is expended : " + ((JTree)e.getSource()).isExpanded(new TreePath(node.getPath())));
 			
@@ -400,8 +359,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 //	        Log.d(event + "");
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();    
 			
-			if(node.getUserObject() instanceof FileNode) {
-				FileNode temp = (FileNode)node.getUserObject();
+			if(node.getUserObject() instanceof DiffTreeUserData) {
+				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 				if (event.getSource() == left) {
 					right.expandPath(temp.other);
 				} else {
@@ -418,8 +377,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        //Log.d("col");
 	        DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();    
 			
-			if(node.getUserObject() instanceof FileNode) {
-				FileNode temp = (FileNode)node.getUserObject();
+			if(node.getUserObject() instanceof DiffTreeUserData) {
+				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 				if (event.getSource() == left) {
 					right.collapsePath(temp.other);
 				} else {
