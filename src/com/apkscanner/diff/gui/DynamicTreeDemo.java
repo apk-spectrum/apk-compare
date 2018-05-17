@@ -129,7 +129,45 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 //        for (int row=right.getRowCount(); row>=0; row--) {
 //        	right.collapseRow(row);
 //        }
+		for (final JTree t : Arrays.asList(left, right)) {
+			MouseAdapter fRowSelectionListener = new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					// Log.d("click : " + e.getClickCount());
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						int closestRow = t.getClosestRowForLocation(e.getX(), e.getY());
+						Rectangle closestRowBounds = t.getRowBounds(closestRow);
 
+						if (e.getY() >= closestRowBounds.getY()
+								&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
+							if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
+								if (e.getClickCount() == 1) {
+									t.setSelectionRow(closestRow);
+									if (left == t) {
+										DiffTree.setSelectedtree(left);
+									} else {
+										DiffTree.setSelectedtree(right);
+									}
+									repaint();
+								} else if (e.getClickCount() == 2) {
+									DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
+											.getLastPathComponent());
+									if (!node.isLeaf()) {
+										if (t.isCollapsed(closestRow)) {
+											t.expandRow(closestRow);
+										} else {
+											t.collapseRow(closestRow);
+										}
+									}
+								}
+							}
+						} // else
+							// temp.setSelectionRow(-1);
+					}
+				}
+			};
+			t.addMouseListener(fRowSelectionListener);
+		}
+        
         leftscrollBar = new JScrollPane(left,
         JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -171,6 +209,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	setfolderstate(leftrootNode);
     	setfolderstate(rightrootNode);
     	
+    	repaint();
     	//DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
     }
     

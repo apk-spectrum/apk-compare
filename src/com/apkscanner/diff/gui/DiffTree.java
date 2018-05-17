@@ -42,43 +42,11 @@ class DiffTree extends JTree {
 		setBorder(BorderFactory.createEmptyBorder ( 2, 2, 2, 2 ));
 		setToggleClickCount(0);
 		final JTree temp = this;
-		MouseAdapter fRowSelectionListener = new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				//Log.d("click : " + e.getClickCount());
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					int closestRow = temp.getClosestRowForLocation(e.getX(), e.getY());
-					Rectangle closestRowBounds = temp.getRowBounds(closestRow);
-					
-					if (e.getY() >= closestRowBounds.getY() && e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
-						if (e.getX() > closestRowBounds.getX() && closestRow < temp.getRowCount()) {
-							if(e.getClickCount() == 1) {									
-								temp.setSelectionRow(closestRow);
-								if(left == temp) {
-									selectedtree = left;
-								} else {
-									selectedtree = right;
-								}
-							} else if(e.getClickCount() == 2){
-								DefaultMutableTreeNode node = (DefaultMutableTreeNode)(temp.getSelectionPath().getLastPathComponent());
-								if(!node.isLeaf()) {
-									if(temp.isCollapsed(closestRow)) {
-										temp.expandRow(closestRow);
-									} else {
-										temp.collapseRow(closestRow);
-									}
-								}
-							}								
-						}
-					} else
-						temp.setSelectionRow(-1);
-				}
-			}	
-		};			
-		temp.addMouseListener(fRowSelectionListener);
+
 	}
 	
-	public void setSelectedtree(JTree tree) {
-		this.selectedtree = tree;
+	public static void setSelectedtree(JTree tree) {
+		selectedtree = tree;
 	}
 	
 	public static void setleftrighttree(DiffTree lefttree, DiffTree righttree) {
@@ -108,7 +76,7 @@ class DiffTree extends JTree {
 				if(selectedtree == this) {
 					return colorarray[temp.getState()+1];					
 				} else {
-					return colorarray[temp.getState()];								
+					return colorarray[temp.getState()].darker();								
 				}
 			} else {
 				if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL) {
@@ -152,7 +120,7 @@ class DiffTree extends JTree {
 				if(temp.other != null) {
 					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 				} else {
-					for(int j=i; j >=0; j--) {							
+					for(int j=i; j >=0; j--) {
 						Object otemp = getPathForRow(j).getLastPathComponent();
 						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
 						DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
