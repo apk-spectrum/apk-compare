@@ -92,7 +92,7 @@ class DiffTree extends JTree {
 	
 	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected) {
 		DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-    	
+		
     	if(isExpanded(row) && !node.isLeaf()){
 			if(selected) {
 				if(selectedtree == this) {

@@ -1,5 +1,6 @@
 package com.apkscanner.diff.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.apkscanner.data.apkinfo.ApkInfo;
@@ -39,26 +40,27 @@ public class DiffMappingTree {
 	    			TabfolderchildNode.add(childNodeapkinfo);
 
 	        		if(strapkinfo.equals("Icon")) {
-	        			String temp = apkInfo.manifest.application.icons[apkInfo.manifest.application.icons.length - 1].name;
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			String temp = apkInfo.manifest.application.icons[0].name;
+	        			temp = temp.substring(temp.lastIndexOf(File.separator) + 1);
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("Title")){
 	        			String temp = apkInfo.manifest.packageName;
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("Package")){
 	        			String temp = apkInfo.manifest.packageName;
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("Version")){
 	        			String temp = apkInfo.manifest.versionName + "/" + apkInfo.manifest.versionCode;
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("SDK Version")){
 	        			String temp = apkInfo.manifest.usesSdk.minSdkVersion+"(Min)," +apkInfo.manifest.usesSdk.targetSdkVersion + " (Target)";
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("Size")){
 	        			String temp = FileUtil.getFileSize(apkInfo.fileSize, FSStyle.FULL);
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp, strapkinfo)));
 	        		} else if(strapkinfo.equals("Feature")){
 	        			String temp = FileUtil.getFileSize(apkInfo.fileSize, FSStyle.FULL);
-	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));	        			
+	        			childNodeapkinfo.add(new SortNode(new DiffTreeUserData(temp)));
 	        		} else if(strapkinfo.equals("Permission")){
 		    			String[] temp = getPermissionString(apkInfo).split("\n");
 	        			for(String str: temp) {
