@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkscanner.data.apkinfo.ActivityAliasInfo;
 import com.apkscanner.data.apkinfo.ActivityInfo;
@@ -23,10 +24,12 @@ import com.apkscanner.data.apkinfo.UsesConfigurationInfo;
 import com.apkscanner.data.apkinfo.UsesFeatureInfo;
 import com.apkscanner.data.apkinfo.UsesLibraryInfo;
 import com.apkscanner.data.apkinfo.UsesPermissionInfo;
+import com.apkscanner.data.apkinfo.WidgetInfo;
 import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.Log;
+import com.apkscanner.util.ZipFileUtil;
 import com.apkscanner.util.FileUtil.FSStyle;
 
 public class DiffMappingTree {
@@ -111,16 +114,66 @@ public class DiffMappingTree {
 	        		}	        	
 	        	}
 	        } else if(tabname.equals(Resource.STR_TAB_WIDGET.getString())){
-	        		
+	        	WidgetInfo[] widgets = apkInfo.widgets;
+	        	
+	    		String preferLang = (String)Resource.PROP_PREFERRED_LANGUAGE.getData("");
+	    		for(int i=0; i< apkInfo.widgets.length; i++) {
+	    			ImageIcon myimageicon = null;
+	    			try {
+	    				myimageicon = new ImageIcon(new URL((String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name));
+	    			} catch (MalformedURLException e) {
+	    				e.printStackTrace();
+	    			}
+	    			if(myimageicon != null) {
+	    				myimageicon.setImage(ImageScaler.getMaxScaledImage(myimageicon,100,100));
+	    			}
+	    			String label = ApkInfoHelper.getResourceValue(apkInfo.widgets[i].lables, preferLang);
+	    			if(label == null) label = ApkInfoHelper.getResourceValue(apkInfo.manifest.application.labels, preferLang);
+	    			String temp = label +" - " + apkInfo.widgets[i].size + " - " +  apkInfo.widgets[i].name + " - " + apkInfo.widgets[i].type;
+	    			
+        			ImageDiffTreeUserData userdata = new ImageDiffTreeUserData(temp, "Icon");
+        			
+        			userdata.setImageIcon(myimageicon);
+    				
+        			TabfolderchildNode.add(new SortNode(userdata));
+	    		}
+	        	
 	        } else if(tabname.equals(Resource.STR_TAB_LIB.getString())){
-        		
-	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){
-        		
+	        	String[] libList = apkInfo.libraries;
+	        	for(int i=0; i< libList.length; i++) {
+					long size = ZipFileUtil.getFileSize(apkInfo.filePath, libList[i]);
+					long compressed = ZipFileUtil.getCompressedSize(apkInfo.filePath, libList[i]);
+					String temp = libList[i] + FileUtil.getFileSize(size, FSStyle.FULL) + " - " +
+							String.format("%.2f", ((float)(size - compressed) / (float)size) * 100f) + " %";							
+					TabfolderchildNode.add(new SortNode(new DiffTreeUserData(temp)));
+				}
+	        	
+	        	
+	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){	        	
+	        	String[] nameList = apkInfo.resources;	        	
+	        	for(int i=0; i< nameList.length; i++) {	        		
+						TabfolderchildNode.add(new SortNode(new DiffTreeUserData(nameList[i])));				
+	        	}	        	
 	        } else if(tabname.equals(Resource.STR_TAB_ACTIVITY.getString())){
-				getComponents(apkInfo, TabfolderchildNode);
-		        
+				getComponents(apkInfo, TabfolderchildNode);		        
 	        } else if(tabname.equals(Resource.STR_TAB_CERT.getString())){
         		
+				String[] mCertList = apkInfo.certificates;
+				String[] mCertFiles = apkInfo.certFiles;
+				String[] tokenmCertList = apkInfo.ss_tokens;
+				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
+	        	
+				
+				for(int i=0;i < mCertList.length; i++) {
+					
+					SortNode tempnode = new SortNode(new DiffTreeUserData(mCertList[i]));
+					TabfolderchildNode.add(tempnode);
+					
+					//tempnode.add(new SortNode(new DiffTreeUserData(mCertList[i])));
+					
+				}
+				
+				
 	        }
 		}
 	}

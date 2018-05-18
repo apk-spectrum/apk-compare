@@ -233,9 +233,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	    			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)(new TreePath(mynode.getParent()).getLastPathComponent());
 	    			DiffTreeUserData parenttemp = (DiffTreeUserData)parent.getUserObject();
 	    			parenttemp.setState(temp.state);
-	    			
-	    			DiffTreeUserData parentothertemp = (DiffTreeUserData)((DefaultMutableTreeNode)(parenttemp.other.getLastPathComponent())).getUserObject();
-	    			parentothertemp.setState(temp.state);
+	    				    			
+	    			if(parenttemp.other != null) {
+		    			DiffTreeUserData parentothertemp = (DiffTreeUserData)((DefaultMutableTreeNode)(parenttemp.other.getLastPathComponent())).getUserObject();
+		    			parentothertemp.setState(temp.state);
+	    			}
 	    		}
     		}
     	}   	

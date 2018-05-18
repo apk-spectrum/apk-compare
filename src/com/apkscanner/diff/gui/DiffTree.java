@@ -107,55 +107,49 @@ class DiffTree extends JTree {
 			Rectangle r = getRowBounds(i);
 			g.fillRect(0, r.y, getWidth(), r.height);
 			
-			//if(this == left) {
-				SplitPaintData tempSplitPaintData = new SplitPaintData();					
-				tempSplitPaintData.color = nodecolor;
-				tempSplitPaintData.index = i;
-				tempSplitPaintData.state = temp.state;
-				tempSplitPaintData.isleaf = node.isLeaf();
-				tempSplitPaintData.isleft = (left==this);
-				tempSplitPaintData.startposition = this.getRowBounds(i).y;
-				tempSplitPaintData.height = this.getRowBounds(i).height;
-				
-				DiffTree tempothertree = (left==this) ? right : left;
-				
-				if(temp.other != null) {
-					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
-				} else {
-					if(left==this) {						
-						for(int j=i; j >=0; j--) {
-							Object otemp = getPathForRow(j).getLastPathComponent();
-							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-							DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
-							if(filetemp.other != null) {
-								//Log.d(i + "  :  " + j);
-								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y-2;
-								break;
-							}
-						}
-					} else {
-						for(int j=i; j <left.getRowCount(); j++) {
-							Object otemp = getPathForRow(j).getLastPathComponent();
-							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-							DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
-							Log.d(j + "  :  " + filetemp + "  other : " + filetemp.other);
-							if(filetemp.other != null) {
-								//Log.d("in  other : " + filetemp.other + " y : " +tempothertree.getPathBounds(filetemp.other).y);
-								
-								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y - tempothertree.getPathBounds(filetemp.other).height;
-								break;
-							}
+			// if(this == left) {
+			SplitPaintData tempSplitPaintData = new SplitPaintData();
+			tempSplitPaintData.color = nodecolor;
+			tempSplitPaintData.index = i;
+			tempSplitPaintData.state = temp.state;
+			tempSplitPaintData.isleaf = node.isLeaf();
+			tempSplitPaintData.isleft = (left == this);
+			tempSplitPaintData.startposition = this.getRowBounds(i).y;
+			tempSplitPaintData.height = this.getRowBounds(i).height;
+
+			DiffTree tempothertree = (left == this) ? right : left;
+
+			if (temp.other != null) {
+				tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
+			} else {
+				if (left == this) {
+					for (int j = i; j >= 0; j--) {
+						Object otemp = getPathForRow(j).getLastPathComponent();
+						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+						DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
+						if (filetemp.other != null) {
+							// Log.d(i + " : " + j);
+							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y - 2;
+							break;
 						}
 					}
-					//tempSplitPaintData.endposition = 0;
+				} else {
+					for (int j = i; j < left.getRowCount(); j++) {
+						Object otemp = getPathForRow(j).getLastPathComponent();
+						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+						DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
+						if (filetemp.other != null) {
+							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y
+									- tempothertree.getPathBounds(filetemp.other).height;
+							break;
+						}
+					}
 				}
-				
-				//Log.d(tree.getRowBounds(row).y + "");
-				splitPane.setsplitPanedata(tempSplitPaintData);
-				//splitPane.revalidate();
+				// tempSplitPaintData.endposition = 0;
 			}
-		//}
+			splitPane.setsplitPanedata(tempSplitPaintData);
 
+		}
 		super.paintComponent(g);
 	}
 	

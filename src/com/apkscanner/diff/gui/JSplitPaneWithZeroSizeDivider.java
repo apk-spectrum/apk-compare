@@ -216,8 +216,8 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 			        parallelogram.moveTo(getWidth(),rightpaintdata.get(i).startposition);
 			        if(rightpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !rightpaintdata.get(i).isleaf) parallelogram.lineTo(0, rightpaintdata.get(i).endposition);			        
-			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + leftpaintdata.get(i).height);
-			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + leftpaintdata.get(i).height);
+			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + rightpaintdata.get(i).height);
+			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + rightpaintdata.get(i).height);
 			        parallelogram.closePath();
 			        g2d.fill(parallelogram);
 				//}
