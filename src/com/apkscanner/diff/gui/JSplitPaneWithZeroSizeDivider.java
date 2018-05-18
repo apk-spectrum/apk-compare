@@ -44,6 +44,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 */
 	private int dividerDragSize = 50;
 	Color defaultColor = new Color(234, 234, 234);
+	Color selectdefaultColor = defaultColor.darker();
 	
 	ArrayList<SplitPaintData> leftpaintdata = new ArrayList<SplitPaintData>();
 	ArrayList<SplitPaintData> rightpaintdata = new ArrayList<SplitPaintData>();
@@ -62,6 +63,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 		int index;
 		int startposition;
 		int endposition;
+		int height;
 		int state;
 		boolean isleaf;
 		boolean isleft;
@@ -189,12 +191,13 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 				//endposition
 					//g.fillRect(0, leftpaintdata.get(i).startposition +1 , getWidth(), 19);
 				//if(leftpaintdata.get(i).endposition != 0) {
+				
 					Path2D.Double parallelogram = new Path2D.Double();
 			        parallelogram.moveTo(0,leftpaintdata.get(i).startposition);
 			        if(leftpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !leftpaintdata.get(i).isleaf) parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition);			        
-			        parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition + 20);
-			        parallelogram.lineTo(0,leftpaintdata.get(i).startposition + 20);
+			        parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition + leftpaintdata.get(i).height);
+			        parallelogram.lineTo(0,leftpaintdata.get(i).startposition + leftpaintdata.get(i).height);
 			        parallelogram.closePath();
 			        g2d.fill(parallelogram);
 				//}
@@ -205,25 +208,23 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 					g.setColor(defaultColor);
 				} else {
 					g.setColor(rightpaintdata.get(i).color.darker());
-				}
-				
-				if(rightpaintdata.get(i).state == DiffTreeUserData.NODE_STATE_ADD
-		        		&& rightpaintdata.get(i).isleaf) {
-					Path2D.Double parallelogram = new Path2D.Double();
-			        parallelogram.moveTo(getWidth(),rightpaintdata.get(i).startposition);
-			        			        
-			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + 20);
-			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + 20);
-			        parallelogram.closePath();
-			        g2d.fill(parallelogram);
-				}
-				
+				}				
 				//endposition
 					//g.fillRect(0, leftpaintdata.get(i).startposition +1 , getWidth(), 19);
 				//if(rightpaintdata.get(i).endposition != 0) {
-					
+					Path2D.Double parallelogram = new Path2D.Double();
+			        parallelogram.moveTo(getWidth(),rightpaintdata.get(i).startposition);
+			        if(rightpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
+			        		|| !rightpaintdata.get(i).isleaf) parallelogram.lineTo(0, rightpaintdata.get(i).endposition);			        
+			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + leftpaintdata.get(i).height);
+			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + leftpaintdata.get(i).height);
+			        parallelogram.closePath();
+			        g2d.fill(parallelogram);
 				//}
 			}
+			
+			//if(DiffTree.selectedtree.getSelectionRows()[0])
+			
 			
 			leftpaintdata.clear();
 			rightpaintdata.clear();

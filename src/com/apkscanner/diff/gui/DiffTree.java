@@ -16,6 +16,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 
 class DiffTree extends JTree {
@@ -114,6 +115,7 @@ class DiffTree extends JTree {
 				tempSplitPaintData.isleaf = node.isLeaf();
 				tempSplitPaintData.isleft = (left==this);
 				tempSplitPaintData.startposition = this.getRowBounds(i).y;
+				tempSplitPaintData.height = this.getRowBounds(i).height;
 				
 				DiffTree tempothertree = (left==this) ? right : left;
 				
@@ -158,6 +160,11 @@ class DiffTree extends JTree {
 				l.setBackground(nodecolor);
 				if(selected && selectedtree == tree) l.setForeground(Color.WHITE);
 				else l.setForeground(Color.BLACK);
+				
+				if(temp.Key.equals("Icon")) {
+					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());
+					
+				}				
 				
 				l.setOpaque(true);
 			}

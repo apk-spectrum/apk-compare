@@ -141,13 +141,17 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 								&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
 							if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
 								if (e.getClickCount() == 1) {
+									
 									t.setSelectionRow(closestRow);
 									if (left == t) {
 										DiffTree.setSelectedtree(left);
+									
 									} else {
 										DiffTree.setSelectedtree(right);
+									
 									}
-									repaint();
+									splitPane.repaint();
+									
 								} else if (e.getClickCount() == 2) {
 									DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
 											.getLastPathComponent());
@@ -405,10 +409,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			
 			if(left == (JTree)e.getSource()) {
 				right.setSelectionPath(temp.other);
-				Log.d("lefttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf() + " key : " + temp.Key);
+				//Log.d("lefttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf() + " key : " + temp.Key);
 			} else {				
 				left.setSelectionPath(temp.other);
-				Log.d("righttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf()+ " key : " + temp.Key);
+				//Log.d("righttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf()+ " key : " + temp.Key);
 			}
 			splitPane.repaint();
 		}		
