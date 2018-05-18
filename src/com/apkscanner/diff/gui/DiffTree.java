@@ -122,17 +122,31 @@ class DiffTree extends JTree {
 				if(temp.other != null) {
 					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 				} else {
-					for(int j=i; j >=0; j--) {
-						Object otemp = getPathForRow(j).getLastPathComponent();
-						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-						DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
-						if(filetemp.other != null) {
-							//Log.d(i + "  :  " + j);
-							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y;
-							break;
+					if(left==this) {						
+						for(int j=i; j >=0; j--) {
+							Object otemp = getPathForRow(j).getLastPathComponent();
+							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+							DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
+							if(filetemp.other != null) {
+								//Log.d(i + "  :  " + j);
+								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y-2;
+								break;
+							}
 						}
-						
-					}						
+					} else {
+						for(int j=i; j <left.getRowCount(); j++) {
+							Object otemp = getPathForRow(j).getLastPathComponent();
+							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+							DiffTreeUserData filetemp = (DiffTreeUserData)nodetemp.getUserObject();
+							Log.d(j + "  :  " + filetemp + "  other : " + filetemp.other);
+							if(filetemp.other != null) {
+								//Log.d("in  other : " + filetemp.other + " y : " +tempothertree.getPathBounds(filetemp.other).y);
+								
+								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y - tempothertree.getPathBounds(filetemp.other).height;
+								break;
+							}
+						}
+					}
 					//tempSplitPaintData.endposition = 0;
 				}
 				
