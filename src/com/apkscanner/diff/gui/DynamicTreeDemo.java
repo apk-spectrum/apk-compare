@@ -190,6 +190,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
 		expansionListener.setSrollpane(scrollpane);
 		
+		DiffTree.setScrollPane(scrollpane);
+		
 		JPanel temppanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		temppanel.setPreferredSize(new Dimension(0, 50));
 		

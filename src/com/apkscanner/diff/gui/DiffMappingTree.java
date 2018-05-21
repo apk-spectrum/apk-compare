@@ -43,7 +43,7 @@ public class DiffMappingTree {
 								Resource.STR_TAB_CERT.getString()};
 		
 		for(String tabname : tabfolders) {
-			SortNode TabfolderchildNode = new SortNode(new DiffTreeUserData(tabname));
+			SortNode TabfolderchildNode = new SortNode(new DiffTreeUserData(tabname, true));
 	        node.add(TabfolderchildNode);
 	        
 	        if(tabname.equals(Resource.STR_TAB_BASIC_INFO.getString())) {
@@ -57,7 +57,7 @@ public class DiffMappingTree {
 						"Permission"};
 	        	
 	        	for(String strapkinfo : apkinfofolders) {
-	    			SortNode childNodeapkinfo = new SortNode(new DiffTreeUserData(strapkinfo));
+	    			SortNode childNodeapkinfo = new SortNode(new DiffTreeUserData(strapkinfo, true));
 	    			TabfolderchildNode.add(childNodeapkinfo);
 
 	        		if(strapkinfo.equals("Icon")) {
@@ -188,7 +188,7 @@ public class DiffMappingTree {
 	
 	public static void getComponents(ApkInfo apkInfo, SortNode node) {
 		if(apkInfo.manifest.application.activity != null) {
-			SortNode nodetemp = new SortNode(new DiffTreeUserData("activity"));
+			SortNode nodetemp = new SortNode(new DiffTreeUserData("activity", true));
 			node.add(nodetemp);
 			
 			for(ActivityInfo info: apkInfo.manifest.application.activity) {
@@ -213,7 +213,7 @@ public class DiffMappingTree {
 			}
 		}
 		if(apkInfo.manifest.application.activityAlias != null) {
-			SortNode nodetemp = new SortNode(new DiffTreeUserData("activityAlias"));
+			SortNode nodetemp = new SortNode(new DiffTreeUserData("activityAlias", true));
 			node.add(nodetemp);
 			
 			for(ActivityAliasInfo info: apkInfo.manifest.application.activityAlias) {
@@ -238,7 +238,7 @@ public class DiffMappingTree {
 			}
 		}
 		if(apkInfo.manifest.application.service != null) {
-			SortNode nodetemp = new SortNode(new DiffTreeUserData("service"));
+			SortNode nodetemp = new SortNode(new DiffTreeUserData("service", true));
 			node.add(nodetemp);
 			
 			for(ServiceInfo info: apkInfo.manifest.application.service) {
@@ -250,7 +250,7 @@ public class DiffMappingTree {
 			}
 		}
 		if(apkInfo.manifest.application.receiver != null) {
-			SortNode nodetemp = new SortNode(new DiffTreeUserData("receiver"));
+			SortNode nodetemp = new SortNode(new DiffTreeUserData("receiver", true));
 			node.add(nodetemp);
 			
 			for(ReceiverInfo info: apkInfo.manifest.application.receiver) {
@@ -263,7 +263,7 @@ public class DiffMappingTree {
 		}
 		if(apkInfo.manifest.application.provider != null) {
 			
-			SortNode nodetemp = new SortNode(new DiffTreeUserData("provider"));
+			SortNode nodetemp = new SortNode(new DiffTreeUserData("provider", true));
 			node.add(nodetemp);
 			
 			for(ProviderInfo info: apkInfo.manifest.application.provider) {

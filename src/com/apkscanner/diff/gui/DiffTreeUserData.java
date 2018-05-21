@@ -7,6 +7,8 @@ public class DiffTreeUserData {
     TreePath me;
     TreePath other = null;
     int state = NODE_STATE_NOMAL;
+    boolean isfolder;
+    boolean isdisplaysplit;
     String Key;
     
     public static final int NODE_STATE_NOMAL = 0;
@@ -21,6 +23,15 @@ public class DiffTreeUserData {
     public DiffTreeUserData(String title, String key) {
         this.title = title;
         this.Key = key;
+    }
+    
+    public DiffTreeUserData(String title, boolean isfolder) {
+    	this(title);
+    	this.isfolder = isfolder;    	
+    }
+    
+    public DiffTreeUserData(String title, String key, boolean isfolder) {
+    	this(title, key);    	
     }
     
     public void setmeTreepath(TreePath path) {

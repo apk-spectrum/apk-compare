@@ -64,12 +64,13 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 		int startposition;
 		int endposition;
 		int height;
+		int ohterheight;
 		int state;
 		boolean isleaf;
 		boolean isleft;
 		Color color;
 		public SplitPaintData() {
-			// TODO Auto-generated constructor stub
+			// TODO Auto-generated constructor stub			
 		}
 	}
 	
@@ -196,7 +197,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 			        parallelogram.moveTo(0,leftpaintdata.get(i).startposition);
 			        if(leftpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !leftpaintdata.get(i).isleaf) parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition);			        
-			        parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition + leftpaintdata.get(i).height);
+			        parallelogram.lineTo(getWidth(), leftpaintdata.get(i).endposition + leftpaintdata.get(i).ohterheight);
 			        parallelogram.lineTo(0,leftpaintdata.get(i).startposition + leftpaintdata.get(i).height);
 			        parallelogram.closePath();
 			        g2d.fill(parallelogram);
@@ -216,7 +217,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 			        parallelogram.moveTo(getWidth(),rightpaintdata.get(i).startposition);
 			        if(rightpaintdata.get(i).state != DiffTreeUserData.NODE_STATE_ADD
 			        		|| !rightpaintdata.get(i).isleaf) parallelogram.lineTo(0, rightpaintdata.get(i).endposition);			        
-			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + rightpaintdata.get(i).height);
+			        parallelogram.lineTo(0, rightpaintdata.get(i).endposition + rightpaintdata.get(i).ohterheight);
 			        parallelogram.lineTo(getWidth(),rightpaintdata.get(i).startposition + rightpaintdata.get(i).height);
 			        parallelogram.closePath();
 			        g2d.fill(parallelogram);

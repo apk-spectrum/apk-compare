@@ -6,14 +6,19 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.resource.Resource;
@@ -32,6 +37,7 @@ class DiffTree extends JTree {
 	static JTree selectedtree;
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
+	static JScrollPane hostingScrollPane;
 	
 	public DiffTree(DefaultTreeModel treeModel) {
 		// TODO Auto-generated constructor stub
@@ -44,6 +50,9 @@ class DiffTree extends JTree {
 		setToggleClickCount(0);
 		final JTree temp = this;
 
+	}
+	public static void setScrollPane(JScrollPane scrollpane) {
+		hostingScrollPane = scrollpane;
 	}
 	
 	public static void setSelectedtree(JTree tree) {
@@ -95,65 +104,92 @@ class DiffTree extends JTree {
 		
 		g.fillRect(0, 0, getWidth()+1, getHeight()+1);
 		//g.drawRect(0, 0, getWidth()+1, getHeight()+1);
-		for (int i = 0; i < getRowCount(); i++) {
-			g.setColor(Color.WHITE);
-			Object o = getPathForRow(i).getLastPathComponent();
-		    DefaultMutableTreeNode node = (DefaultMutableTreeNode) o;
-		    DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+		
+		if(hostingScrollPane != null && getRowCount() > 0) {
+			List<TreePath> visiblenode = getVisibleNodes(this);
 			
-			Color nodecolor = this.getnodeColor(i,node, (getSelectionCount() > 0 && getSelectionRows()[0] == i));
-			
-			g.setColor(nodecolor);
-			Rectangle r = getRowBounds(i);
-			g.fillRect(0, r.y, getWidth(), r.height);
-			
-			// if(this == left) {
-			SplitPaintData tempSplitPaintData = new SplitPaintData();
-			tempSplitPaintData.color = nodecolor;
-			tempSplitPaintData.index = i;
-			tempSplitPaintData.state = temp.state;
-			tempSplitPaintData.isleaf = node.isLeaf();
-			tempSplitPaintData.isleft = (left == this);
-			tempSplitPaintData.startposition = this.getRowBounds(i).y;
-			tempSplitPaintData.height = this.getRowBounds(i).height;
+			for (int k = 0; k < visiblenode.size(); k++) {
+				g.setColor(Color.WHITE);				
+				TreePath o = visiblenode.get(k);
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) o.getLastPathComponent();
+				DiffTreeUserData temp = (DiffTreeUserData) node.getUserObject();
+				int i = this.getRowForPath(o);
+				Color nodecolor = this.getnodeColor(i, node, (getSelectionCount() > 0 && getSelectionRows()[0] == i));
 
-			DiffTree tempothertree = (left == this) ? right : left;
+				g.setColor(nodecolor);
+				//Log.d(getRowCount() + "");
+				Rectangle r = getRowBounds(i);
+				g.fillRect(0, r.y, getWidth(), r.height);
 
-			if (temp.other != null) {
-				tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
-			} else {
-				if (left == this) {
-					for (int j = i; j >= 0; j--) {
-						Object otemp = getPathForRow(j).getLastPathComponent();
-						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-						DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
-						if (filetemp.other != null) {
-							// Log.d(i + " : " + j);
-							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y - 2;
-							break;
-						}
-					}
+				// if(this == left) {
+				SplitPaintData tempSplitPaintData = new SplitPaintData();
+				tempSplitPaintData.color = nodecolor;
+				tempSplitPaintData.index = i;
+				tempSplitPaintData.state = temp.state;
+				tempSplitPaintData.isleaf = node.isLeaf() && !temp.isfolder;
+				tempSplitPaintData.isleft = (left == this);
+				tempSplitPaintData.startposition = this.getRowBounds(i).y;
+				tempSplitPaintData.ohterheight = tempSplitPaintData.height = this.getRowBounds(i).height;
+
+				DiffTree tempothertree = (left == this) ? right : left;
+
+				if (temp.other != null) {
+					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 				} else {
-					for (int j = i; j < right.getRowCount(); j++) {
-						Object otemp = getPathForRow(j).getLastPathComponent();
-						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
-						DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
-						
-						//Log.d("i = " + i + filetemp);
-						if (filetemp.other != null) {
-							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y
-									- tempothertree.getPathBounds(filetemp.other).height;
-							break;
+					if (left == this) {
+						for (int j = i; j >= 0; j--) {
+							Object otemp = getPathForRow(j).getLastPathComponent();
+							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+							DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
+							if (filetemp.other != null) {
+								// Log.d(i + " : " + j);
+								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y;
+								tempSplitPaintData.ohterheight = tempothertree.getPathBounds(filetemp.other).height;
+								break;
+							}
+						}
+					} else {
+						for (int j = i; j < right.getRowCount(); j++) {
+							Object otemp = getPathForRow(j).getLastPathComponent();
+							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
+							DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
+
+							// Log.d("i = " + i + filetemp);
+							if (filetemp.other != null) {
+								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y
+										- tempothertree.getPathBounds(filetemp.other).height;
+								tempSplitPaintData.ohterheight = tempothertree.getPathBounds(filetemp.other).height;
+
+								// Log.d(filetemp.toString());
+								// tempSplitPaintData
+								break;
+							}
 						}
 					}
+					// tempSplitPaintData.endposition = 0;
 				}
-				// tempSplitPaintData.endposition = 0;
+				if (tempSplitPaintData.endposition != 0)
+					splitPane.setsplitPanedata(tempSplitPaintData);
 			}
-			splitPane.setsplitPanedata(tempSplitPaintData);
-
+			
 		}
 		super.paintComponent(g);
 	}
+	
+    private static List<TreePath> getVisibleNodes(JTree hostingJTree){
+        //Find the first and last visible row within the scroll pane.
+        final Rectangle visibleRectangle = hostingScrollPane.getViewport().getViewRect();
+        final int firstRow = hostingJTree.getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y);
+        final int lastRow  = hostingJTree.getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y + visibleRectangle.height);   
+        //Iterate through each visible row, identify the object at this row, and add it to a result list.
+        List<TreePath> resultList = new ArrayList<TreePath>();          
+        for (int currentRow = firstRow; currentRow<=lastRow; currentRow++){
+            TreePath currentPath = hostingJTree.getPathForRow(currentRow);            
+            if(currentPath==null) return null;
+            resultList.add(currentPath);                       
+        }
+        return(resultList);
+    }  
 	
 	private class DiffTreeCellRenderer extends DefaultTreeCellRenderer {
 		@Override
