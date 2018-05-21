@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,6 +51,7 @@ import com.apkscanner.core.scanner.ApkScanner;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
+import com.sun.corba.se.impl.orbutil.graph.Node;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	
@@ -257,17 +259,23 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     			}
     		}
     		
+    		TreeNode[] path = mynode.getPath();
+    		String[] patharray = new String[path.length]; 
+    		for (int i=path.length-1; i>=0;i--) { 
+    			patharray[i]= path[i].toString();
+    		}
+    		
     		TreePath leftTreepath = new TreePath(mynode.getPath()); 
             String str = leftTreepath.toString();
             
-            int spaceindex = str.indexOf("[");
-            if(spaceindex > -1) {
-            	str = str.substring(spaceindex+1, str.indexOf("]"));            	
-            	//Log.d(str);
+//            int spaceindex = str.indexOf("[");
+//            if(spaceindex > -1) {
+//            	str = str.substring(spaceindex+1, str.indexOf("]"));
+//            	//Log.d(str);
+//            	
+//            	String[] parts = str.split(", ");
             	
-            	String[] parts = str.split(", ");
-            	
-            	TreePath temppath = findByName(othertree, parts, ((DiffTreeUserData)mynode.getUserObject()).Key); 
+            	TreePath temppath = findByName(othertree, patharray, ((DiffTreeUserData)mynode.getUserObject()).Key); 
             	//Log.d("" + temppath);
             	//exist same object
             	if(temppath!=null ) {
@@ -300,7 +308,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	            		temp.setState(DiffTreeUserData.NODE_STATE_ADD);
             		}        			
         		}
-            }
+//            }
     	}        	
     }
     public DiffTreeUserData getUserDatabyTreePath(TreePath path) {

@@ -87,7 +87,7 @@ public class DiffMappingTree {
 	        						childNodeapkinfo.add(new SortNode(new DiffTreeUserData(apkInfo.manifest.packageName)));
 	        					}
 	        				} else {
-	        					childNodeapkinfo.add(new SortNode(new DiffTreeUserData(r.name + "(" + r.configuration + ")")));	        					
+	        					childNodeapkinfo.add(new SortNode(new DiffTreeUserData("[" + r.configuration + "]"+r.name)));	        					
 	        				}
 	        			}
 	        		} else if(strapkinfo.equals("Package")){
@@ -117,7 +117,7 @@ public class DiffMappingTree {
 	        	WidgetInfo[] widgets = apkInfo.widgets;
 	        	
 	    		String preferLang = (String)Resource.PROP_PREFERRED_LANGUAGE.getData("");
-	    		for(int i=0; i< apkInfo.widgets.length; i++) {
+	    		for(int i=0; i < apkInfo.widgets.length; i++) {
 	    			ImageIcon myimageicon = null;
 	    			try {
 	    				myimageicon = new ImageIcon(new URL((String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name));
@@ -137,6 +137,8 @@ public class DiffMappingTree {
     				
         			TabfolderchildNode.add(new SortNode(userdata));
 	    		}
+	    		
+	    		//if(widgets.length ==0) node.remove(TabfolderchildNode);
 	        	
 	        } else if(tabname.equals(Resource.STR_TAB_LIB.getString())){
 	        	String[] libList = apkInfo.libraries;
@@ -165,8 +167,14 @@ public class DiffMappingTree {
 	        	
 				
 				for(int i=0;i < mCertList.length; i++) {
+					String str = mCertList[i];
 					
-					SortNode tempnode = new SortNode(new DiffTreeUserData(mCertList[i]));
+					str = "<html>" + str.replace("\n", "<br/>") + "</html>";
+					
+					SortNode tempnode = new SortNode(new DiffTreeUserData(str));
+					
+					//"<html>Hello World!<br/>blahblahblah</html>"
+					
 					TabfolderchildNode.add(tempnode);
 					
 					//tempnode.add(new SortNode(new DiffTreeUserData(mCertList[i])));

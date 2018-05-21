@@ -134,10 +134,12 @@ class DiffTree extends JTree {
 						}
 					}
 				} else {
-					for (int j = i; j < left.getRowCount(); j++) {
+					for (int j = i; j < right.getRowCount(); j++) {
 						Object otemp = getPathForRow(j).getLastPathComponent();
 						DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
 						DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
+						
+						//Log.d("i = " + i + filetemp);
 						if (filetemp.other != null) {
 							tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y
 									- tempothertree.getPathBounds(filetemp.other).height;
