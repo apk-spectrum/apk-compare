@@ -1,8 +1,8 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
 import javax.swing.tree.TreePath;
 
-public class DiffTreeUserData {
+public class DiffTreeUserData implements MappingImp{
     String title;
     TreePath me;
     TreePath other = null;
@@ -14,6 +14,7 @@ public class DiffTreeUserData {
     public static final int NODE_STATE_NOMAL = 0;
     public static final int NODE_STATE_ADD = 2;
     public static final int NODE_STATE_DIFF = 4;
+        
     
     public DiffTreeUserData(String title) {
         this.title = title;
@@ -46,6 +47,10 @@ public class DiffTreeUserData {
     	return title;
     }
     
+    public boolean equals(DiffTreeUserData temp) {
+    	return this.title.equals(temp.toString());
+    }
+    
     public void setState(int state) {
     	this.state = state;
     }
@@ -53,4 +58,10 @@ public class DiffTreeUserData {
     public int getState() {
     	return this.state;
     }
+
+	@Override
+	public boolean compare(DiffTreeUserData data) {
+		// TODO Auto-generated method stub
+		return this.title.equals(data.toString());
+	}
 }

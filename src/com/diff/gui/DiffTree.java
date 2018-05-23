@@ -1,4 +1,4 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -20,9 +20,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
+import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.sun.scenario.animation.SplineInterpolator;
 
 class DiffTree extends JTree {
 	public static final Color diffcolor = new Color(224,224,255);
@@ -168,11 +169,13 @@ class DiffTree extends JTree {
 					}
 					// tempSplitPaintData.endposition = 0;
 				}
-				if (tempSplitPaintData.endposition != 0)
-					splitPane.setsplitPanedata(tempSplitPaintData);
+				if (tempSplitPaintData.endposition != 0) {
+					splitPane.setsplitPanedata(tempSplitPaintData);					
+				}
 			}
 			
 		}
+		
 		super.paintComponent(g);
 	}
 	

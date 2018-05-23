@@ -1,4 +1,4 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -65,8 +65,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private DefaultTreeModel righttreeModel;
     
     private JScrollPane scrollpane;
-    private JScrollPane leftscrollBar;
-    private JScrollPane rightscrollBar;
+// private JScrollPane leftscrollBar;
+// private JScrollPane rightscrollBar;
     
     JSplitPaneWithZeroSizeDivider splitPane;
 
@@ -174,13 +174,13 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			t.addMouseListener(fRowSelectionListener);
 		}
         
-        leftscrollBar = new JScrollPane(left,
-        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        
-        rightscrollBar = new JScrollPane(right,
-                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        leftscrollBar = new JScrollPane(left,
+//        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+//        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        
+//        rightscrollBar = new JScrollPane(right,
+//                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+//                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     	
 		splitPane.setDividerLocation(400);
 		splitPane.setLeftComponent(left);
@@ -288,9 +288,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
             			DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
             			temp.setotherTreepath(temppath);
 	            		temp.setmeTreepath(new TreePath(mynode.getPath()));
-	            		if(temp.Key.length() > 0 && !getUserDatabyTreePath(temppath).toString().equals(temp.toString())) {
-	            			tempstate = DiffTreeUserData.NODE_STATE_DIFF;	            			
-	            		}	            		
+	            		if(temp.Key.length() > 0 && !getUserDatabyTreePath(temppath).compare(temp)) {
+	            			tempstate = DiffTreeUserData.NODE_STATE_DIFF;
+	            		}
             			temp.setState(tempstate);
             		}
             		//right
@@ -354,7 +354,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                     	DiffTreeUserData temp = (DiffTreeUserData)tempNode.getUserObject();
                     	//Log.d(temp.Key + ":" + key);
                     	
-                    	if(temp.Key.equals(key) && temp.Key.length() > 0) {
+                    	if(temp.Key.equals(key) && temp.Key.length() > 0 && !temp.Key.equals("Lib")) {
                         	return path;
                         }
 					}

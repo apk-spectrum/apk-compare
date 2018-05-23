@@ -1,8 +1,8 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
 import javax.swing.ImageIcon;
 
-public class ImageDiffTreeUserData extends DiffTreeUserData{
+public class ImageDiffTreeUserData extends DiffTreeUserData implements MappingImp{
 	ImageIcon icon = null;
 	
 	public ImageDiffTreeUserData(String title) {
@@ -21,4 +21,14 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
 		return icon;
 	}
 
+	@Override
+	public boolean compare(DiffTreeUserData data) {
+		ImageDiffTreeUserData temp = (ImageDiffTreeUserData)data;		
+		if(temp.equals(title) && temp.getImageIcon().equals(icon)) {
+			return true;
+		} else {			
+			return false;
+		}
+	}
+	
 }

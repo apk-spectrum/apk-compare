@@ -1,4 +1,4 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
 import java.util.Collections;
 import java.util.Comparator;

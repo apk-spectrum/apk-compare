@@ -1,10 +1,17 @@
-package com.apkscanner.diff.gui;
+package com.diff.gui;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.stream.FileImageInputStream;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -30,6 +37,10 @@ import com.apkscanner.resource.Resource;
 import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.ZipFileUtil;
+
+import net.sf.javavp8decoder.imageio.WebPImageReader;
+import net.sf.javavp8decoder.imageio.WebPImageReaderSpi;
+
 import com.apkscanner.util.FileUtil.FSStyle;
 
 public class DiffMappingTree {
@@ -69,7 +80,13 @@ public class DiffMappingTree {
 	    				if(temppath != null && (temppath.startsWith("jar:") || temppath.startsWith("file:"))) {
 	    					ImageIcon icon;
 							try {
-								icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(temppath)),50,50));
+//								if(temppath.endsWith(".webp")) {
+//									icon = getwebpImage(temppath);
+//									
+//								}else {
+									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(temppath)),50,50));
+//								}
+								
 								userdata.setImageIcon(icon);
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
@@ -145,9 +162,11 @@ public class DiffMappingTree {
 	        	for(int i=0; i< libList.length; i++) {
 					long size = ZipFileUtil.getFileSize(apkInfo.filePath, libList[i]);
 					long compressed = ZipFileUtil.getCompressedSize(apkInfo.filePath, libList[i]);
-					String temp = libList[i] + FileUtil.getFileSize(size, FSStyle.FULL) + " - " +
-							String.format("%.2f", ((float)(size - compressed) / (float)size) * 100f) + " %";							
-					TabfolderchildNode.add(new SortNode(new DiffTreeUserData(temp)));
+					String temp = libList[i];
+					FileDiffTreeUserData libuserdata = new FileDiffTreeUserData(temp, "Lib");
+					libuserdata.setFilesInfo(FileUtil.getFileSize(size, FSStyle.FULL), String.format("%.2f", ((float)(size - compressed) / (float)size) * 100f) + " %");
+					
+					TabfolderchildNode.add(new SortNode(libuserdata));
 				}
 	        	
 	        	
@@ -436,4 +455,27 @@ public class DiffMappingTree {
 		}
 		return permissionList.toString();
 	}
+	
+	public static ImageIcon getwebpImage(String path) {
+        WebPImageReader reader = new WebPImageReader(new WebPImageReaderSpi());
+        FileImageInputStream fiis;
+        BufferedImage image = null;
+        
+		try {
+			URL url = new URL(path);
+			JarURLConnection connection = (JarURLConnection) url.openConnection();
+			File file = new File(connection.getJarFileURL().toURI());
+			
+			fiis = new FileImageInputStream(file);
+	        reader.setInput(fiis);
+	        image = reader.read(0, null);
+		} catch (IOException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return new ImageIcon(image);
+	}
+	
+	
 }
