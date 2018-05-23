@@ -39,9 +39,6 @@ import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.ZipFileUtil;
 
-import net.sf.javavp8decoder.imageio.WebPImageReader;
-import net.sf.javavp8decoder.imageio.WebPImageReaderSpi;
-
 import com.apkscanner.util.FileUtil.FSStyle;
 import com.diff.data.ComponentDiffTreeUserData;
 import com.diff.data.DiffTreeUserData;
@@ -483,26 +480,26 @@ public class DiffMappingTree {
 		return permissionList.toString();
 	}
 	
-	public static ImageIcon getwebpImage(String path) {
-        WebPImageReader reader = new WebPImageReader(new WebPImageReaderSpi());
-        FileImageInputStream fiis;
-        BufferedImage image = null;
-        
-		try {
-			URL url = new URL(path);
-			JarURLConnection connection = (JarURLConnection) url.openConnection();
-			File file = new File(connection.getJarFileURL().toURI());
-			
-			fiis = new FileImageInputStream(file);
-	        reader.setInput(fiis);
-	        image = reader.read(0, null);
-		} catch (IOException | URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        return new ImageIcon(image);
-	}
+//	public static ImageIcon getwebpImage(String path) {
+//        WebPImageReader reader = new WebPImageReader(new WebPImageReaderSpi());
+//        FileImageInputStream fiis;
+//        BufferedImage image = null;
+//        
+//		try {
+//			URL url = new URL(path);
+//			JarURLConnection connection = (JarURLConnection) url.openConnection();
+//			File file = new File(connection.getJarFileURL().toURI());
+//			
+//			fiis = new FileImageInputStream(file);
+//	        reader.setInput(fiis);
+//	        image = reader.read(0, null);
+//		} catch (IOException | URISyntaxException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//        return new ImageIcon(image);
+//	}
 	
 	
 }
