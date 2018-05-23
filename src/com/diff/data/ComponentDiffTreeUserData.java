@@ -5,7 +5,6 @@ import java.io.File;
 public class ComponentDiffTreeUserData extends DiffTreeUserData implements MappingImp{
 	File file;
 	String size;
-	String compressed;
 	String reportinfo;
 	
 	public ComponentDiffTreeUserData(String title) {

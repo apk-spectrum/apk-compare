@@ -36,19 +36,16 @@ public class ImageDiffTreeUserData extends DiffTreeUserData implements MappingIm
 		ImageDiffTreeUserData temp = (ImageDiffTreeUserData)data;
 		Log.d(temp.getImageIcon() + ":" + icon);
 		
-		//if(compareImages(temp.getImageIcon(), icon)) {
-		if(true) {
+		if(compareImages(temp.getImageIcon(), icon)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	private boolean compareImages(ImageIcon imgiconA, ImageIcon imgiconB) {
-		
+	private boolean compareImages(ImageIcon imgiconA, ImageIcon imgiconB) {		
 		BufferedImage imgA = bufferImage(imgiconA.getImage());
-		BufferedImage imgB = bufferImage(imgiconB.getImage());
-		
+		BufferedImage imgB = bufferImage(imgiconB.getImage());		
 		// The images must be the same size.
 		if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
 			return false;

@@ -33,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -52,11 +53,13 @@ import javax.swing.tree.TreePath;
 import com.apkscanner.core.scanner.AaptScanner;
 import com.apkscanner.core.scanner.ApkScanner;
 import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.resource.Resource;
 import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
 import com.diff.data.DiffTreeUserData;
 import com.diff.data.FileDiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
+import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	
@@ -76,6 +79,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     JSplitPaneWithZeroSizeDivider splitPane;
 
 	private ApkInfo apkinfodiff1, apkinfodiff2;
+	private JToggleButton btnadd, btneditor, btniden;
 	
     
     public DynamicTreeDemo() {
@@ -143,7 +147,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 					if (SwingUtilities.isLeftMouseButton(e)) {
 						int closestRow = t.getClosestRowForLocation(e.getX(), e.getY());
 						Rectangle closestRowBounds = t.getRowBounds(closestRow);
-
+												
 						if (e.getY() >= closestRowBounds.getY()
 								&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
 							if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
@@ -162,11 +166,19 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 								} else if (e.getClickCount() == 2) {
 									DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
 											.getLastPathComponent());
-									if (!node.isLeaf()) {
+									DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+									
+									if (!node.isLeaf() || temp.isfolder) {
 										if (t.isCollapsed(closestRow)) {
 											t.expandRow(closestRow);
 										} else {
 											t.collapseRow(closestRow);
+										}
+									} else {
+										if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD) {
+											Log.d("open program : " + temp);
+										} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
+											Log.d("open diff program : " + temp.state);
 										}
 									}
 								}
@@ -200,11 +212,31 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		DiffTree.setScrollPane(scrollpane);
 		
 		JPanel temppanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		temppanel.setPreferredSize(new Dimension(0, 50));
+		temppanel.setPreferredSize(new Dimension(0, 48));
 		
-		temppanel.add(new JButton("aaaaa"));
-		temppanel.add(new JButton("aaaaa"));
-		temppanel.add(new JButton("aaaaa"));
+		
+		//https://www.shareicon.net/diff-94479
+		btnadd = new JToggleButton();
+		btneditor = new JToggleButton();
+		btniden = new JToggleButton();
+		
+		for(JToggleButton btn: Arrays.asList(btnadd, btneditor, btniden)) {
+			//btn.setBorderPainted( false );
+			//btn.setContentAreaFilled( false );
+			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+			
+			btn.setFocusPainted(false);
+			btn.addActionListener(this);
+		}
+	    
+		btnadd.setIcon(Resource.IMG_DIFF_TOOLBAR_ADD.getImageIcon());
+		btneditor.setIcon(Resource.IMG_DIFF_TOOLBAR_EDITOR.getImageIcon());
+		btniden.setIcon(Resource.IMG_DIFF_TOOLBAR_IDEN.getImageIcon());
+		
+		
+		temppanel.add(btniden);
+		temppanel.add(btnadd);
+		temppanel.add(btneditor);
 		
 		add(temppanel, BorderLayout.NORTH);
 		add(scrollpane, BorderLayout.CENTER);
@@ -418,7 +450,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-
+        Log.d(e.toString());
     }
 
     /**

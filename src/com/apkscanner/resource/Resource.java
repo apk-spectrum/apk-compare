@@ -426,6 +426,13 @@ public enum Resource
 	IMG_ADD_TO_DESKTOP			(Type.IMAGE, "add-to-desktop.png"),
 	IMG_ASSOCIATE_APK			(Type.IMAGE, "associate.png"),
 	IMG_UNASSOCIATE_APK			(Type.IMAGE, "unassociate.png"),
+	
+	
+	IMG_DIFF_TOOLBAR_ADD			(Type.IMAGE, "diff_toolbar_add.png"),
+	IMG_DIFF_TOOLBAR_EDITOR		(Type.IMAGE, "diff_toolbar_editor.png"),
+	IMG_DIFF_TOOLBAR_IDEN			(Type.IMAGE, "diff_toolbar_iden.png"),
+	
+	
 
 	BIN_PATH					(Type.BIN, ""),	
 

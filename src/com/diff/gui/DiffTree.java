@@ -3,6 +3,7 @@ package com.diff.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -20,6 +22,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.diff.data.DiffTreeUserData;
@@ -41,6 +44,7 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
+	Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
 	
 	public DiffTree(DefaultTreeModel treeModel) {
 		// TODO Auto-generated constructor stub
@@ -49,7 +53,7 @@ class DiffTree extends JTree {
 		setOpaque(false);		
 		setRootVisible(false);
 		//left.setShowsRootHandles(true);
-		setBorder(BorderFactory.createEmptyBorder ( 2, 2, 2, 2 ));
+		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
 		setToggleClickCount(0);
 		final JTree temp = this;
 
@@ -215,7 +219,9 @@ class DiffTree extends JTree {
 				
 				if(temp.Key.equals("Icon")) {
 					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());					
-				}				
+				} else if(temp.isfolder) {
+					l.setIcon(new ImageIcon(foldericon));
+				}
 				
 				l.setOpaque(true);
 			}

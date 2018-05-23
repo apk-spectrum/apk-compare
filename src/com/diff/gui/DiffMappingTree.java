@@ -16,11 +16,14 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.apkscanner.data.apkinfo.ActionInfo;
 import com.apkscanner.data.apkinfo.ActivityAliasInfo;
 import com.apkscanner.data.apkinfo.ActivityInfo;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.data.apkinfo.ApkInfoHelper;
+import com.apkscanner.data.apkinfo.CategoryInfo;
 import com.apkscanner.data.apkinfo.CompatibleScreensInfo;
+import com.apkscanner.data.apkinfo.IntentFilterInfo;
 import com.apkscanner.data.apkinfo.PermissionInfo;
 import com.apkscanner.data.apkinfo.ProviderInfo;
 import com.apkscanner.data.apkinfo.ReceiverInfo;
@@ -222,7 +225,7 @@ public class DiffMappingTree {
 		}
 	}
 	
-	public static void getComponents(ApkInfo apkInfo, SortNode node) {
+	private static void getComponents(ApkInfo apkInfo, SortNode node) {
 		if(apkInfo.manifest.application.activity != null) {
 			SortNode nodetemp = new SortNode(new DiffTreeUserData("activity", true));
 			node.add(nodetemp);
@@ -230,24 +233,19 @@ public class DiffMappingTree {
 			for(ActivityInfo info: apkInfo.manifest.application.activity) {
 				String type = null;
 				if((info.featureFlag & ApkInfo.APP_FEATURE_LAUNCHER) != 0 && (info.featureFlag & ApkInfo.APP_FEATURE_MAIN) != 0) {
-					type = "launcher";
+					type = "[LAUNCHER]";
 				} else if((info.featureFlag & ApkInfo.APP_FEATURE_MAIN) != 0) {
-					type = "main";
+					type = "[MAIN]";
 				} else if((info.featureFlag & ApkInfo.APP_FEATURE_LAUNCHER) != 0) {
 					Log.w("set launcher flag, but not main");
-					type = "activity";
+					type = "";//"ACTIVITY";
 				} else {
-					type = "activity";
+					type = "";//"ACTIVITY";
 				}
-				String startUp = (info.featureFlag & ApkInfo.APP_FEATURE_STARTUP) != 0 ? "O" : "X";
-				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
-				String exported = (info.exported == null) || info.exported ? "O" : "X";
-				String permission = info.permission != null ? "O" : "X";
 				
-				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData("["+ type + "]" + info.name, "Component");
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
 				data.setinforeport(info.getReport());
 				nodetemp.add(new SortNode(data));
-				
 			}
 		}
 		if(apkInfo.manifest.application.activityAlias != null) {
@@ -257,21 +255,17 @@ public class DiffMappingTree {
 			for(ActivityAliasInfo info: apkInfo.manifest.application.activityAlias) {
 				String type = null;
 				if((info.featureFlag & ApkInfo.APP_FEATURE_LAUNCHER) != 0 && (info.featureFlag & ApkInfo.APP_FEATURE_MAIN) != 0) {
-					type = "launcher-alias";
+					type = "[LAUNCHER-ALIAS]";
 				} else if((info.featureFlag & ApkInfo.APP_FEATURE_MAIN) != 0) {
-					type = "main-alias";
+					type = "[MAIN-ALIAS]";
 				} else if((info.featureFlag & ApkInfo.APP_FEATURE_LAUNCHER) != 0) {
 					Log.w("set launcher flag, but not main");
-					type = "activity-alias";
+					type = "";
 				} else {
-					type = "activity-alias";
+					type = "";
 				}
-				String startUp = (info.featureFlag & ApkInfo.APP_FEATURE_STARTUP) != 0 ? "O" : "X";
-				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
-				String exported = (info.exported == null) || info.exported ? "O" : "X";
-				String permission = info.permission != null ? "O" : "X";
 				
-				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData("["+ type + "]" + info.name, "Component");
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
 				data.setinforeport(info.getReport());
 				nodetemp.add(new SortNode(data));
 				
@@ -281,11 +275,7 @@ public class DiffMappingTree {
 			SortNode nodetemp = new SortNode(new DiffTreeUserData("service", true));
 			node.add(nodetemp);
 			
-			for(ServiceInfo info: apkInfo.manifest.application.service) {
-				String startUp = (info.featureFlag & ApkInfo.APP_FEATURE_STARTUP) != 0 ? "O" : "X";
-				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
-				String exported = (info.exported == null) || info.exported ? "O" : "X";
-				String permission = info.permission != null ? "O" : "X"; 
+			for(ServiceInfo info: apkInfo.manifest.application.service) {				
 				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
 				data.setinforeport(info.getReport());
 				nodetemp.add(new SortNode(data));
@@ -296,33 +286,15 @@ public class DiffMappingTree {
 			node.add(nodetemp);
 			
 			for(ReceiverInfo info: apkInfo.manifest.application.receiver) {
-				String startUp = (info.featureFlag & ApkInfo.APP_FEATURE_STARTUP) != 0 ? "O" : "X";
-				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
-				String exported = (info.exported == null) || info.exported ? "O" : "X";
-				String permission = info.permission != null ? "O" : "X"; 
-				
 				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
 				data.setinforeport(info.getReport());
 				nodetemp.add(new SortNode(data));
 			}
 		}
-		if(apkInfo.manifest.application.provider != null) {
-			
+		if(apkInfo.manifest.application.provider != null) {			
 			SortNode nodetemp = new SortNode(new DiffTreeUserData("provider", true));
 			node.add(nodetemp);
-			
-			for(ProviderInfo info: apkInfo.manifest.application.provider) {
-				String startUp = "X";
-				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
-				String exported = (info.exported == null) || info.exported ? "O" : "X";
-				String permission = "X";
-				if(info.permission != null || (info.readPermission != null && info.writePermission != null)) {
-					permission = "R/W"; 
-				} else if(info.readPermission != null) {
-					permission = "Read";
-				} else if(info.writePermission != null) {
-					permission = "Write";
-				}
+			for(ProviderInfo info: apkInfo.manifest.application.provider) {				
 				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
 				data.setinforeport(info.getReport());
 				nodetemp.add(new SortNode(data));
@@ -332,7 +304,7 @@ public class DiffMappingTree {
 	}
 	
 	
-	public static Object[] getfeature(ApkInfo apkInfo) {
+	private static Object[] getfeature(ApkInfo apkInfo) {
 		ArrayList<String> str = new ArrayList<String>();
 		
 		String installLocation = apkInfo.manifest.installLocation;
@@ -411,7 +383,7 @@ public class DiffMappingTree {
 	}
 	
 	
-	public static String getPermissionString(ApkInfo apkInfo) {
+	private static String getPermissionString(ApkInfo apkInfo) {
 		String deprecatedPermissions = "";
 
 		boolean isSamsungSign = (apkInfo.featureFlags & ApkInfo.APP_FEATURE_SAMSUNG_SIGN) != 0 ? true : false;
