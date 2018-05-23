@@ -55,6 +55,7 @@ import com.apkscanner.data.apkinfo.ApkInfo;
 import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
 import com.diff.data.DiffTreeUserData;
+import com.diff.data.FileDiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
@@ -222,6 +223,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
     	Log.d("createTreeNode");
+    	
+    	FileDiffTreeUserData.setApkfilepath(apkinfodiff1.filePath, apkinfodiff2.filePath);
     	
     	DiffMappingTree.createTree(apkinfodiff1, leftrootNode);
     	lefttreeModel.reload();

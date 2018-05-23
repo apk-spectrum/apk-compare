@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.imageio.stream.FileImageInputStream;
 import javax.swing.ImageIcon;
@@ -40,18 +41,13 @@ import com.apkscanner.util.Log;
 import com.apkscanner.util.ZipFileUtil;
 
 import com.apkscanner.util.FileUtil.FSStyle;
-import com.diff.data.ComponentDiffTreeUserData;
-import com.diff.data.DiffTreeUserData;
-import com.diff.data.FileDiffTreeUserData;
-import com.diff.data.ImageDiffTreeUserData;
-import com.diff.data.LibDiffTreeUserData;
+import com.diff.data.*;
 
 public class DiffMappingTree {
-	public static String[] allowaddkey = {"Lib","Component","Resource"};
-	
+	public static String[] allowaddkey = {"Lib","Component","Resource", "Sig"};
 	
 	public static void  createTree(ApkInfo apkInfo, SortNode node) {
-	
+		//for apk file path
 		String[] tabfolders = {Resource.STR_TAB_BASIC_INFO.getString(),
 								Resource.STR_TAB_WIDGET.getString(),
 								Resource.STR_TAB_LIB.getString(),
@@ -177,14 +173,13 @@ public class DiffMappingTree {
 	        	
 	        	
 	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){	        	
-	        	String[] nameList = apkInfo.resources;	        	
+	        	String[] nameList = apkInfo.resources;
 	        	for(int i=0; i< nameList.length; i++) {
 	        		
 	        		String resPath = apkInfo.tempWorkPath + File.separator + nameList[i].replace("/", File.separator);
 	        		File resFile = new File(resPath);	        		
 	        		FileDiffTreeUserData tempdata = new FileDiffTreeUserData(nameList[i], "Resource");
-	        		tempdata.setFile(resPath, apkInfo.filePath);
-	        		
+	        		tempdata.setFile(resPath);	        		       		
 	        		TabfolderchildNode.add(new SortNode(tempdata));
 	        	}	        	
 	        } else if(tabname.equals(Resource.STR_TAB_ACTIVITY.getString())){
@@ -195,25 +190,34 @@ public class DiffMappingTree {
 				String[] mCertFiles = apkInfo.certFiles;
 				String[] tokenmCertList = apkInfo.ss_tokens;
 				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
-	        	
-				if(mCertList == null) return;
+	        					
 				
-				for(int i=0;i < mCertList.length; i++) {
-					String str = mCertList[i];
+				for(String[] strtemp : Arrays.asList(mCertList, mCertFiles, tokenmCertList, tokenmCertFiles)) {
+					if(strtemp == null) continue;
 					
-					str = "<html>" + str.replace("\n", "<br/>") + "</html>";
+					for(int i=0;i < strtemp.length; i++) {
+						String str = strtemp[i];
+						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
+						if(strtemp == mCertList || strtemp == tokenmCertList) {
+							str = strtemp[i].split(System.getProperty("line.separator"))[0];
+							SigDiffTreeUserData tempdata = new SigDiffTreeUserData(str, "Sig");
+							tempdata.setOrignalSig(strtemp[i]);
+							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
+							//"<html>Hello World!<br/>blahblahblah</html>"					
+							TabfolderchildNode.add(new SortNode(tempdata));
+						} else {
+							str = strtemp[i];
+							SigDiffTreeUserData tempdata = new SigDiffTreeUserData(str, "Sig");
+							tempdata.setFile(str);							
+							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
+							//"<html>Hello World!<br/>blahblahblah</html>"					
+							TabfolderchildNode.add(new SortNode(tempdata));
+						}						
+						
+					}
 					
-					SortNode tempnode = new SortNode(new DiffTreeUserData(str));
-					
-					//"<html>Hello World!<br/>blahblahblah</html>"
-					
-					TabfolderchildNode.add(tempnode);
-					
-					//tempnode.add(new SortNode(new DiffTreeUserData(mCertList[i])));
 					
 				}
-				
-				
 	        }
 		}
 	}
