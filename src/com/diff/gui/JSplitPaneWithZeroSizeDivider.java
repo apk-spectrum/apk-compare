@@ -34,6 +34,8 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
+import com.diff.data.DiffTreeUserData;
+
 /**
  * A JSplitPane that uses a 1 pixel thin visible divider,
  * but a 9 pixel wide transparent drag area.

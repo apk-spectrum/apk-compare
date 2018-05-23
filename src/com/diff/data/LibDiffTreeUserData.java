@@ -1,18 +1,18 @@
-package com.diff.gui;
+package com.diff.data;
 
 import java.io.File;
 
-public class FileDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+public class LibDiffTreeUserData extends DiffTreeUserData implements MappingImp{
 	File file;
 	String size;
 	String compressed;
 	
 	
-	public FileDiffTreeUserData(String title) {
+	public LibDiffTreeUserData(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
-	public FileDiffTreeUserData(String title, String key) {
+	public LibDiffTreeUserData(String title, String key) {
 		super(title, key);
 		// TODO Auto-generated constructor stub
 	}
@@ -26,7 +26,7 @@ public class FileDiffTreeUserData extends DiffTreeUserData implements MappingImp
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
-		FileDiffTreeUserData temp = (FileDiffTreeUserData)data;
+		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;
 		
 		
 		if(temp.size.equals(size) && temp.compressed.equals(compressed)) {

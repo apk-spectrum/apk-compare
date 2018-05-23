@@ -1,5 +1,6 @@
 package com.diff.gui;
 
+import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,6 +11,8 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -49,8 +52,9 @@ import javax.swing.tree.TreePath;
 import com.apkscanner.core.scanner.AaptScanner;
 import com.apkscanner.core.scanner.ApkScanner;
 import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
+import com.diff.data.DiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
@@ -188,6 +192,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		splitPane.setResizeWeight(0.5);
 		scrollpane = new JScrollPane(splitPane);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
+		scrollpane.getVerticalScrollBar().addAdjustmentListener(new TreeAdjustmentListener());
+		
 		expansionListener.setSrollpane(scrollpane);
 		
 		DiffTree.setScrollPane(scrollpane);
@@ -203,6 +209,17 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		add(scrollpane, BorderLayout.CENTER);
 		
     }
+    
+    class TreeAdjustmentListener implements AdjustmentListener {
+    	  public void adjustmentValueChanged(AdjustmentEvent evt) {
+    	    Adjustable source = evt.getAdjustable();
+    	    if (evt.getValueIsAdjusting()) {
+    	      return;
+    	    }
+    	    splitPane.repaint();
+    	  }
+    }
+    
     public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
     	Log.d("createTreeNode");
     	
@@ -236,11 +253,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	    		if(temp.state != DiffTreeUserData.NODE_STATE_NOMAL && mynode.getParent()!= null) {	    			
 	    			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)(new TreePath(mynode.getParent()).getLastPathComponent());
 	    			DiffTreeUserData parenttemp = (DiffTreeUserData)parent.getUserObject();
-	    			parenttemp.setState(temp.state);
+	    			if(parenttemp.state != DiffTreeUserData.NODE_STATE_DIFF) parenttemp.setState(temp.state);
 	    				    			
 	    			if(parenttemp.other != null) {
 		    			DiffTreeUserData parentothertemp = (DiffTreeUserData)((DefaultMutableTreeNode)(parenttemp.other.getLastPathComponent())).getUserObject();
-		    			parentothertemp.setState(temp.state);
+		    			if(parentothertemp.state != DiffTreeUserData.NODE_STATE_DIFF) parentothertemp.setState(temp.state);
 	    			}
 	    		}
     		}
@@ -329,7 +346,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private TreePath find2(JTree tree, TreePath parent, Object[] nodes, int depth, boolean byName, String key) {
         TreeNode node = (TreeNode)parent.getLastPathComponent();
         Object o = node;
-
+        
         // If by name, convert node to a string
         if (byName) {
             o = o.toString();
@@ -354,7 +371,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                     	DiffTreeUserData temp = (DiffTreeUserData)tempNode.getUserObject();
                     	//Log.d(temp.Key + ":" + key);
                     	
-                    	if(temp.Key.equals(key) && temp.Key.length() > 0 && !temp.Key.equals("Lib")) {
+                    	if(temp.Key.equals(key) && temp.Key.length() > 0 && !Arrays.asList(DiffMappingTree.allowaddkey).contains(key)) {
                         	return path;
                         }
 					}

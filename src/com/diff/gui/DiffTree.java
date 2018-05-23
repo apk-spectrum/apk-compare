@@ -22,6 +22,8 @@ import javax.swing.tree.TreePath;
 
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
+import com.diff.data.DiffTreeUserData;
+import com.diff.data.ImageDiffTreeUserData;
 import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.sun.scenario.animation.SplineInterpolator;
 
@@ -170,8 +172,9 @@ class DiffTree extends JTree {
 					// tempSplitPaintData.endposition = 0;
 				}
 				if (tempSplitPaintData.endposition != 0) {
-					splitPane.setsplitPanedata(tempSplitPaintData);					
-				}
+					splitPane.setsplitPanedata(tempSplitPaintData);
+					//splitPane.repaint();
+				}				
 			}
 			
 		}
@@ -211,8 +214,7 @@ class DiffTree extends JTree {
 				else l.setForeground(Color.BLACK);
 				
 				if(temp.Key.equals("Icon")) {
-					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());
-					
+					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());					
 				}				
 				
 				l.setOpaque(true);

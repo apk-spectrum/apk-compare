@@ -32,6 +32,7 @@ import com.apkscanner.data.apkinfo.UsesFeatureInfo;
 import com.apkscanner.data.apkinfo.UsesLibraryInfo;
 import com.apkscanner.data.apkinfo.UsesPermissionInfo;
 import com.apkscanner.data.apkinfo.WidgetInfo;
+import com.apkscanner.gui.tabpanels.Resources.ResourceObject;
 import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.FileUtil;
@@ -42,8 +43,16 @@ import net.sf.javavp8decoder.imageio.WebPImageReader;
 import net.sf.javavp8decoder.imageio.WebPImageReaderSpi;
 
 import com.apkscanner.util.FileUtil.FSStyle;
+import com.diff.data.ComponentDiffTreeUserData;
+import com.diff.data.DiffTreeUserData;
+import com.diff.data.FileDiffTreeUserData;
+import com.diff.data.ImageDiffTreeUserData;
+import com.diff.data.LibDiffTreeUserData;
 
 public class DiffMappingTree {
+	public static String[] allowaddkey = {"Lib","Component","Resource"};
+	
+	
 	public static void  createTree(ApkInfo apkInfo, SortNode node) {
 	
 		String[] tabfolders = {Resource.STR_TAB_BASIC_INFO.getString(),
@@ -163,7 +172,7 @@ public class DiffMappingTree {
 					long size = ZipFileUtil.getFileSize(apkInfo.filePath, libList[i]);
 					long compressed = ZipFileUtil.getCompressedSize(apkInfo.filePath, libList[i]);
 					String temp = libList[i];
-					FileDiffTreeUserData libuserdata = new FileDiffTreeUserData(temp, "Lib");
+					LibDiffTreeUserData libuserdata = new LibDiffTreeUserData(temp, "Lib");
 					libuserdata.setFilesInfo(FileUtil.getFileSize(size, FSStyle.FULL), String.format("%.2f", ((float)(size - compressed) / (float)size) * 100f) + " %");
 					
 					TabfolderchildNode.add(new SortNode(libuserdata));
@@ -172,11 +181,17 @@ public class DiffMappingTree {
 	        	
 	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){	        	
 	        	String[] nameList = apkInfo.resources;	        	
-	        	for(int i=0; i< nameList.length; i++) {	        		
-						TabfolderchildNode.add(new SortNode(new DiffTreeUserData(nameList[i])));				
+	        	for(int i=0; i< nameList.length; i++) {
+	        		
+	        		String resPath = apkInfo.tempWorkPath + File.separator + nameList[i].replace("/", File.separator);
+	        		File resFile = new File(resPath);	        		
+	        		FileDiffTreeUserData tempdata = new FileDiffTreeUserData(nameList[i], "Resource");
+	        		tempdata.setFile(resPath, apkInfo.filePath);
+	        		
+	        		TabfolderchildNode.add(new SortNode(tempdata));
 	        	}	        	
 	        } else if(tabname.equals(Resource.STR_TAB_ACTIVITY.getString())){
-				getComponents(apkInfo, TabfolderchildNode);		        
+				getComponents(apkInfo, TabfolderchildNode);
 	        } else if(tabname.equals(Resource.STR_TAB_CERT.getString())){
         		
 				String[] mCertList = apkInfo.certificates;
@@ -184,6 +199,7 @@ public class DiffMappingTree {
 				String[] tokenmCertList = apkInfo.ss_tokens;
 				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
 	        	
+				if(mCertList == null) return;
 				
 				for(int i=0;i < mCertList.length; i++) {
 					String str = mCertList[i];
@@ -227,7 +243,9 @@ public class DiffMappingTree {
 				String exported = (info.exported == null) || info.exported ? "O" : "X";
 				String permission = info.permission != null ? "O" : "X";
 				
-				nodetemp.add(new SortNode(new DiffTreeUserData(info.name)));
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData("["+ type + "]" + info.name, "Component");
+				data.setinforeport(info.getReport());
+				nodetemp.add(new SortNode(data));
 				
 			}
 		}
@@ -252,7 +270,9 @@ public class DiffMappingTree {
 				String exported = (info.exported == null) || info.exported ? "O" : "X";
 				String permission = info.permission != null ? "O" : "X";
 				
-				nodetemp.add(new SortNode(new DiffTreeUserData(info.name)));
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData("["+ type + "]" + info.name, "Component");
+				data.setinforeport(info.getReport());
+				nodetemp.add(new SortNode(data));
 				
 			}
 		}
@@ -265,7 +285,9 @@ public class DiffMappingTree {
 				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
 				String exported = (info.exported == null) || info.exported ? "O" : "X";
 				String permission = info.permission != null ? "O" : "X"; 
-				nodetemp.add(new SortNode(new DiffTreeUserData(info.name)));
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
+				data.setinforeport(info.getReport());
+				nodetemp.add(new SortNode(data));
 			}
 		}
 		if(apkInfo.manifest.application.receiver != null) {
@@ -277,7 +299,10 @@ public class DiffMappingTree {
 				String enabled = (info.enabled == null) || info.enabled ? "O" : "X";
 				String exported = (info.exported == null) || info.exported ? "O" : "X";
 				String permission = info.permission != null ? "O" : "X"; 
-				nodetemp.add(new SortNode(new DiffTreeUserData(info.name)));
+				
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
+				data.setinforeport(info.getReport());
+				nodetemp.add(new SortNode(data));
 			}
 		}
 		if(apkInfo.manifest.application.provider != null) {
@@ -297,7 +322,9 @@ public class DiffMappingTree {
 				} else if(info.writePermission != null) {
 					permission = "Write";
 				}
-				nodetemp.add(new SortNode(new DiffTreeUserData(info.name)));
+				ComponentDiffTreeUserData data = new ComponentDiffTreeUserData(info.name, "Component");
+				data.setinforeport(info.getReport());
+				nodetemp.add(new SortNode(data));
 				//String startUp = (info.featureFlag & ActivityInfo.ACTIVITY_FEATURE_STARTUP) != 0 ? "O" : "X";
 			}
 		}
