@@ -21,6 +21,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
@@ -49,27 +50,27 @@ class DiffTree extends JTree {
 	
 	public DiffTree() {
 		super();
-		setCellRenderer(new DiffTreeCellRenderer());
-		setOpaque(false);		
-		//setRootVisible(false);
-		//left.setShowsRootHandles(true);
-		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
-		setToggleClickCount(0);
-		final JTree temp = this;
+		initTree();	
 	}
 	
 	public DiffTree(DefaultTreeModel treeModel) {
 		// TODO Auto-generated constructor stub
 		super(treeModel);
+		initTree();
+	}
+	
+	private void initTree() {
+		//getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+	    //getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
+	    //getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		setCellRenderer(new DiffTreeCellRenderer());
-		setOpaque(false);		
+		setOpaque(false);	
 		//setRootVisible(false);
 		//left.setShowsRootHandles(true);
 		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
 		setToggleClickCount(0);
-		final JTree temp = this;
-
 	}
+	
 	public static void setScrollPane(JScrollPane scrollpane) {
 		hostingScrollPane = scrollpane;
 	}
