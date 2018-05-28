@@ -1,4 +1,4 @@
-package com.apkcompare.data;
+package com.apkcompare.data.base;
 
 import javax.swing.tree.TreePath;
 

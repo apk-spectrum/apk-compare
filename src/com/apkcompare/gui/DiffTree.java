@@ -25,8 +25,8 @@ import javax.swing.tree.TreePath;
 import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
-import com.apkcompare.data.DiffTreeUserData;
-import com.apkcompare.data.ImageDiffTreeUserData;
+import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
+import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.sun.scenario.animation.SplineInterpolator;
 
@@ -44,7 +44,8 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
-	Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
+	static Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
+	static Image rooticon = ImageScaler.getScaledImage(Resource.IMG_APK_FILE_ICON.getImageIcon(), 16, 16);
 	
 	public DiffTree() {
 		super();
@@ -86,12 +87,12 @@ class DiffTree extends JTree {
 		splitPane = pane;
 	}
 	
-	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected) {
+	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected, boolean forsplitpane) {
 		DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 		
     	if(isExpanded(row) && !node.isLeaf()){
 			if(selected) {
-				if(selectedtree == this) {
+				if(selectedtree == this || forsplitpane) {
 					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL+1];
 				} else{
 					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL];
@@ -101,10 +102,10 @@ class DiffTree extends JTree {
 			}
 		} else {
 			if(selected) {
-				if(selectedtree == this) {
-					return colorarray[temp.getState()+1];					
+				if(selectedtree == this || forsplitpane) {
+					return colorarray[temp.getState()+1];
 				} else {
-					return colorarray[temp.getState()].darker();								
+					return colorarray[temp.getState()].darker();
 				}
 			} else {
 				if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL) {
@@ -132,7 +133,7 @@ class DiffTree extends JTree {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) o.getLastPathComponent();
 				DiffTreeUserData temp = (DiffTreeUserData) node.getUserObject();
 				int i = this.getRowForPath(o);
-				Color nodecolor = this.getnodeColor(i, node, (getSelectionCount() > 0 && getSelectionRows()[0] == i));
+				Color nodecolor = this.getnodeColor(i, node, (getSelectionCount() > 0 && getSelectionRows()[0] == i), false);
 
 				g.setColor(nodecolor);
 				//Log.d(getRowCount() + "");
@@ -141,7 +142,7 @@ class DiffTree extends JTree {
 
 				// if(this == left) {
 				SplitPaintData tempSplitPaintData = new SplitPaintData();
-				tempSplitPaintData.color = nodecolor;
+				tempSplitPaintData.color = this.getnodeColor(i, node, (getSelectionCount() > 0 && getSelectionRows()[0] == i), true);
 				tempSplitPaintData.index = i;
 				tempSplitPaintData.state = temp.state;
 				tempSplitPaintData.isleaf = node.isLeaf() && !temp.isfolder;
@@ -222,14 +223,16 @@ class DiffTree extends JTree {
 			
 			if(node.getUserObject() instanceof DiffTreeUserData) {
 				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-				Color nodecolor = ((DiffTree) tree).getnodeColor(row,node, selected);
+				Color nodecolor = ((DiffTree) tree).getnodeColor(row,node, selected, false);
 				//l.setBackground(new Color(0,0,0,0));
 				l.setBackground(nodecolor);
 				if(selected && selectedtree == tree) l.setForeground(Color.WHITE);
 				else l.setForeground(Color.BLACK);
 				
-				if(temp.Key.equals("Icon")) {
-					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());					
+				if(temp instanceof ImagePassKeyDiffTreeUserData) {
+					l.setIcon(((ImagePassKeyDiffTreeUserData)temp).getImageIcon());
+				} else if(temp.Key.equals("Root")) {
+					l.setIcon(new ImageIcon(rooticon));
 				} else if(temp.isfolder) {
 					l.setIcon(new ImageIcon(foldericon));
 				}

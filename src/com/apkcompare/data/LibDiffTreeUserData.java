@@ -2,11 +2,13 @@ package com.apkcompare.data;
 
 import java.io.File;
 
-public class LibDiffTreeUserData extends FileDiffTreeUserData implements MappingImp{
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.data.base.MappingImp;
+
+public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData implements MappingImp{
 	File file;
 	String size;
-	String compressed;
-	
+	String compressed;	
 	
 	public LibDiffTreeUserData(String title) {
 		super(title);
@@ -29,7 +31,7 @@ public class LibDiffTreeUserData extends FileDiffTreeUserData implements Mapping
 		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;
 		
 		
-		if(issameFile(title)) {
+		if(issameFile(temp.title, temp.apkfilePath)) {
 			return true;
 		} else {
 			title = title + " : " + size + " : " + compressed;

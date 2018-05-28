@@ -46,12 +46,8 @@ public class DiffMain {
     	javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
-       
-                            	
             	apkScannerDiff1.openApk(diff1path);
             	apkScannerDiff1.setStatusListener(diff1listener);
-            	
-            	
             }
         });
     }
@@ -83,9 +79,6 @@ public class DiffMain {
 				apkScannerDiff2.openApk(diff2path);
 	        	apkScannerDiff2.setStatusListener(diff2listener);
 			} else {
-				
-				
-				
 				newContentPane.createTreeNode(
 						apkScannerDiff1.getApkInfo(),
 						apkScannerDiff2.getApkInfo());

@@ -56,8 +56,10 @@ import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.resource.Resource;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
-import com.apkcompare.data.DiffTreeUserData;
-import com.apkcompare.data.FileDiffTreeUserData;
+import com.apkcompare.data.FilePassKeyDiffTreeUserData;
+import com.apkcompare.data.RootDiffTreeUserData;
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
@@ -253,16 +255,16 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
     	Log.d("createTreeNode");
     	
-        leftrootNode = new SortNode(new DiffTreeUserData("temp", true));
+        leftrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
         lefttreeModel = new DefaultTreeModel(leftrootNode);
 
-        rightrootNode = new SortNode(new DiffTreeUserData("temp", true));
+        rightrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff2.manifest.packageName));
         righttreeModel = new DefaultTreeModel(rightrootNode);
     	
         left.setModel(lefttreeModel);
         right.setModel(righttreeModel);
             	
-    	FileDiffTreeUserData.setApkfilepath(apkinfodiff1.filePath, apkinfodiff2.filePath);
+    	//FilePassKeyDiffTreeUserData.setApkfilepath(apkinfodiff1.filePath, apkinfodiff2.filePath);
     	
     	DiffMappingTree.createTree(apkinfodiff1, leftrootNode);
     	lefttreeModel.reload();
@@ -324,6 +326,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     		for (int i=path.length-1; i>=0;i--) { 
     			patharray[i]= path[i].toString();
     		}
+    		// for root node
+    		patharray[0] = othertree.getModel().getRoot().toString();
+    		
     		
     		TreePath leftTreepath = new TreePath(mynode.getPath()); 
             String str = leftTreepath.toString();
@@ -412,7 +417,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                     	DiffTreeUserData temp = (DiffTreeUserData)tempNode.getUserObject();
                     	//Log.d(temp.Key + ":" + key);
                     	
-                    	if(temp.Key.equals(key) && temp.Key.length() > 0 && !Arrays.asList(DiffMappingTree.allowaddkey).contains(key)) {
+                    	//if(temp.Key.equals(key) && temp.Key.length() > 0 && !Arrays.asList(DiffMappingTree.allowaddkey).contains(key)) {
+                    	if(temp.Key.equals(key) && temp.Key.length() > 0 && !(temp instanceof PassKeyDiffTreeUserData)) {                    	
                         	return path;
                         }
 					}

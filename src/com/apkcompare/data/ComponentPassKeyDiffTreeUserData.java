@@ -2,16 +2,20 @@ package com.apkcompare.data;
 
 import java.io.File;
 
-public class ComponentDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.data.base.MappingImp;
+import com.apkcompare.data.base.PassKeyDiffTreeUserData;
+
+public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData implements MappingImp{
 	File file;
 	String size;
 	String reportinfo;
 	
-	public ComponentDiffTreeUserData(String title) {
+	public ComponentPassKeyDiffTreeUserData(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
-	public ComponentDiffTreeUserData(String title, String key) {
+	public ComponentPassKeyDiffTreeUserData(String title, String key) {
 		super(title, key);
 		// TODO Auto-generated constructor stub
 	}
@@ -24,7 +28,7 @@ public class ComponentDiffTreeUserData extends DiffTreeUserData implements Mappi
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
-		ComponentDiffTreeUserData temp = (ComponentDiffTreeUserData)data;		
+		ComponentPassKeyDiffTreeUserData temp = (ComponentPassKeyDiffTreeUserData)data;		
 
 		if(temp.reportinfo.equals(reportinfo)) {
 			return true;

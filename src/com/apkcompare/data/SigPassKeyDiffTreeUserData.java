@@ -5,16 +5,18 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.data.base.MappingImp;
 import com.apkscanner.util.Log;
 
-public class SigDiffTreeUserData extends FileDiffTreeUserData implements MappingImp{
+public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData implements MappingImp{
 	String original;
 	boolean isFile = true;
-	public SigDiffTreeUserData(String title) {
+	public SigPassKeyDiffTreeUserData(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
-	public SigDiffTreeUserData(String title, String key) {
+	public SigPassKeyDiffTreeUserData(String title, String key) {
 		super(title, key);
 		// TODO Auto-generated constructor stub
 	}
@@ -27,10 +29,10 @@ public class SigDiffTreeUserData extends FileDiffTreeUserData implements Mapping
 	@Override
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
-		SigDiffTreeUserData temp = (SigDiffTreeUserData)data;
+		SigPassKeyDiffTreeUserData temp = (SigPassKeyDiffTreeUserData)data;
 
 		if(isFile) {
-			return issameFile(temp.title);
+			return issameFile(temp.title, temp.apkfilePath);
 		} else {
 			return original.equals(temp.original);
 		}

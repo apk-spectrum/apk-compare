@@ -9,28 +9,35 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.data.base.MappingImp;
+import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkscanner.util.Log;
 
 import sun.misc.IOUtils;
 
-public class FileDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData implements MappingImp{
 	File file;
 	String filepath;
-	static String apkfilePath1;
-	static String apkfilePath2;
+	String apkfilePath;
+	//static String apkfilePath2;
 	
-	public FileDiffTreeUserData(String title) {
+	public FilePassKeyDiffTreeUserData(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
-	public FileDiffTreeUserData(String title, String key) {
+	public FilePassKeyDiffTreeUserData(String title, String key) {
 		super(title, key);
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void setApkfilepath(String mapkfilePath1, String mapkfilePath2) {
-		apkfilePath1 = mapkfilePath1;
-		apkfilePath2 = mapkfilePath2;
+//	public static void setApkfilepath(String mapkfilePath1, String mapkfilePath2) {
+//		apkfilePath1 = mapkfilePath1;
+//		apkfilePath2 = mapkfilePath2;
+//	}
+	
+	public void setApkfilepath(String mapkfilePath1) {
+		apkfilePath = mapkfilePath1;		
 	}
 	
 	public void setFile(String filepath) {
@@ -44,17 +51,17 @@ public class FileDiffTreeUserData extends DiffTreeUserData implements MappingImp
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
-		FileDiffTreeUserData temp = (FileDiffTreeUserData)data;
+		FilePassKeyDiffTreeUserData temp = (FilePassKeyDiffTreeUserData)data;
 		
 		//Log.d(apkfilePath + ":" + temp.apkfilePath);
 		
-		return issameFile(temp.title);
+		return issameFile(temp.title, temp.apkfilePath);
 	}
 	
-	protected boolean issameFile(String path) {
+	protected boolean issameFile(String path, String apkfilePath2) {
 		ZipFile zipFile, zipFile2;
 		try {
-			zipFile = new ZipFile(apkfilePath1);
+			zipFile = new ZipFile(apkfilePath);
 			ZipEntry entry = zipFile.getEntry(title);
 			
 			zipFile2 = new ZipFile(apkfilePath2);

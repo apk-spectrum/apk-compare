@@ -34,7 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.apkcompare.data.DiffTreeUserData;
+import com.apkcompare.data.base.DiffTreeUserData;
 
 /**
  * A JSplitPane that uses a 1 pixel thin visible divider,
@@ -45,7 +45,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 * The size of the transparent drag area.
 	 */
 	private int dividerDragSize = 50;
-	Color defaultColor = new Color(234, 234, 234);
+	Color defaultColor = new Color(234, 234, 234, 1);
 	Color selectdefaultColor = defaultColor.darker();
 	
 	ArrayList<SplitPaintData> leftpaintdata = new ArrayList<SplitPaintData>();
@@ -186,11 +186,11 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 			g.fillRect(0, 0, getWidth(), getHeight());
 			
 			for(int i=0; i<leftpaintdata.size(); i++) {
-				if(leftpaintdata.get(i).color == Color.white) {					
+				if(leftpaintdata.get(i).color == Color.white) {
 					g.setColor(defaultColor);
 				} else {
 					g.setColor(leftpaintdata.get(i).color.darker());
-				}				
+				}
 				//endposition
 					//g.fillRect(0, leftpaintdata.get(i).startposition +1 , getWidth(), 19);
 				//if(leftpaintdata.get(i).endposition != 0) {
