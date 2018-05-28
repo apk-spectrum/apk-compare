@@ -1,4 +1,4 @@
-package com.diff.gui;
+package com.apkcompare.gui;
 
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
@@ -54,10 +54,10 @@ import com.apkscanner.core.scanner.AaptScanner;
 import com.apkscanner.core.scanner.ApkScanner;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.resource.Resource;
-import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
-import com.diff.data.DiffTreeUserData;
-import com.diff.data.FileDiffTreeUserData;
+import com.apkcompare.data.DiffTreeUserData;
+import com.apkcompare.data.FileDiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
@@ -85,11 +85,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     public DynamicTreeDemo() {
         super(new BorderLayout());
 
-        leftrootNode = new SortNode(new DiffTreeUserData("temp"));
-        lefttreeModel = new DefaultTreeModel(leftrootNode);
 
-        rightrootNode = new SortNode(new DiffTreeUserData("temp"));
-        righttreeModel = new DefaultTreeModel(rightrootNode);
 
         splitPane = new JSplitPaneWithZeroSizeDivider();
         
@@ -109,9 +105,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp"), leftrootNode);
     	//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp2"), rightrootNode);
         
-        left = new DiffTree(lefttreeModel);
+        left = new DiffTree();
         //left.setCellRenderer(new LeftTreeCellRenderer());
-        right = new DiffTree(righttreeModel);
+        right = new DiffTree();
         //right.setCellRenderer(new RightTreeCellRenderer());
                 
         left.addFocusListener(fl);
@@ -166,6 +162,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 								} else if (e.getClickCount() == 2) {
 									DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
 											.getLastPathComponent());
+									
 									DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 									
 									if (!node.isLeaf() || temp.isfolder) {
@@ -256,6 +253,15 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
     	Log.d("createTreeNode");
     	
+        leftrootNode = new SortNode(new DiffTreeUserData("temp", true));
+        lefttreeModel = new DefaultTreeModel(leftrootNode);
+
+        rightrootNode = new SortNode(new DiffTreeUserData("temp", true));
+        righttreeModel = new DefaultTreeModel(rightrootNode);
+    	
+        left.setModel(lefttreeModel);
+        right.setModel(righttreeModel);
+            	
     	FileDiffTreeUserData.setApkfilepath(apkinfodiff1.filePath, apkinfodiff2.filePath);
     	
     	DiffMappingTree.createTree(apkinfodiff1, leftrootNode);

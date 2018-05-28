@@ -20,7 +20,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.diff.gui;
+package com.apkcompare.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,7 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.diff.data.DiffTreeUserData;
+import com.apkcompare.data.DiffTreeUserData;
 
 /**
  * A JSplitPane that uses a 1 pixel thin visible divider,

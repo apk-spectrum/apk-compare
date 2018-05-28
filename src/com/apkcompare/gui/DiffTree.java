@@ -1,4 +1,4 @@
-package com.diff.gui;
+package com.apkcompare.gui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -25,9 +25,9 @@ import javax.swing.tree.TreePath;
 import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
-import com.diff.data.DiffTreeUserData;
-import com.diff.data.ImageDiffTreeUserData;
-import com.diff.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkcompare.data.DiffTreeUserData;
+import com.apkcompare.data.ImageDiffTreeUserData;
+import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.sun.scenario.animation.SplineInterpolator;
 
 class DiffTree extends JTree {
@@ -46,12 +46,23 @@ class DiffTree extends JTree {
 	static JScrollPane hostingScrollPane;
 	Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
 	
+	public DiffTree() {
+		super();
+		setCellRenderer(new DiffTreeCellRenderer());
+		setOpaque(false);		
+		//setRootVisible(false);
+		//left.setShowsRootHandles(true);
+		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
+		setToggleClickCount(0);
+		final JTree temp = this;
+	}
+	
 	public DiffTree(DefaultTreeModel treeModel) {
 		// TODO Auto-generated constructor stub
 		super(treeModel);
 		setCellRenderer(new DiffTreeCellRenderer());
 		setOpaque(false);		
-		setRootVisible(false);
+		//setRootVisible(false);
 		//left.setShowsRootHandles(true);
 		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
 		setToggleClickCount(0);

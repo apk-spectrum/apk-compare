@@ -1,4 +1,4 @@
-package com.diff.data;
+package com.apkcompare.data;
 
 import java.io.File;
 

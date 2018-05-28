@@ -1,8 +1,8 @@
-package com.diff.data;
+package com.apkcompare.data;
 
 import java.io.File;
 
-public class LibDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+public class LibDiffTreeUserData extends FileDiffTreeUserData implements MappingImp{
 	File file;
 	String size;
 	String compressed;
@@ -29,7 +29,7 @@ public class LibDiffTreeUserData extends DiffTreeUserData implements MappingImp{
 		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;
 		
 		
-		if(temp.size.equals(size) && temp.compressed.equals(compressed)) {
+		if(issameFile(title)) {
 			return true;
 		} else {
 			title = title + " : " + size + " : " + compressed;

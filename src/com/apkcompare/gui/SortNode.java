@@ -1,4 +1,4 @@
-package com.diff.gui;
+package com.apkcompare.gui;
 
 import java.util.Collections;
 import java.util.Comparator;

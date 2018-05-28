@@ -1,4 +1,4 @@
-package com.diff.gui;
+package com.apkcompare.gui;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -44,7 +44,7 @@ import com.apkscanner.util.Log;
 import com.apkscanner.util.ZipFileUtil;
 
 import com.apkscanner.util.FileUtil.FSStyle;
-import com.diff.data.*;
+import com.apkcompare.data.*;
 
 public class DiffMappingTree {
 	public static String[] allowaddkey = {"Lib","Component","Resource", "Sig"};
