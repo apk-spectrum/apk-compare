@@ -84,7 +84,7 @@ public class DiffMappingTree {
 	        			String temppath = apkInfo.manifest.application.icons[apkInfo.manifest.application.icons.length - 1].name;
 	        			String title = temppath.substring(temppath.lastIndexOf(File.separator) + 1);
 	        			
-	        			ImagePassKeyDiffTreeUserData userdata = new ImagePassKeyDiffTreeUserData(title, "Icon");
+	        			ImageDiffTreeUserData userdata = new ImageDiffTreeUserData(title, "Icon");
 	        			
 	    				if(temppath != null && (temppath.startsWith("jar:") || temppath.startsWith("file:"))) {
 	    					ImageIcon icon;

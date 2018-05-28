@@ -16,7 +16,7 @@ public class DiffMain {
 	static ApkScannerDiffListener diff2listener = new ApkScannerDiffListener();
 	
 	static String diff2path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMMascot/zerofltedcm/DCMMascot.apk";
-	static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMMascot/starqltedcm/DCMMascot.apk";
+	static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMContacts/starqltedcm/DCMContacts.apk";
 	//static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMImadoco/zeroltedcm/DCMImadoco.apk";
 	
     private static void createAndShowGUI() {
