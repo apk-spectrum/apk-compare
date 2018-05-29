@@ -11,13 +11,15 @@ import com.apkscanner.util.Log;
 
 public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData implements MappingImp{
 	String original;
-	boolean isFile = true;
+	boolean isFile;
 	public SigPassKeyDiffTreeUserData(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
 	}
 	public SigPassKeyDiffTreeUserData(String title, String key) {
 		super(title, key);
+		
+		 isFile = true;
 		// TODO Auto-generated constructor stub
 	}
 

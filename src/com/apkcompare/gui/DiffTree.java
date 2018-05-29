@@ -225,6 +225,7 @@ class DiffTree extends JTree {
 			
 			if(node.getUserObject() instanceof DiffTreeUserData) {
 				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+				
 				Color nodecolor = ((DiffTree) tree).getnodeColor(row,node, selected, false);
 				//l.setBackground(new Color(0,0,0,0));
 				l.setBackground(nodecolor);

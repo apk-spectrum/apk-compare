@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -71,8 +72,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private SortNode leftrootNode;
     private SortNode rightrootNode;
     
-    private DefaultTreeModel lefttreeModel;
-    private DefaultTreeModel righttreeModel;
+    private FilteredTreeModel lefttreeModel;
+    private FilteredTreeModel righttreeModel;
     
     private JScrollPane scrollpane;
 // private JScrollPane leftscrollBar;
@@ -81,9 +82,12 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     JSplitPaneWithZeroSizeDivider splitPane;
 
 	private ApkInfo apkinfodiff1, apkinfodiff2;
-	private JToggleButton btnadd, btneditor, btniden;
+	private JToggleButton btnadd, btndiff, btniden;
 	
-    
+	private static String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
+	private static String CMD_TOGGLE_EDITOR = "CMD_TOGGLE_EDITOR";
+	private static String CMD_TOGGLE_IDEN = "CMD_TOGGLE_IDEN";
+	
     public DynamicTreeDemo() {
         super(new BorderLayout());
 
@@ -153,11 +157,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									
 									t.setSelectionRow(closestRow);
 									if (left == t) {
-										DiffTree.setSelectedtree(left);
-									
+										DiffTree.setSelectedtree(left);									
 									} else {
-										DiffTree.setSelectedtree(right);
-									
+										DiffTree.setSelectedtree(right);									
 									}
 									splitPane.repaint();
 									
@@ -167,7 +169,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									
 									DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 									
-									if (!node.isLeaf() || temp.isfolder) {
+									Log.d("" + node.getChildCount());
+									
+									
+									
+									if ((!node.isLeaf() || temp.isfolder) ) {
 										if (t.isCollapsed(closestRow)) {
 											t.expandRow(closestRow);
 										} else {
@@ -216,27 +222,28 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		
 		//https://www.shareicon.net/diff-94479
 		btnadd = new JToggleButton();
-		btneditor = new JToggleButton();
+		btndiff = new JToggleButton();
 		btniden = new JToggleButton();
 		
-		for(JToggleButton btn: Arrays.asList(btnadd, btneditor, btniden)) {
+		btnadd.setIcon(Resource.IMG_DIFF_TOOLBAR_ADD.getImageIcon());
+		btndiff.setIcon(Resource.IMG_DIFF_TOOLBAR_EDITOR.getImageIcon());
+		btniden.setIcon(Resource.IMG_DIFF_TOOLBAR_IDEN.getImageIcon());
+		
+		btnadd.setActionCommand(CMD_TOGGLE_ADD);
+		btndiff.setActionCommand(CMD_TOGGLE_EDITOR);
+		btniden.setActionCommand(CMD_TOGGLE_IDEN);
+				
+		
+		for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
 			//btn.setBorderPainted( false );
 			//btn.setContentAreaFilled( false );
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			
 			btn.setFocusPainted(false);
 			btn.addActionListener(this);
+			btn.setSelected(true);
+			temppanel.add(btn);
 		}
 	    
-		btnadd.setIcon(Resource.IMG_DIFF_TOOLBAR_ADD.getImageIcon());
-		btneditor.setIcon(Resource.IMG_DIFF_TOOLBAR_EDITOR.getImageIcon());
-		btniden.setIcon(Resource.IMG_DIFF_TOOLBAR_IDEN.getImageIcon());
-		
-		
-		temppanel.add(btniden);
-		temppanel.add(btnadd);
-		temppanel.add(btneditor);
-		
 		add(temppanel, BorderLayout.NORTH);
 		add(scrollpane, BorderLayout.CENTER);
 		
@@ -256,10 +263,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	Log.d("createTreeNode");
     	
         leftrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
-        lefttreeModel = new DefaultTreeModel(leftrootNode);
+        lefttreeModel = new FilteredTreeModel(leftrootNode);
 
         rightrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff2.manifest.packageName));
-        righttreeModel = new DefaultTreeModel(rightrootNode);
+        righttreeModel = new FilteredTreeModel(rightrootNode);
     	
         left.setModel(lefttreeModel);
         right.setModel(righttreeModel);
@@ -463,8 +470,59 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         Log.d(e.toString());
+        
+        ArrayList<TreePath> expandedpath = new ArrayList<TreePath>();
+        getPaths(left,new TreePath(leftrootNode.getPath()), true, expandedpath);
+        
+        if(e.getActionCommand() == CMD_TOGGLE_IDEN) {
+        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_IDEN);
+        	righttreeModel.setFilter(FilteredTreeModel.FLAG_IDEN);        	
+        } else if(e.getActionCommand() == CMD_TOGGLE_ADD) {
+        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_ADD);
+        	righttreeModel.setFilter(FilteredTreeModel.FLAG_ADD);
+        } else if(e.getActionCommand() == CMD_TOGGLE_EDITOR) {
+        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_DIFF);
+        	righttreeModel.setFilter(FilteredTreeModel.FLAG_DIFF);
+        }
+        
+        for(int i=0; i< expandedpath.size(); i++) {
+        	left.expandPath(expandedpath.get(i));
+        }        
     }
+    
+    private boolean ishavevisiblenode(JTree tree, TreePath parent) {
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0) {
+			for (Enumeration e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();				
+				TreePath path = parent.pathByAddingChild(n);
+				if(tree.isVisible(path)) {
+					return true;
+				}
+			}
+		}
+		
+    	return false;
+    }
+    
+	private void getPaths(JTree tree, TreePath parent, boolean expanded, List<TreePath> list) {		
+		if (!tree.isVisible(parent)) {
+			return;
+		}
+		
+		if(tree.isExpanded(parent)) {
+			list.add(parent);
+		}
 
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0) {
+			for (Enumeration e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				getPaths(tree, path, expanded, list);
+			}
+		}
+	}
     /**
      * Create the GUI and show it. For thread safety, this method should be
      * invoked from the event-dispatching thread.

@@ -70,6 +70,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData impleme
 			
 			if(entry == null || entry.isDirectory() || entry2 == null || entry2.isDirectory() ) {
 				Log.w("entry was no file " + path);
+				return false;
 			}
 			
 			//is = zipFile.getInputStream(entry);
