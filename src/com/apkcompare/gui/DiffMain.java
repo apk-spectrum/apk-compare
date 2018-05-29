@@ -48,11 +48,11 @@ public class DiffMain {
                 //createAndShowGUI();
 				createAndShowGUI();
 				
-				apkScannerDiff1.openApk(diff1path);
-            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1));
-            	
-            	apkScannerDiff2.openApk(diff2path);
-            	apkScannerDiff2.setStatusListener(new ApkScannerDiffListener(apkScannerDiff2));
+//				apkScannerDiff1.openApk(diff1path);
+//            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1, 0));
+//            	
+//            	apkScannerDiff2.openApk(diff2path);
+//            	apkScannerDiff2.setStatusListener(new ApkScannerDiffListener(apkScannerDiff2, 1));
             	
             	
             	
@@ -62,9 +62,11 @@ public class DiffMain {
 
     static class ApkScannerDiffListener implements ApkScanner.StatusListener {
     	ApkScanner apkScannerDiff;
-    	public ApkScannerDiffListener(ApkScanner scanner) {
+    	int number;
+    	public ApkScannerDiffListener(ApkScanner scanner, int num) {
     		
     		this.apkScannerDiff = scanner;
+    		this.number = num;
 			// TODO Auto-generated constructor stub
 		}
     	
@@ -89,7 +91,7 @@ public class DiffMain {
 		@Override
 		public void onCompleted() {
 			// TODO Auto-generated method stub			
-			newContentPane.createTreeNode(apkScannerDiff.getApkInfo());					
+			newContentPane.createTreeNode(apkScannerDiff.getApkInfo(), number);					
 			
 		}
 

@@ -53,8 +53,11 @@ import javax.swing.tree.TreePath;
 
 import com.apkscanner.core.scanner.AaptScanner;
 import com.apkscanner.core.scanner.ApkScanner;
+import com.apkscanner.core.scanner.ApkScanner.Status;
 import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.gui.util.FileDrop;
 import com.apkscanner.resource.Resource;
+import com.apkcompare.gui.DiffMain.ApkScannerDiffListener;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
 import com.apkcompare.data.FilePassKeyDiffTreeUserData;
@@ -65,15 +68,6 @@ import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
-	
-    //private DiffTree left;
-    //private DiffTree right;
-    
-    //private SortNode leftrootNode;
-    //private SortNode rightrootNode;
-    
-    //private FilteredTreeModel lefttreeModel;
-    //private FilteredTreeModel righttreeModel;
     
     private SortNode[] arraytreeNode = {null, null};
     private DiffTree[] arrayTree = {null, null};
@@ -81,16 +75,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private int LEFT = 0;
     private int RIGHT = 1;
     
-    private int treecount = 0;
-
-    
     private JScrollPane scrollpane;
-// private JScrollPane leftscrollBar;
-// private JScrollPane rightscrollBar;
     
     private JSplitPaneWithZeroSizeDivider splitPane;
     private DiffLoadingPanel[] loadingpanel = {null, null};
-	//private ApkInfo apkinfodiff1, apkinfodiff2;
 	private JToggleButton btnadd, btndiff, btniden;
 	
 	private static String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
@@ -102,6 +90,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         arrayTree[LEFT] = new DiffTree();
         arrayTree[RIGHT] = new DiffTree();
 		
+        initializeTree(arrayTree[LEFT]);
+        initializeTree(arrayTree[RIGHT]);
+        
 //        for (int row=right.getRowCount(); row>=0; row--) {
 //        	right.expandRow(row);
 //        }
@@ -112,6 +103,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         loadingpanel[LEFT] = new DiffLoadingPanel();
         loadingpanel[RIGHT] = new DiffLoadingPanel();
 		
+        setFileDrop();
+        
         MyExpansionListener expansionListener = new MyExpansionListener(arrayTree[0], arrayTree[1]);
         arrayTree[LEFT].addTreeExpansionListener(expansionListener);
         arrayTree[RIGHT].addTreeExpansionListener(expansionListener);
@@ -167,6 +160,55 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		repaint();
     }
     
+    class ApkScannerDiffListener implements ApkScanner.StatusListener {
+    	ApkScanner apkScannerDiff;
+    	int number;
+    	public ApkScannerDiffListener(ApkScanner scanner, int num) {
+    		
+    		this.apkScannerDiff = scanner;
+    		this.number = num;
+			// TODO Auto-generated constructor stub
+		}
+    	
+		@Override
+		public void onStart(long estimatedTime) {
+			// TODO Auto-generated method stub
+			Log.d("onStart()" + estimatedTime);
+		}
+
+		@Override
+		public void onSuccess() {
+			// TODO Auto-generated method stub
+			Log.d("onSuccess()");
+		}
+
+		@Override
+		public void onError(int error) {
+			// TODO Auto-generated method stub
+			Log.d("onError()" + error);
+		}
+
+		@Override
+		public void onCompleted() {
+			// TODO Auto-generated method stub			
+			createTreeNode(apkScannerDiff.getApkInfo(), number);					
+			
+		}
+
+		@Override
+		public void onProgress(int step, String msg) {
+			// TODO Auto-generated method stub
+			Log.d("onProgress()" + step +":" +  msg);
+		}
+
+		@Override
+		public void onStateChanged(Status status) {
+			// TODO Auto-generated method stub
+			Log.d("onProgress()" + status );
+		}
+    	
+    }
+    
     class TreeAdjustmentListener implements AdjustmentListener {
     	  public void adjustmentValueChanged(AdjustmentEvent evt) {
     	    Adjustable source = evt.getAdjustable();
@@ -175,6 +217,29 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	    }
     	    splitPane.repaint();
     	  }
+    }
+    private void setFileDrop() {
+        for(Component com: Arrays.asList(loadingpanel[LEFT], arrayTree[LEFT])) {
+        	new  FileDrop( com, new FileDrop.Listener()
+            {   public void  filesDropped( java.io.File[] files )
+                {   
+            		ApkScanner apkScannerDiff1 = new AaptScanner(null);
+					apkScannerDiff1.openApk(files[0].getAbsolutePath());
+	            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1, LEFT));	            	
+                }
+            });
+        }
+        
+        for(Component com: Arrays.asList(loadingpanel[RIGHT], arrayTree[RIGHT])) {
+        	new  FileDrop( com, new FileDrop.Listener()
+            {   public void  filesDropped( java.io.File[] files )
+                {   
+            		ApkScanner apkScannerDiff1 = new AaptScanner(null);
+					apkScannerDiff1.openApk(files[0].getAbsolutePath());
+	            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1, RIGHT));	            	
+                }
+            });
+        }
     }
     
     private void initializeTree(DiffTree tree) {
@@ -250,31 +315,52 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		}
     }
     
-    public void createTreeNode(ApkInfo apkinfodiff1) {
+    public void createTreeNode(ApkInfo apkinfodiff1, int num) {
     	Log.d("createTreeNode");
     	
-    	int index = treecount++;
+    	int index = num;
+    	
     	Log.d("index : " + index);
-    	
-    	initializeTree(arrayTree[index]);
-    	
+    	    	
     	arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
     	arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
         
-    	arrayTree[index].setModel(arrayTreemodel[index]);
+    	loadingpanel[index].setshow(DiffLoadingPanel.LOADING);
+    	setSplitComponent(loadingpanel[index], index);
+    	
+    	
         
     	DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
-    	    	
-    	arrayTreemodel[index].reload();
+    	arrayTree[index].setModel(arrayTreemodel[index]);
     	
-    	//DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
-    	    	
-    	if(index==1) {
-    		splitPane.setRightComponent(arrayTree[RIGHT]);
+    	setSplitComponent(arrayTree[index], index);
+    	
+    	
+    	if(arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
+    		for(int i=0;i < 2; i++) {
+	    		loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
+	        	setSplitComponent(loadingpanel[i], i);
+	        	arrayTree[i].setpaintingFlag(false);
+    		}
+    		
     		startDiff();
-    	} else {    		
-    		splitPane.setLeftComponent(arrayTree[LEFT]);
+    		
+    		for(int i=0;i < 2; i++) {
+	    		loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
+	        	setSplitComponent(arrayTree[i], i);
+	        	arrayTreemodel[i].reload();
+	        	arrayTree[i].setpaintingFlag(true);
+    		}
+    		return;
     	}
+    	arrayTreemodel[index].reload();
+    }
+    
+    private void setSplitComponent(Component com, int index) {
+    	
+    	if(index==LEFT) {    		
+    		splitPane.setLeftComponent(com);
+    	} else splitPane.setRightComponent(com);
     }
 
     private void startDiff() {

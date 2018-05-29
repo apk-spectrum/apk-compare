@@ -2,6 +2,7 @@ package com.apkcompare.gui;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,42 +19,49 @@ import com.apkscanner.util.Log;
 
 public class DiffLoadingPanel extends JPanel{
 	ImageIcon imgicon;
+	
+	public static String LOADING = "loading";
+	public static String EMPTY = "empty";
+	
+	private JPanel loading, empty;
+	
+	
 	public DiffLoadingPanel() {
-		super(new BorderLayout());
+		super(new CardLayout());
 		
-		imgicon = Resource.IMG_APK_LOGO.getImageIcon(300, 200);
-		BufferedImage buffer = (BufferedImage)imgicon.getImage();
+		loading = new JPanel(new BorderLayout());
+		empty = new JPanel(new BorderLayout());
 		
-		Graphics g = buffer.getGraphics();
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-		
-		ImageIcon tempimg = new ImageIcon(buffer);
-		
-		JLabel logo = new JLabel(tempimg);
+		JLabel logo = new JLabel(Resource.IMG_APK_LOGO.getImageIcon(300, 200));
 		logo.setOpaque(true);
 		logo.setBackground(Color.white);
 
-		JLabel gif = new JLabel(Resource.IMG_DIFF_DRAG_AND_DROP.getImageIcon());
+		JLabel gif = new JLabel(Resource.IMG_WAIT_BAR.getImageIcon());
 		gif.setOpaque(true);
 		gif.setBackground(Color.white);
 		gif.setPreferredSize(new Dimension(Resource.IMG_WAIT_BAR.getImageIcon().getIconWidth(),Resource.IMG_WAIT_BAR.getImageIcon().getIconHeight()));
 		
-		this.setLayout(new BorderLayout());
+		loading.add(logo, BorderLayout.CENTER);
+		//loading.add(gif, BorderLayout.SOUTH);
+		
+		JLabel emptylabel = new JLabel(Resource.IMG_DIFF_DRAG_AND_DROP.getImageIcon(150, 150));
+		emptylabel.setOpaque(true);
+		emptylabel.setBackground(Color.white);
+		
+		empty.add(emptylabel, BorderLayout.CENTER);
+		
 		this.setOpaque(false);
 		setBackground(Color.white);
 		//add(logo,BorderLayout.NORTH);
-		add(gif,BorderLayout.CENTER);
+		add(loading, LOADING);
+		add(empty, EMPTY);
 		
-		
-		  new  FileDrop( this, new FileDrop.Listener()
-		  {   public void  filesDropped( java.io.File[] files )
-		      {   
-		          // handle file drop
-		          Log.d(files[0].toString());
-		      }   // end filesDropped
-		  }); // end FileDrop.Listener
-		
-		setVisible(true);
+		setshow(EMPTY);
 	}
+	
+	public void setshow(String str) {
+		CardLayout cl = (CardLayout)(getLayout());
+	    cl.show(this, str);
+	}
+	
 }

@@ -49,9 +49,15 @@ class DiffTree extends JTree {
 	static Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
 	static Image rooticon = ImageScaler.getScaledImage(Resource.IMG_APK_FILE_ICON.getImageIcon(), 16, 16);
 	
+	boolean painting = true;
+	
 	public DiffTree() {
 		super();
 		initTree();	
+	}
+	
+	public void setpaintingFlag(boolean flag) {
+		this.painting = flag;
 	}
 	
 	public DiffTree(DefaultTreeModel treeModel) {
@@ -126,6 +132,11 @@ class DiffTree extends JTree {
 		g.fillRect(0, 0, getWidth()+1, getHeight()+1);
 		//g.drawRect(0, 0, getWidth()+1, getHeight()+1);
 		
+		if(!painting) {
+			super.paintComponent(g);
+			return;
+		}
+		
 		if(hostingScrollPane != null && getRowCount() > 0) {
 			List<TreePath> visiblenode = getVisibleNodes(this);
 			
@@ -140,6 +151,8 @@ class DiffTree extends JTree {
 				g.setColor(nodecolor);
 				//Log.d(getRowCount() + "");
 				Rectangle r = getRowBounds(i);
+				
+				
 				g.fillRect(0, r.y, getWidth(), r.height);
 
 				// if(this == left) {
@@ -155,6 +168,11 @@ class DiffTree extends JTree {
 				DiffTree tempothertree = (left == this) ? right : left;
 
 				if (temp.other != null) {
+									
+					if(tempothertree.getPathBounds(temp.other)== null) {
+						Log.d(tempothertree.getPathBounds(temp.other) + "");
+					}
+					
 					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 				} else {
 					if (left == this) {
