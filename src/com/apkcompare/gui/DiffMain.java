@@ -12,11 +12,11 @@ public class DiffMain {
 	private static final ApkScanner apkScannerDiff2 = new AaptScanner(null);
 	private static int Count =0;
 	static DynamicTreeDemo newContentPane;
-	static ApkScannerDiffListener diff1listener = new ApkScannerDiffListener();
-	static ApkScannerDiffListener diff2listener = new ApkScannerDiffListener();
+	static ApkScannerDiffListener diff1listener;
+	static ApkScannerDiffListener diff2listener;
 	
-	static String diff2path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMMascot/zerofltedcm/DCMMascot.apk";
-	static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMMascot/starqltedcm/DCMMascot.apk";
+	static String diff2path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMMagHome/zerofltedcm/DCMMagHome.apk";
+	static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO81/Cinnamon/applications/provisional/JPN/DCM/apps/DCMMagHome/starqltedcm/DCMMagHome.apk";
 	//static String diff1path = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMImadoco/zeroltedcm/DCMImadoco.apk";
 	
     private static void createAndShowGUI() {
@@ -45,15 +45,29 @@ public class DiffMain {
         // creating and showing this application's GUI.
     	javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	createAndShowGUI();
-            	apkScannerDiff1.openApk(diff1path);
-            	apkScannerDiff1.setStatusListener(diff1listener);            	
+                //createAndShowGUI();
+				createAndShowGUI();
+				
+				apkScannerDiff1.openApk(diff1path);
+            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1));
+            	
+            	apkScannerDiff2.openApk(diff2path);
+            	apkScannerDiff2.setStatusListener(new ApkScannerDiffListener(apkScannerDiff2));
+            	
+            	
+            	
             }
         });
     }
 
     static class ApkScannerDiffListener implements ApkScanner.StatusListener {
-
+    	ApkScanner apkScannerDiff;
+    	public ApkScannerDiffListener(ApkScanner scanner) {
+    		
+    		this.apkScannerDiff = scanner;
+			// TODO Auto-generated constructor stub
+		}
+    	
 		@Override
 		public void onStart(long estimatedTime) {
 			// TODO Auto-generated method stub
@@ -74,15 +88,9 @@ public class DiffMain {
 
 		@Override
 		public void onCompleted() {
-			// TODO Auto-generated method stub
-			if(this == diff1listener) {
-				apkScannerDiff2.openApk(diff2path);
-	        	apkScannerDiff2.setStatusListener(diff2listener);
-			} else {
-				newContentPane.createTreeNode(
-						apkScannerDiff1.getApkInfo(),
-						apkScannerDiff2.getApkInfo());
-			}
+			// TODO Auto-generated method stub			
+			newContentPane.createTreeNode(apkScannerDiff.getApkInfo());					
+			
 		}
 
 		@Override

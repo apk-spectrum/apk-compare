@@ -66,22 +66,31 @@ import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	
-    private DiffTree left;
-    private DiffTree right;
+    //private DiffTree left;
+    //private DiffTree right;
     
-    private SortNode leftrootNode;
-    private SortNode rightrootNode;
+    //private SortNode leftrootNode;
+    //private SortNode rightrootNode;
     
-    private FilteredTreeModel lefttreeModel;
-    private FilteredTreeModel righttreeModel;
+    //private FilteredTreeModel lefttreeModel;
+    //private FilteredTreeModel righttreeModel;
+    
+    private SortNode[] arraytreeNode = {null, null};
+    private DiffTree[] arrayTree = {null, null};
+    private FilteredTreeModel[] arrayTreemodel = {null, null};
+    private int LEFT = 0;
+    private int RIGHT = 1;
+    
+    private int treecount = 0;
+
     
     private JScrollPane scrollpane;
 // private JScrollPane leftscrollBar;
 // private JScrollPane rightscrollBar;
     
-    JSplitPaneWithZeroSizeDivider splitPane;
-
-	private ApkInfo apkinfodiff1, apkinfodiff2;
+    private JSplitPaneWithZeroSizeDivider splitPane;
+    private DiffLoadingPanel[] loadingpanel = {null, null};
+	//private ApkInfo apkinfodiff1, apkinfodiff2;
 	private JToggleButton btnadd, btndiff, btniden;
 	
 	private static String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
@@ -90,123 +99,31 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	
     public DynamicTreeDemo() {
         super(new BorderLayout());
-
-
+        arrayTree[LEFT] = new DiffTree();
+        arrayTree[RIGHT] = new DiffTree();
+		
+//        for (int row=right.getRowCount(); row>=0; row--) {
+//        	right.expandRow(row);
+//        }
+//        for (int row=left.getRowCount(); row>=0; row--) {
+//        	left.expandRow(row);
+//        }
+        
+        loadingpanel[LEFT] = new DiffLoadingPanel();
+        loadingpanel[RIGHT] = new DiffLoadingPanel();
+		
+        MyExpansionListener expansionListener = new MyExpansionListener(arrayTree[0], arrayTree[1]);
+        arrayTree[LEFT].addTreeExpansionListener(expansionListener);
+        arrayTree[RIGHT].addTreeExpansionListener(expansionListener);
 
         splitPane = new JSplitPaneWithZeroSizeDivider();
         
-		FocusListener fl = new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				e.getComponent().repaint();
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				e.getComponent().repaint();
-			}
-		};
-
-		
-		//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp"), leftrootNode);
-    	//createChildren(new File("/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/OHIO/Cinnamon/applications/provisional/temp2"), rightrootNode);
-        
-        left = new DiffTree();
-        //left.setCellRenderer(new LeftTreeCellRenderer());
-        right = new DiffTree();
-        //right.setCellRenderer(new RightTreeCellRenderer());
-                
-        left.addFocusListener(fl);
-		left.addTreeSelectionListener(this);
-		
-		right.addFocusListener(fl);
-		right.addTreeSelectionListener(this);
-		
-        for (int row=right.getRowCount(); row>=0; row--) {
-        	right.expandRow(row);
-        }
-        for (int row=left.getRowCount(); row>=0; row--) {
-        	left.expandRow(row);
-        }
-		
-        MyExpansionListener expansionListener = new MyExpansionListener(left, right);
-
-        left.addTreeExpansionListener(expansionListener);
-        right.addTreeExpansionListener(expansionListener);
-        
-        
-        DiffTree.setleftrighttree(left,right);
+        DiffTree.setleftrighttree(arrayTree[LEFT],arrayTree[RIGHT]);
         DiffTree.setJSplitPane(splitPane);
-        //right.setSelectionModel(left.getSelectionModel());
-
-//        for (int row=right.getRowCount(); row>=0; row--) {
-//        	right.collapseRow(row);
-//        }
-		for (final JTree t : Arrays.asList(left, right)) {
-			MouseAdapter fRowSelectionListener = new MouseAdapter() {
-				public void mousePressed(MouseEvent e) {
-					// Log.d("click : " + e.getClickCount());
-					if (SwingUtilities.isLeftMouseButton(e)) {
-						int closestRow = t.getClosestRowForLocation(e.getX(), e.getY());
-						Rectangle closestRowBounds = t.getRowBounds(closestRow);
-												
-						if (e.getY() >= closestRowBounds.getY()
-								&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
-							if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
-								if (e.getClickCount() == 1) {
-									
-									t.setSelectionRow(closestRow);
-									if (left == t) {
-										DiffTree.setSelectedtree(left);									
-									} else {
-										DiffTree.setSelectedtree(right);									
-									}
-									splitPane.repaint();
-									
-								} else if (e.getClickCount() == 2) {
-									DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
-											.getLastPathComponent());
-									
-									DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-									
-									Log.d("" + node.getChildCount());
-									
-									
-									
-									if ((!node.isLeaf() || temp.isfolder) ) {
-										if (t.isCollapsed(closestRow)) {
-											t.expandRow(closestRow);
-										} else {
-											t.collapseRow(closestRow);
-										}
-									} else {
-										if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD) {
-											Log.d("open program : " + temp);
-										} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
-											Log.d("open diff program : " + temp.state);
-										}
-									}
-								}
-							}
-						} // else
-							// temp.setSelectionRow(-1);
-					}
-				}
-			};
-			t.addMouseListener(fRowSelectionListener);
-		}
-        
-//        leftscrollBar = new JScrollPane(left,
-//        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-//        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        
-//        rightscrollBar = new JScrollPane(right,
-//                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-//                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     	
 		splitPane.setDividerLocation(400);
-		splitPane.setLeftComponent(left);
-		splitPane.setRightComponent(right);
+		splitPane.setLeftComponent(loadingpanel[LEFT]);
+		splitPane.setRightComponent(loadingpanel[RIGHT]);
 		splitPane.setResizeWeight(0.5);
 		scrollpane = new JScrollPane(splitPane);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
@@ -247,6 +164,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		add(temppanel, BorderLayout.NORTH);
 		add(scrollpane, BorderLayout.CENTER);
 		
+		repaint();
     }
     
     class TreeAdjustmentListener implements AdjustmentListener {
@@ -259,35 +177,117 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	  }
     }
     
-    public void createTreeNode(ApkInfo apkinfodiff1, ApkInfo apkinfodiff2) {
-    	Log.d("createTreeNode");
-    	
-        leftrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
-        lefttreeModel = new FilteredTreeModel(leftrootNode);
+    private void initializeTree(DiffTree tree) {
+    	FocusListener fl = new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				e.getComponent().repaint();
+			}
 
-        rightrootNode = new SortNode(new RootDiffTreeUserData(apkinfodiff2.manifest.packageName));
-        righttreeModel = new FilteredTreeModel(rightrootNode);
+			@Override
+			public void focusLost(FocusEvent e) {
+				e.getComponent().repaint();
+			}
+		};
     	
-        left.setModel(lefttreeModel);
-        right.setModel(righttreeModel);
-            	
-    	//FilePassKeyDiffTreeUserData.setApkfilepath(apkinfodiff1.filePath, apkinfodiff2.filePath);
-    	
-    	DiffMappingTree.createTree(apkinfodiff1, leftrootNode);
-    	lefttreeModel.reload();
-    	
-    	DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
-    	righttreeModel.reload();
-    	
-    	mappingtree(leftrootNode, right);
-    	mappingtree(rightrootNode, left);
-    	setfolderstate(leftrootNode);
-    	setfolderstate(rightrootNode);
-    	
-    	repaint();
-    	//DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
+		tree.addFocusListener(fl);
+		tree.addTreeSelectionListener(this);
+		DiffMouseAdapter fRowSelectionListener = new DiffMouseAdapter(tree);
+		tree.addMouseListener(fRowSelectionListener);
+		
+        
     }
     
+    class DiffMouseAdapter extends MouseAdapter {
+    	JTree t;
+    	public DiffMouseAdapter(JTree tree) {
+    		this.t = tree;
+    	}
+    	
+		public void mousePressed(MouseEvent e) {
+			// Log.d("click : " + e.getClickCount());
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				int closestRow = t.getClosestRowForLocation(e.getX(), e.getY());
+				Rectangle closestRowBounds = t.getRowBounds(closestRow);
+										
+				if (e.getY() >= closestRowBounds.getY()
+						&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
+					if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
+						if (e.getClickCount() == 1) {
+							
+							t.setSelectionRow(closestRow);
+							if (arrayTree[LEFT] == t) {
+								DiffTree.setSelectedtree(arrayTree[LEFT]);									
+							} else {
+								DiffTree.setSelectedtree(arrayTree[RIGHT]);
+							}
+							splitPane.repaint();
+							
+						} else if (e.getClickCount() == 2) {
+							DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
+									.getLastPathComponent());
+							
+							DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+							
+							if ((!node.isLeaf() || temp.isfolder) ) {
+								if (t.isCollapsed(closestRow)) {
+									t.expandRow(closestRow);
+								} else {
+									t.collapseRow(closestRow);
+								}
+							} else {
+								if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD) {
+									Log.d("open program : " + temp);
+								} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
+									Log.d("open diff program : " + temp.state);
+								}
+							}
+						}
+					}
+				} // else
+					// temp.setSelectionRow(-1);
+			}
+		}
+    }
+    
+    public void createTreeNode(ApkInfo apkinfodiff1) {
+    	Log.d("createTreeNode");
+    	
+    	int index = treecount++;
+    	Log.d("index : " + index);
+    	
+    	initializeTree(arrayTree[index]);
+    	
+    	arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
+    	arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
+        
+    	arrayTree[index].setModel(arrayTreemodel[index]);
+        
+    	DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
+    	    	
+    	arrayTreemodel[index].reload();
+    	
+    	//DiffMappingTree.createTree(apkinfodiff2, rightrootNode);
+    	    	
+    	if(index==1) {
+    		splitPane.setRightComponent(arrayTree[RIGHT]);
+    		startDiff();
+    	} else {    		
+    		splitPane.setLeftComponent(arrayTree[LEFT]);
+    	}
+    }
+
+    private void startDiff() {
+    	mappingtree(arraytreeNode[LEFT], arrayTree[RIGHT]);
+    	mappingtree(arraytreeNode[RIGHT], arrayTree[LEFT]);
+    	
+    	setfolderstate(arraytreeNode[LEFT]);
+    	setfolderstate(arraytreeNode[RIGHT]);
+    	
+    	arrayTreemodel[LEFT].reload();
+    	arrayTreemodel[RIGHT].reload();
+    	repaint();
+    }
     
     private void setfolderstate(SortNode rootmynode) {
     	
@@ -443,28 +443,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         // No match at this branch
         return null;
     }
-    
-    public boolean findText(String nodes) {
-        String[] parts = nodes.split(", ");
-        TreePath path = null;
-        //parts[0] = "temp2";//rightrootNode.getUserObject().toString();
-        
-        for (String part : parts) {
-        	
-            int row = (path==null ? 0 : right.getRowForPath(path));
-            path = right.getNextMatch(part, row, Position.Bias.Forward);
-        
-            Log.d("find : " + part + "   row : "  + row);
-            
-            if (path==null) {
-                return false;
-            }
-        }
-        //left.scrollPathToVisible(path);
-        //left.setSelectionPath(path);
-
-        return path!=null;
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -472,21 +450,21 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         Log.d(e.toString());
         
         ArrayList<TreePath> expandedpath = new ArrayList<TreePath>();
-        getPaths(left,new TreePath(leftrootNode.getPath()), true, expandedpath);
+        getPaths(arrayTree[LEFT],new TreePath(arraytreeNode[LEFT].getPath()), true, expandedpath);
         
         if(e.getActionCommand() == CMD_TOGGLE_IDEN) {
-        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_IDEN);
-        	righttreeModel.setFilter(FilteredTreeModel.FLAG_IDEN);        	
+        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_IDEN);
+        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_IDEN);        	
         } else if(e.getActionCommand() == CMD_TOGGLE_ADD) {
-        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_ADD);
-        	righttreeModel.setFilter(FilteredTreeModel.FLAG_ADD);
+        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_ADD);
+        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_ADD);
         } else if(e.getActionCommand() == CMD_TOGGLE_EDITOR) {
-        	lefttreeModel.setFilter(FilteredTreeModel.FLAG_DIFF);
-        	righttreeModel.setFilter(FilteredTreeModel.FLAG_DIFF);
+        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_DIFF);
+        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_DIFF);
         }
         
         for(int i=0; i< expandedpath.size(); i++) {
-        	left.expandPath(expandedpath.get(i));
+        	arrayTree[LEFT].expandPath(expandedpath.get(i));
         }        
     }
     
@@ -541,11 +519,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
 //			Log.d("is expended : " + ((JTree)e.getSource()).isExpanded(new TreePath(node.getPath())));
 			
-			if(left == (JTree)e.getSource()) {
-				right.setSelectionPath(temp.other);
+			if(arrayTree[LEFT] == (JTree)e.getSource()) {
+				arrayTree[RIGHT].setSelectionPath(temp.other);
 				//Log.d("lefttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf() + " key : " + temp.Key);
 			} else {				
-				left.setSelectionPath(temp.other);
+				arrayTree[LEFT].setSelectionPath(temp.other);
 				//Log.d("righttree state : "+ temp.state + "   me : " + temp.me + "   other : " + temp.other + " isLeaf : " + node.isLeaf()+ " key : " + temp.Key);
 			}
 			splitPane.repaint();
