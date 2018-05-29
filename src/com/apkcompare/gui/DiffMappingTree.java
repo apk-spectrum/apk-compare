@@ -470,9 +470,6 @@ public class DiffMappingTree {
 					ImageIcon icon;
 					icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(path)),16,16));
 					
-					
-					
-					
 					SortNode tempnode = new SortNode(new PermissionDiffTreeUserData(temp.name + "  ["+ temp.protectionLevel+ "]", icon));					
 					childNodeapkinfo.add(tempnode);
 				} catch (MalformedURLException e) {

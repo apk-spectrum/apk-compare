@@ -331,8 +331,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	
         
     	DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
-    	arrayTree[index].setModel(arrayTreemodel[index]);
-    	
+    	arrayTree[index].setModel(arrayTreemodel[index]);    	
     	setSplitComponent(arrayTree[index], index);
     	
     	
@@ -351,6 +350,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        	arrayTreemodel[i].reload();
 	        	arrayTree[i].setpaintingFlag(true);
     		}
+    		
     		return;
     	}
     	arrayTreemodel[index].reload();
@@ -409,9 +409,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
     		
     		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
-    			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {
-    				continue;
-    			}
+//    			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {
+//    				continue;
+//    			}
     		}
     		
     		TreeNode[] path = mynode.getPath();

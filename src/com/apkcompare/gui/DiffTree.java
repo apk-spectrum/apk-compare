@@ -170,7 +170,9 @@ class DiffTree extends JTree {
 				if (temp.other != null) {
 									
 					if(tempothertree.getPathBounds(temp.other)== null) {
-						Log.d(tempothertree.getPathBounds(temp.other) + "");
+						Log.d(tempothertree.getPathBounds(temp.other) + ": " + temp.other);
+						
+						
 					}
 					
 					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
