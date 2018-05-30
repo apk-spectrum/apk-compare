@@ -25,7 +25,7 @@ public class DiffMain {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create and set up the content pane.
-        newContentPane = new DynamicTreeDemo();
+        newContentPane = new DynamicTreeDemo(null);
         newContentPane.setOpaque(true);
         
         frame.setContentPane(newContentPane);
