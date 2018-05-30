@@ -64,6 +64,7 @@ import com.apkscanner.resource.Resource;
 import com.apkcompare.gui.DiffMain.ApkScannerDiffListener;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
+import com.apkcompare.ApkComparer;
 import com.apkcompare.data.FilePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
@@ -72,6 +73,8 @@ import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
+	
+	private ApkComparer apkComparer;
     
     private SortNode[] arraytreeNode = {null, null};
     private DiffTree[] arrayTree = {null, null};
@@ -97,10 +100,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	private static String CARD_LAYOUT_TREE = "card_tree";
 	private static String CARD_LAYOUT_LOADING = "card_loading";
 	
-	ApkScanner []apkScannerDiff  = {new AaptScanner(null), new AaptScanner(null)};
-	
-	
-    public DynamicTreeDemo() {
+    public DynamicTreeDemo(ApkComparer apkComparer) {
         super(new BorderLayout());
         arrayTree[LEFT] = new DiffTree();
         arrayTree[RIGHT] = new DiffTree();
@@ -108,9 +108,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         initializeTree(arrayTree[LEFT]);
         initializeTree(arrayTree[RIGHT]);
         
-        apkScannerDiff[LEFT].setStatusListener(new ApkScannerDiffListener(apkScannerDiff[LEFT], LEFT));
-        apkScannerDiff[RIGHT].setStatusListener(new ApkScannerDiffListener(apkScannerDiff[RIGHT], RIGHT));
-        
+       
         setCardPanel();
         setFileDrop();
         
@@ -181,6 +179,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		add(scrollpane, BorderLayout.CENTER);
 		
 		repaint();
+		
+		this.apkComparer = apkComparer;
+		if(apkComparer != null) {
+			apkComparer.setStatusListener(new ApkComparerListener());
+		}
     }
     private void setEnableToggleBtn(boolean enable) {
     	for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
@@ -188,54 +191,23 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	}
     }
     
-    
-    class ApkScannerDiffListener implements ApkScanner.StatusListener {
-    	ApkScanner apkScannerDiff;
-    	int number;
-    	public ApkScannerDiffListener(ApkScanner scanner, int num) {
-    		
-    		this.apkScannerDiff = scanner;
-    		this.number = num;
-			// TODO Auto-generated constructor stub
-		}
-    	
+    class ApkComparerListener implements ApkComparer.StatusListener {
 		@Override
-		public void onStart(long estimatedTime) {
-			// TODO Auto-generated method stub
-			Log.d("onStart()" + estimatedTime);
+		public void onStart(int position) {
+			loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
+		    	showCardpanel(CARD_LAYOUT_LOADING, position);
 		}
 
 		@Override
-		public void onSuccess() {
-			// TODO Auto-generated method stub
-			Log.d("onSuccess()");
-		}
+		public void onSuccess(int position) { }
 
 		@Override
-		public void onError(int error) {
-			// TODO Auto-generated method stub
-			Log.d("onError()" + error);
-		}
+		public void onError(int position, int error) { }
 
 		@Override
-		public void onCompleted() {
-			// TODO Auto-generated method stub			
-			createTreeNode(apkScannerDiff.getApkInfo(), number);					
-			
+		public void onCompleted(int position) {
+			createTreeNode(apkComparer.getApkInfo(position), position);
 		}
-
-		@Override
-		public void onProgress(int step, String msg) {
-			// TODO Auto-generated method stub
-			Log.d("onProgress()" + step +":" +  msg);
-		}
-
-		@Override
-		public void onStateChanged(Status status) {
-			// TODO Auto-generated method stub
-			Log.d("onProgress()" + status );
-		}
-    	
     }
     
     class TreeAdjustmentListener implements AdjustmentListener {
@@ -275,26 +247,21 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        ((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],CARD_LAYOUT_LOADING);	       
     	}
     }
-    private void openApkFile(String path, int index) {
-		loadingpanel[index].setshow(DiffLoadingPanel.LOADING);
-    	showCardpanel(CARD_LAYOUT_LOADING, index);
-    	apkScannerDiff[index].openApk(path);
-    }    
-    
+
     private void setFileDrop() {
         for(Component com: Arrays.asList(loadingpanel[LEFT], arrayTree[LEFT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
                 {   
-            		openApkFile(files[0].getAbsolutePath(), LEFT);
+            		apkComparer.setApk(LEFT, files[0].getAbsolutePath());
                 }
             });
         }        
         for(Component com: Arrays.asList(loadingpanel[RIGHT], arrayTree[RIGHT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
-                {
-            		openApkFile(files[0].getAbsolutePath(), RIGHT);	            	
+                {   
+            		apkComparer.setApk(RIGHT, files[0].getAbsolutePath());	            	
                 }
             });
         }

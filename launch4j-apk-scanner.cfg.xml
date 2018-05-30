@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>ApkScanner.jar</jar>
-  <outfile>release\ApkScanner.exe</outfile>
+  <jar>ApkCompare.jar</jar>
+  <outfile>release\ApkCompare.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
