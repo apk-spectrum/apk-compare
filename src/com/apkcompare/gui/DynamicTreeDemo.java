@@ -107,8 +107,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		
         initializeTree(arrayTree[LEFT]);
         initializeTree(arrayTree[RIGHT]);
-        
-       
+               
         setCardPanel();
         setFileDrop();
         
@@ -195,7 +194,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		@Override
 		public void onStart(int position) {
 			loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
-		    	showCardpanel(CARD_LAYOUT_LOADING, position);
+		    showCardpanel(CARD_LAYOUT_LOADING, position);
+		    loadingpanel[position].repaint();	
 		}
 
 		@Override
@@ -339,48 +339,66 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     public void createTreeNode(final ApkInfo apkinfodiff1, int num) {
-    	Log.d("createTreeNode");
     	
-    	final int index = num;
-    	
-    	Log.d("index : " + index);
-    	    	
-    	pathtextfiled[index].setText(apkinfodiff1.filePath);
-    	pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
-    	
-    	arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
-    	arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
-        
-    	Log.d("start create Tree :" + index);
-		DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);		
-		Log.d("end create Tree :" + index);
+		final int index = num;
+		int otherindex = index == LEFT ? RIGHT : LEFT;
 		
-		arrayTree[index].setModel(arrayTreemodel[index]);
-		showCardpanel(CARD_LAYOUT_TREE, index);
+		Log.d("createTreeNode" + index);
+    	
+		synchronized (arrayTree[index].lock) {
+			arrayTree[index].lock.valueOf(true);
+			pathtextfiled[index].setText(apkinfodiff1.filePath);
+			pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
 
+			arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
+			arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
+
+			Log.d("start create Tree :" + index);
+			DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
+			Log.d("end create Tree :" + index);
+
+			arrayTree[index].setModel(arrayTreemodel[index]);
+			showCardpanel(CARD_LAYOUT_TREE, index);
+			Log.d("notify :" + index);
+			arrayTree[index].lock.valueOf(false);
+			arrayTree[index].lock.notify();
+		}
+		synchronized (arrayTree[otherindex].lock) {
+			try {
+				Log.d("wait other tree :" + index);
+				while (arrayTree[otherindex].lock) {
+					arrayTree[otherindex].lock.wait();
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
 			for (int i = 0; i < 2; i++) {
 				loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
 				showCardpanel(CARD_LAYOUT_LOADING, index);
 				arrayTree[i].setpaintingFlag(false);
 			}
-//			new Thread(){
-//				public void run(){
+			// new Thread(){
+			// public void run(){
 			clearnodepath(arraytreeNode[index != LEFT ? LEFT : RIGHT]);
 
 			startDiff();
+
 			for (int i = 0; i < 2; i++) {
 				loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
 				showCardpanel(CARD_LAYOUT_TREE, index);
 				arrayTreemodel[i].reload();
 				arrayTree[i].setpaintingFlag(true);
 			}
-			setEnableToggleBtn(true);	
-				//}}.start();
-				//return;
+			setEnableToggleBtn(true);
+			// }}.start();
+			return;
 		}
 
-    	arrayTreemodel[index].reload();
+    	arrayTreemodel[index].reload();    	
     }
     
     private void showCardpanel(String str, int index) {

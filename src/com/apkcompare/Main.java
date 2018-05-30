@@ -33,6 +33,10 @@ public class Main {
             }
         });
 
+    	args[0] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMAreaMail/dream2qltedcm/DCMAreaMail_eng.apk";
+    	args[1] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMAreaMail/dream2qltedcm/DCMAreaMail.apk";
+    			
+    	
 		if(args.length > 0) {
 			apkComparer.setApk(ApkComparer.LEFT, args[0]);
 		}

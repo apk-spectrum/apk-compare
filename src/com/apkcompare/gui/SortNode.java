@@ -6,6 +6,8 @@ import java.util.Comparator;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
+import com.apkcompare.data.base.DiffTreeUserData;
+
 public class SortNode extends DefaultMutableTreeNode {
 	public SortNode(Object userObject) {
 		super(userObject);
@@ -14,12 +16,16 @@ public class SortNode extends DefaultMutableTreeNode {
 	@Override
 	public void add(MutableTreeNode newChild) {
 		super.add(newChild);
+		DiffTreeUserData temp = (DiffTreeUserData) ((DefaultMutableTreeNode)newChild).getUserObject();
+		if(!temp.isfolder) {
 		sort();// add to tree and sort immediately use in case the model is
 				// small if large comment it and and call node.sort once
 				// you've added all the children
+		}
 	}
 
 	public void sort() {
+		
 		Collections.sort(children, compare());
 	}
 

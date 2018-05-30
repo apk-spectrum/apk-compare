@@ -51,6 +51,8 @@ class DiffTree extends JTree {
 	
 	boolean painting = true;
 	
+	public Boolean lock= false;
+	
 	public DiffTree() {
 		super();
 		initTree();	
