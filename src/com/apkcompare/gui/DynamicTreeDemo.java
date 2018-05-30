@@ -386,6 +386,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         
     	Log.d("start create Tree :" + index);
 		DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);		
+		Log.d("end create Tree :" + index);
 		
 		arrayTree[index].setModel(arrayTreemodel[index]);
 		showCardpanel(CARD_LAYOUT_TREE, index);
@@ -396,19 +397,19 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 				showCardpanel(CARD_LAYOUT_LOADING, index);
 				arrayTree[i].setpaintingFlag(false);
 			}
-			new Thread(){
-				public void run(){
-					clearnodepath(arraytreeNode[index != LEFT ? LEFT : RIGHT]);
-					
-					startDiff();
-					for (int i = 0; i < 2; i++) {
-						loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
-						showCardpanel(CARD_LAYOUT_TREE, index);
-						arrayTreemodel[i].reload();
-						arrayTree[i].setpaintingFlag(true);
-					}
-					setEnableToggleBtn(true);	
-				}}.start();
+//			new Thread(){
+//				public void run(){
+			clearnodepath(arraytreeNode[index != LEFT ? LEFT : RIGHT]);
+
+			startDiff();
+			for (int i = 0; i < 2; i++) {
+				loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
+				showCardpanel(CARD_LAYOUT_TREE, index);
+				arrayTreemodel[i].reload();
+				arrayTree[i].setpaintingFlag(true);
+			}
+			setEnableToggleBtn(true);	
+				//}}.start();
 				//return;
 		}
 
@@ -423,8 +424,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     private void startDiff() {
+    	Log.d("Start Diff- mapping");
     	mappingtree(arraytreeNode[LEFT], arrayTree[RIGHT]);
     	mappingtree(arraytreeNode[RIGHT], arrayTree[LEFT]);
+    	Log.d("End Diff- mapping");
     	
     	setfolderstate(arraytreeNode[LEFT]);
     	setfolderstate(arraytreeNode[RIGHT]);
