@@ -53,7 +53,7 @@ import com.apkcompare.data.base.DiffTreeUserData;
 public class DiffMappingTree {
 	//public static String[] allowaddkey = {"Lib","Component","Resource", "Sig", "Permission"};
 	
-	public static void  createTree(ApkInfo apkInfo, SortNode node) {
+	public static void  createTree(ApkInfo apkInfo, SortNode node) {		
 		//for apk file path
 		String[] tabfolders = {Resource.STR_TAB_BASIC_INFO.getString(),
 								Resource.STR_TAB_WIDGET.getString(),
@@ -67,6 +67,7 @@ public class DiffMappingTree {
 	        node.add(TabfolderchildNode);
 	        
 	        if(tabname.equals(Resource.STR_TAB_BASIC_INFO.getString())) {
+	        	Log.d("create basic Node");
 	        	String[] apkinfofolders = {"Icon",
 						"Title",
 						"Package",
@@ -142,7 +143,8 @@ public class DiffMappingTree {
 	        		}	        	
 	        	}
 	        } else if(tabname.equals(Resource.STR_TAB_WIDGET.getString())){
-	        	WidgetInfo[] widgets = apkInfo.widgets;
+	        	Log.d("create widget Node");
+	        	
 	        	
 	    		String preferLang = (String)Resource.PROP_PREFERRED_LANGUAGE.getData("");
 	    		for(int i=0; i < apkInfo.widgets.length; i++) {
@@ -169,6 +171,8 @@ public class DiffMappingTree {
 	    		//if(widgets.length ==0) node.remove(TabfolderchildNode);
 	        	
 	        } else if(tabname.equals(Resource.STR_TAB_LIB.getString())){
+	        	Log.d("create Lib Node");
+	        	
 	        	String[] libList = apkInfo.libraries;
 	        	for(int i=0; i< libList.length; i++) {
 					long size = ZipFileUtil.getFileSize(apkInfo.filePath, libList[i]);
@@ -181,7 +185,9 @@ public class DiffMappingTree {
 				}
 	        	
 	        	
-	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){	        	
+	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){
+	        	Log.d("create image Node");
+	        	
 	        	String[] nameList = apkInfo.resources;
 	        	for(int i=0; i< nameList.length; i++) {
 	        		
@@ -193,16 +199,18 @@ public class DiffMappingTree {
 	        		TabfolderchildNode.add(new SortNode(tempdata));
 	        	}	        	
 	        } else if(tabname.equals(Resource.STR_TAB_ACTIVITY.getString())){
+	        	Log.d("create component Node");
 				getComponents(apkInfo, TabfolderchildNode);
 	        } else if(tabname.equals(Resource.STR_TAB_CERT.getString())){
-        		
+	        	Log.d("create cert Node");
+	        	
 				String[] mCertList = apkInfo.certificates;
 				String[] mCertFiles = apkInfo.certFiles;
 				String[] tokenmCertList = apkInfo.ss_tokens;
 				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
 	        					
 				
-				for(String[] strtemp : Arrays.asList(mCertList, mCertFiles, tokenmCertList, tokenmCertFiles)) {
+				for(String[] strtemp : Arrays.asList(mCertList, tokenmCertList, tokenmCertFiles)) {
 					if(strtemp == null) continue;
 					
 					for(int i=0;i < strtemp.length; i++) {
@@ -210,6 +218,7 @@ public class DiffMappingTree {
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
 						if(strtemp == mCertList || strtemp == tokenmCertList) {
 							str = strtemp[i].split(System.getProperty("line.separator"))[0];
+							str = "<html>" + str.replace(", ", "<br/>") + "</html>";
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig");
 							tempdata.setOrignalSig(strtemp[i]);
 							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
@@ -231,6 +240,8 @@ public class DiffMappingTree {
 				}
 	        }
 		}
+		
+		Log.d("End create Tree");
 	}
 
 	private static void getComponents(ApkInfo apkInfo, SortNode node) {

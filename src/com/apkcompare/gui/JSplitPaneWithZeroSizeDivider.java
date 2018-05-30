@@ -45,7 +45,8 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 * The size of the transparent drag area.
 	 */
 	private int dividerDragSize = 50;
-	Color defaultColor = new Color(234, 234, 234, 1);
+	private int y = 0;
+	Color defaultColor = new Color(234, 234, 234);
 	Color selectdefaultColor = defaultColor.darker();
 	
 	ArrayList<SplitPaintData> leftpaintdata = new ArrayList<SplitPaintData>();
@@ -59,8 +60,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 * Default is centered.
 	 */
 	private int dividerDragOffset = 1;
-	private int height=0;
-	
+		
 	static public class SplitPaintData {		
 		int index;
 		int startposition;
@@ -90,6 +90,10 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 				rightpaintdata.set(data.index, data);
 			}
 		}
+	}
+	
+	public void setY(int y) {
+		this.y = y;
 	}
 	
 	public JSplitPaneWithZeroSizeDivider() {
@@ -131,6 +135,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 		if( orientation == HORIZONTAL_SPLIT ) {
 			bounds.x -= dividerDragOffset;
 			bounds.width = dividerDragSize;
+			bounds.y = y;
 		} else {
 			bounds.y -= dividerDragOffset;
 			bounds.height = dividerDragSize;

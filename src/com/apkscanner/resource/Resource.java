@@ -433,7 +433,9 @@ public enum Resource
 	IMG_DIFF_TOOLBAR_IDEN			(Type.IMAGE, "diff_toolbar_iden.png"),
 	IMG_DIFF_DRAG_AND_DROP			(Type.IMAGE, "diff_draganddrop.png"),
 	
-
+	IMG_DIFF_TOOLBAR_SETTING			(Type.IMAGE, "diff_toolbar_setting.png"),
+	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
+	
 	BIN_PATH					(Type.BIN, ""),	
 
 	BIN_ADB_LNX					(Type.BIN, "adb", "nux"),

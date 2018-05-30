@@ -2,6 +2,7 @@ package com.apkcompare.gui;
 
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -34,10 +36,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -72,18 +76,29 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private SortNode[] arraytreeNode = {null, null};
     private DiffTree[] arrayTree = {null, null};
     private FilteredTreeModel[] arrayTreemodel = {null, null};
-    private int LEFT = 0;
-    private int RIGHT = 1;
-    
-    private JScrollPane scrollpane;
-    
-    private JSplitPaneWithZeroSizeDivider splitPane;
     private DiffLoadingPanel[] loadingpanel = {null, null};
 	private JToggleButton btnadd, btndiff, btniden;
+	private JButton btnsetting, btninfo;
+	private JTextField[] pathtextfiled = {null, null};
+	private JPanel[] cardpanel = {null, null};
+	private JButton[] btnfileopen = {null, null};
 	
+    private int LEFT = 0;
+    private int RIGHT = 1;
+    private int textfield_height = 28;
+    
+    private JScrollPane scrollpane;
+    private JSplitPaneWithZeroSizeDivider splitPane;
+    
 	private static String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
 	private static String CMD_TOGGLE_EDITOR = "CMD_TOGGLE_EDITOR";
 	private static String CMD_TOGGLE_IDEN = "CMD_TOGGLE_IDEN";
+	
+	private static String CARD_LAYOUT_TREE = "card_tree";
+	private static String CARD_LAYOUT_LOADING = "card_loading";
+	
+	ApkScanner []apkScannerDiff  = {new AaptScanner(null), new AaptScanner(null)};
+	
 	
     public DynamicTreeDemo() {
         super(new BorderLayout());
@@ -93,34 +108,32 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         initializeTree(arrayTree[LEFT]);
         initializeTree(arrayTree[RIGHT]);
         
-//        for (int row=right.getRowCount(); row>=0; row--) {
-//        	right.expandRow(row);
-//        }
-//        for (int row=left.getRowCount(); row>=0; row--) {
-//        	left.expandRow(row);
-//        }
+        apkScannerDiff[LEFT].setStatusListener(new ApkScannerDiffListener(apkScannerDiff[LEFT], LEFT));
+        apkScannerDiff[RIGHT].setStatusListener(new ApkScannerDiffListener(apkScannerDiff[RIGHT], RIGHT));
         
-        loadingpanel[LEFT] = new DiffLoadingPanel();
-        loadingpanel[RIGHT] = new DiffLoadingPanel();
-		
+        setCardPanel();
         setFileDrop();
         
         MyExpansionListener expansionListener = new MyExpansionListener(arrayTree[0], arrayTree[1]);
         arrayTree[LEFT].addTreeExpansionListener(expansionListener);
         arrayTree[RIGHT].addTreeExpansionListener(expansionListener);
 
+        
         splitPane = new JSplitPaneWithZeroSizeDivider();
         
         DiffTree.setleftrighttree(arrayTree[LEFT],arrayTree[RIGHT]);
         DiffTree.setJSplitPane(splitPane);
     	
-		splitPane.setDividerLocation(400);
-		splitPane.setLeftComponent(loadingpanel[LEFT]);
-		splitPane.setRightComponent(loadingpanel[RIGHT]);
+		//splitPane.setDividerLocation(400);
+		splitPane.setLeftComponent(cardpanel[LEFT]);
+		splitPane.setRightComponent(cardpanel[RIGHT]);
 		splitPane.setResizeWeight(0.5);
+		
+		splitPane.setY(textfield_height+1);
 		scrollpane = new JScrollPane(splitPane);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
 		scrollpane.getVerticalScrollBar().addAdjustmentListener(new TreeAdjustmentListener());
+		scrollpane.getHorizontalScrollBar().addAdjustmentListener(new TreeAdjustmentListener());
 		
 		expansionListener.setSrollpane(scrollpane);
 		
@@ -131,20 +144,28 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		
 		
 		//https://www.shareicon.net/diff-94479
+		//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
+		//https://www.shareicon.net/setting-598385
+		
 		btnadd = new JToggleButton();
 		btndiff = new JToggleButton();
 		btniden = new JToggleButton();
+		
+		btnsetting = new JButton();
+		btninfo = new JButton();
 		
 		btnadd.setIcon(Resource.IMG_DIFF_TOOLBAR_ADD.getImageIcon());
 		btndiff.setIcon(Resource.IMG_DIFF_TOOLBAR_EDITOR.getImageIcon());
 		btniden.setIcon(Resource.IMG_DIFF_TOOLBAR_IDEN.getImageIcon());
 		
+		btnsetting.setIcon(Resource.IMG_DIFF_TOOLBAR_SETTING.getImageIcon());
+		btninfo.setIcon(Resource.IMG_DIFF_TOOLBAR_INFO.getImageIcon());
+		
 		btnadd.setActionCommand(CMD_TOGGLE_ADD);
 		btndiff.setActionCommand(CMD_TOGGLE_EDITOR);
 		btniden.setActionCommand(CMD_TOGGLE_IDEN);
-				
 		
-		for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
+		for(AbstractButton btn: Arrays.asList(btniden, btnadd, btndiff, btnsetting, btninfo)) {
 			//btn.setBorderPainted( false );
 			//btn.setContentAreaFilled( false );
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
@@ -153,12 +174,20 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			btn.setSelected(true);
 			temppanel.add(btn);
 		}
+		
+		setEnableToggleBtn(false);
 	    
 		add(temppanel, BorderLayout.NORTH);
 		add(scrollpane, BorderLayout.CENTER);
 		
 		repaint();
     }
+    private void setEnableToggleBtn(boolean enable) {
+    	for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
+    		btn.setEnabled(enable);
+    	}
+    }
+    
     
     class ApkScannerDiffListener implements ApkScanner.StatusListener {
     	ApkScanner apkScannerDiff;
@@ -212,31 +241,60 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     class TreeAdjustmentListener implements AdjustmentListener {
     	  public void adjustmentValueChanged(AdjustmentEvent evt) {
     	    Adjustable source = evt.getAdjustable();
-    	    if (evt.getValueIsAdjusting()) {
-    	      return;
-    	    }
+//    	    if (evt.getValueIsAdjusting()) {
+//    	      return;
+//    	    }
     	    splitPane.repaint();
     	  }
     }
+    
+    private void setCardPanel() {
+    	JPanel []bordertreepanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
+    	JPanel []pathpanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
+    	
+    	for(int index=0;index <2; index++) {
+	    	cardpanel[index] = new JPanel(new CardLayout());	        
+	        loadingpanel[index] = new DiffLoadingPanel();	        
+	        pathtextfiled[index] = new JTextField();
+	        btnfileopen[index] = new JButton(Resource.IMG_TREE_MENU_OPEN.getImageIcon());
+	        btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
+	        btnfileopen[index].setPreferredSize(new Dimension(textfield_height, textfield_height));
+	        
+	        pathtextfiled[index].setPreferredSize(new Dimension(0, textfield_height));
+	                
+	        pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
+	        pathpanel[index].add(btnfileopen[index], BorderLayout.EAST);
+	        
+	        bordertreepanel[index].add(pathpanel[index], BorderLayout.NORTH);
+	        
+	        bordertreepanel[index].add(arrayTree[index], BorderLayout.CENTER);
+	        
+	        cardpanel[index].add(bordertreepanel[index], CARD_LAYOUT_TREE);
+	        cardpanel[index].add(loadingpanel[index], CARD_LAYOUT_LOADING);
+	        
+	        ((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],CARD_LAYOUT_LOADING);	       
+    	}
+    }
+    private void openApkFile(String path, int index) {
+		loadingpanel[index].setshow(DiffLoadingPanel.LOADING);
+    	showCardpanel(CARD_LAYOUT_LOADING, index);
+    	apkScannerDiff[index].openApk(path);
+    }    
+    
     private void setFileDrop() {
         for(Component com: Arrays.asList(loadingpanel[LEFT], arrayTree[LEFT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
                 {   
-            		ApkScanner apkScannerDiff1 = new AaptScanner(null);
-					apkScannerDiff1.openApk(files[0].getAbsolutePath());
-	            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1, LEFT));	            	
+            		openApkFile(files[0].getAbsolutePath(), LEFT);
                 }
             });
-        }
-        
+        }        
         for(Component com: Arrays.asList(loadingpanel[RIGHT], arrayTree[RIGHT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
-                {   
-            		ApkScanner apkScannerDiff1 = new AaptScanner(null);
-					apkScannerDiff1.openApk(files[0].getAbsolutePath());
-	            	apkScannerDiff1.setStatusListener(new ApkScannerDiffListener(apkScannerDiff1, RIGHT));	            	
+                {
+            		openApkFile(files[0].getAbsolutePath(), RIGHT);	            	
                 }
             });
         }
@@ -259,8 +317,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		tree.addTreeSelectionListener(this);
 		DiffMouseAdapter fRowSelectionListener = new DiffMouseAdapter(tree);
 		tree.addMouseListener(fRowSelectionListener);
-		
-        
     }
     
     class DiffMouseAdapter extends MouseAdapter {
@@ -315,54 +371,57 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		}
     }
     
-    public void createTreeNode(ApkInfo apkinfodiff1, int num) {
+    public void createTreeNode(final ApkInfo apkinfodiff1, int num) {
     	Log.d("createTreeNode");
     	
-    	int index = num;
+    	final int index = num;
     	
     	Log.d("index : " + index);
     	    	
+    	pathtextfiled[index].setText(apkinfodiff1.filePath);
+    	pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
+    	
     	arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1.manifest.packageName));
     	arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
         
-    	loadingpanel[index].setshow(DiffLoadingPanel.LOADING);
-    	setSplitComponent(loadingpanel[index], index);
-    	
-    	
-        
-    	DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
-    	arrayTree[index].setModel(arrayTreemodel[index]);    	
-    	setSplitComponent(arrayTree[index], index);
-    	
-    	
-    	if(arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
-    		for(int i=0;i < 2; i++) {
-	    		loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
-	        	setSplitComponent(loadingpanel[i], i);
-	        	arrayTree[i].setpaintingFlag(false);
-    		}
-    		
-    		startDiff();
-    		
-    		for(int i=0;i < 2; i++) {
-	    		loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
-	        	setSplitComponent(arrayTree[i], i);
-	        	arrayTreemodel[i].reload();
-	        	arrayTree[i].setpaintingFlag(true);
-    		}
-    		
-    		return;
-    	}
+    	Log.d("start create Tree :" + index);
+		DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);		
+		
+		arrayTree[index].setModel(arrayTreemodel[index]);
+		showCardpanel(CARD_LAYOUT_TREE, index);
+
+		if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
+			for (int i = 0; i < 2; i++) {
+				loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
+				showCardpanel(CARD_LAYOUT_LOADING, index);
+				arrayTree[i].setpaintingFlag(false);
+			}
+			new Thread(){
+				public void run(){
+					clearnodepath(arraytreeNode[index != LEFT ? LEFT : RIGHT]);
+					
+					startDiff();
+					for (int i = 0; i < 2; i++) {
+						loadingpanel[i].setshow(DiffLoadingPanel.EMPTY);
+						showCardpanel(CARD_LAYOUT_TREE, index);
+						arrayTreemodel[i].reload();
+						arrayTree[i].setpaintingFlag(true);
+					}
+					setEnableToggleBtn(true);	
+				}}.start();
+				//return;
+		}
+
     	arrayTreemodel[index].reload();
     }
     
-    private void setSplitComponent(Component com, int index) {
-    	
+    private void showCardpanel(String str, int index) {
     	if(index==LEFT) {    		
-    		splitPane.setLeftComponent(com);
-    	} else splitPane.setRightComponent(com);
+    		 ((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
+    	} else  ((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
+    	cardpanel[index].repaint();
     }
-
+    
     private void startDiff() {
     	mappingtree(arraytreeNode[LEFT], arrayTree[RIGHT]);
     	mappingtree(arraytreeNode[RIGHT], arrayTree[LEFT]);
@@ -400,6 +459,19 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	}   	
     }
     
+    private void clearnodepath(SortNode rootmynode) {
+    	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+    	
+    	while (myreenode.hasMoreElements()) {
+    		DefaultMutableTreeNode mynode = myreenode.nextElement();
+    		
+    		DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
+    		
+    		temp.me = null;
+    		temp.other = null;
+    	}
+    }
+    
     private void mappingtree(SortNode rootmynode, JTree othertree) {
     	
     	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
@@ -409,9 +481,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
     		
     		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
-//    			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {
-//    				continue;
-//    			}
+    			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {
+    				continue;
+    			}
     		}
     		
     		TreeNode[] path = mynode.getPath();
@@ -533,25 +605,28 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        Log.d(e.toString());
+        //Log.d(e.toString());
         
-        ArrayList<TreePath> expandedpath = new ArrayList<TreePath>();
-        getPaths(arrayTree[LEFT],new TreePath(arraytreeNode[LEFT].getPath()), true, expandedpath);
-        
-        if(e.getActionCommand() == CMD_TOGGLE_IDEN) {
-        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_IDEN);
-        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_IDEN);        	
-        } else if(e.getActionCommand() == CMD_TOGGLE_ADD) {
-        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_ADD);
-        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_ADD);
-        } else if(e.getActionCommand() == CMD_TOGGLE_EDITOR) {
-        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_DIFF);
-        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_DIFF);
+        if(e.getSource() instanceof JToggleButton) {
+        	
+        	if(arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
+		        ArrayList<TreePath> expandedpath = new ArrayList<TreePath>();        
+		        getPaths(arrayTree[LEFT],new TreePath(arraytreeNode[LEFT].getPath()), true, expandedpath);
+		        if(e.getActionCommand() == CMD_TOGGLE_IDEN) {
+		        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_IDEN);
+		        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_IDEN);        	
+		        } else if(e.getActionCommand() == CMD_TOGGLE_ADD) {
+		        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_ADD);
+		        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_ADD);
+		        } else if(e.getActionCommand() == CMD_TOGGLE_EDITOR) {
+		        	arrayTreemodel[LEFT].setFilter(FilteredTreeModel.FLAG_DIFF);
+		        	arrayTreemodel[RIGHT].setFilter(FilteredTreeModel.FLAG_DIFF);
+		        }        
+		        for(int i=0; i< expandedpath.size(); i++) {
+		        	arrayTree[LEFT].expandPath(expandedpath.get(i));
+		        }
+        	}
         }
-        
-        for(int i=0; i< expandedpath.size(); i++) {
-        	arrayTree[LEFT].expandPath(expandedpath.get(i));
-        }        
     }
     
     private boolean ishavevisiblenode(JTree tree, TreePath parent) {
