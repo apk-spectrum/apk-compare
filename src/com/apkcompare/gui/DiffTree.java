@@ -139,7 +139,7 @@ class DiffTree extends JTree {
 			List<TreePath> visiblenode = getVisibleNodes(this);
 			
 			for (int k = 0; k < visiblenode.size(); k++) {
-				g.setColor(Color.WHITE);				
+				g.setColor(Color.WHITE);
 				TreePath o = visiblenode.get(k);
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) o.getLastPathComponent();
 				DiffTreeUserData temp = (DiffTreeUserData) node.getUserObject();
@@ -165,13 +165,16 @@ class DiffTree extends JTree {
 
 				DiffTree tempothertree = (left == this) ? right : left;
 
+				//exception working diff 
+
+				
 				if (temp.other != null) {
-									
 					if(tempothertree.getPathBounds(temp.other)== null) {
 						Log.d(tempothertree.getPathBounds(temp.other) + ": " + temp.other);
+						tempSplitPaintData.endposition = tempSplitPaintData.startposition;
+					} else {
+						tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 					}
-					
-					tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
 				} else {
 					if (left == this) {
 						for (int j = i; j >= 0; j--) {
@@ -208,7 +211,7 @@ class DiffTree extends JTree {
 				if (tempSplitPaintData.endposition != 0) {
 					splitPane.setsplitPanedata(tempSplitPaintData);
 					//splitPane.repaint();
-				}				
+				}
 			}
 			
 		}

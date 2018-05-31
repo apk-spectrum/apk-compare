@@ -37,8 +37,7 @@ public class ImageDiffTreeUserData extends DiffTreeUserData implements MappingIm
 	@Override
 	public boolean compare(DiffTreeUserData data) {
 		ImageDiffTreeUserData temp = (ImageDiffTreeUserData)data;
-		Log.d(temp.getImageIcon() + ":" + icon);
-		
+				
 		if(compareImages(temp.getImageIcon(), icon)) {
 			return true;
 		} else {
