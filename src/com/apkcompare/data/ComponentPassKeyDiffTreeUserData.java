@@ -6,6 +6,7 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.util.Log;
 
 public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
@@ -33,7 +34,7 @@ public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 
 		if(temp.reportinfo.equals(reportinfo)) {
 			return true;
-		} else {
+		} else {			
 			return false;
 		}
 		
@@ -41,9 +42,7 @@ public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	@Override
-	public void openFileNode(ApkInfo apkinfo) {
-		// TODO Auto-generated method stub
-		openString(reportinfo, apkinfo);
-		
+	public File makeFilebyNode(ApkInfo apkinfo) {
+		return makeFileForString(reportinfo, apkinfo);
 	}
 }

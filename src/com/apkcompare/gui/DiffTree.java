@@ -24,6 +24,7 @@ import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkcompare.data.ImageDiffTreeUserData;
 import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
+import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 
@@ -257,7 +258,7 @@ class DiffTree extends JTree {
 					l.setIcon(((ImagePassKeyDiffTreeUserData)temp).getImageIcon());
 				} else if(temp instanceof ImageDiffTreeUserData) {
 					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());
-				} else if(temp.Key.equals("Root")) {
+				} else if(temp instanceof RootDiffTreeUserData) {
 					l.setIcon(new ImageIcon(rooticon));
 				} else if(temp.isfolder) {
 					l.setIcon(new ImageIcon(foldericon));

@@ -72,7 +72,7 @@ public class DiffTreeUserData implements MappingImp{
     	return this.state;
     }
 
-    protected void openFile(String filePath, ApkInfo apkinfo) {
+    protected File makeFileForFile(String filePath, ApkInfo apkinfo) {
     	Log.d("open file : " + filePath);
 		String resPath = apkinfo.tempWorkPath + File.separator + filePath.replace("/", File.separator);
 		File resFile = new File(resPath);
@@ -108,7 +108,7 @@ public class DiffTreeUserData implements MappingImp{
 			for (String s : convStrings)
 				sb.append(s + "\n");
 			try {
-				FileWriter fw = new FileWriter(new File(resPath));
+				FileWriter fw = new FileWriter(resFile);
 				fw.write(sb.toString());
 				fw.close();
 			} catch (IOException e) {
@@ -116,17 +116,18 @@ public class DiffTreeUserData implements MappingImp{
 			}
 		}
 		
-		SystemUtil.openFile(resPath);
+		//SystemUtil.openFile(resPath);
+		return resFile;
     }
 
-    protected void openString(String str, ApkInfo apkinfo) {
+    protected File makeFileForString(String str, ApkInfo apkinfo) {
     	Log.d("open String : ");
     	
 		File resFile = new File(apkinfo.tempWorkPath + File.separator + "openstring");
 		if (!resFile.exists()) {
 			Log.d("not exist");
 			//resFile.mkdirs();
-			if (!resFile.getParentFile().exists()) {
+			if (!resFile.exists()) {
 				if (FileUtil.makeFolder(resFile.getAbsolutePath())) {
 					Log.i("sucess make folder : " + resFile.getParentFile().getAbsolutePath());
 				}
@@ -152,8 +153,9 @@ public class DiffTreeUserData implements MappingImp{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}		
-		SystemUtil.openFile(resFile.getAbsolutePath());    	
+		}
+		//SystemUtil.openFile(resFile.getAbsolutePath());
+		return resFile;
     }
     
 	@Override
@@ -161,10 +163,9 @@ public class DiffTreeUserData implements MappingImp{
 		// TODO Auto-generated method stub
 		return this.title.equals(data.toString());
 	}	
-	
+		
 	@Override
-	public void openFileNode(ApkInfo apkinfo) {
-		// TODO Auto-generated method stub
-		openString(title, apkinfo);		
-	}
+	public File makeFilebyNode(ApkInfo apkinfo) {
+		return makeFileForString(title, apkinfo);
+	}	
 }

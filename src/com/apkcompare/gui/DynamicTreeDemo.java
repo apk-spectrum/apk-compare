@@ -70,6 +70,7 @@ import com.apkscanner.resource.Resource;
 import com.apkcompare.gui.DiffMain.ApkScannerDiffListener;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
+import com.apkscanner.util.SystemUtil;
 import com.apkcompare.ApkComparer;
 import com.apkcompare.Main;
 import com.apkcompare.data.FilePassKeyDiffTreeUserData;
@@ -346,17 +347,26 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									t.collapseRow(closestRow);
 								}
 							} else {
-								if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD
-										|| node.isRoot()) {
+								if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD	 || node.isRoot()) {
 									Log.d("open program : " + temp);
 									if (arrayTree[LEFT] == t) {
-										temp.openFileNode(apkComparer.getApkInfo(LEFT));										
+										SystemUtil.openFile(temp.makeFilebyNode(apkComparer.getApkInfo(LEFT)));
 									} else {
-										temp.openFileNode(apkComparer.getApkInfo(RIGHT));
+										SystemUtil.openFile(temp.makeFilebyNode(apkComparer.getApkInfo(RIGHT)));
 									}
 									
 								} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
 									Log.d("open diff program : " + temp.state);
+									String openner;
+									if(SystemUtil.isLinux()) {
+										openner = "/opt/p4v-2017.3.1601999/bin/p4merge";
+									} else {
+										openner = "p4merge";
+									}
+									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);										
+									SystemUtil.exec(new String[]{openner, temp.makeFilebyNode(apkComparer.getApkInfo(LEFT)).getAbsolutePath(),
+											othertemp.makeFilebyNode(apkComparer.getApkInfo(RIGHT)).getAbsolutePath()});
+									
 								}
 							}
 						}

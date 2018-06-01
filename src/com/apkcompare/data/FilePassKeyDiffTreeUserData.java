@@ -121,11 +121,9 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	        if (i2 != null) i2.close();
 	    }
 	}
-	
+		
 	@Override
-	public void openFileNode(ApkInfo apkinfo) {
-		// TODO Auto-generated method stub
-		openFile(title, apkinfo);
+	public File makeFilebyNode(ApkInfo apkinfo) {
+		return makeFileForFile(title, apkinfo);
 	}
-	
 }

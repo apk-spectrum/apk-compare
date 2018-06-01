@@ -40,12 +40,10 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 			return original.equals(temp.original);
 		}
 	}
-	
+
 	@Override
-	public void openFileNode(ApkInfo apkinfo) {
-		// TODO Auto-generated method stub
-		if(isFile) openFile(original, apkinfo);
-		else openString(original, apkinfo);
-		
+	public File makeFilebyNode(ApkInfo apkinfo) {
+		if(isFile) return makeFileForFile(original, apkinfo);
+		else return makeFileForString(original, apkinfo);
 	}
 }

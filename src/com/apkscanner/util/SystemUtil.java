@@ -417,6 +417,10 @@ public class SystemUtil
 
 	public static boolean exec(String[] cmd)
 	{
+		for(String str : cmd) {
+			Log.d(str);
+		}
+		
 		try {
 			final Process process = new ProcessBuilder(cmd).redirectErrorStream(true).start();
 			new Thread(new Runnable() {
