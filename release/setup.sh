@@ -115,17 +115,17 @@ EOF
     sudo rm -f /usr/share/mime/packages/vnd.android.package-archive.xml
 fi
 
-if [ -e ~/.local/share/applications/mimeapps.list ]; then
-cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
-cat ~/.local/share/applications/mimeapps_old.list \
-	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
-	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkcompare.desktop;/' > ~/.local/share/applications/mimeapps.list
-else
-cat << EOF > ~/.local/share/applications/mimeapps.list
-[Added Associations]
-application/vnd.android.package-archive=apkcompare.desktop;
-EOF
-fi
+#if [ -e ~/.local/share/applications/mimeapps.list ]; then
+#cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
+#cat ~/.local/share/applications/mimeapps_old.list \
+#	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
+#	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkcompare.desktop;/' > ~/.local/share/applications/mimeapps.list
+#else
+#cat << EOF > ~/.local/share/applications/mimeapps.list
+#[Added Associations]
+#application/vnd.android.package-archive=apkcompare.desktop;
+#EOF
+#fi
 
 #if [ -e ~/.p4qt/ApplicationSettings.xml ]; then
 #    cat ~/.p4qt/ApplicationSettings.xml | sed '/EditorMappings/,/StringList/{/<String>apk/d; /<String>ppk/d; s/.*<\/StringList>.*/  <String>apk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n  <String>ppk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n <\/StringList>/}' > .ApplicationSettings.xml
