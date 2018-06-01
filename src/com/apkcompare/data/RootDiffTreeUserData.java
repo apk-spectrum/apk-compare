@@ -5,7 +5,7 @@ import java.io.File;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 
-public class RootDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+public class RootDiffTreeUserData extends DiffTreeUserData {
 	public RootDiffTreeUserData(String title) {
 		super(title, "Root");
 		this.isfolder = true;

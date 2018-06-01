@@ -9,7 +9,7 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkscanner.util.Log;
 
-public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData implements MappingImp{
+public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	String original;
 	boolean isFile;
 	public SigPassKeyDiffTreeUserData(String title) {

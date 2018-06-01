@@ -15,7 +15,7 @@ import com.apkscanner.util.Log;
 
 import sun.awt.image.ToolkitImage;
 
-public class ImageDiffTreeUserData extends DiffTreeUserData implements MappingImp{
+public class ImageDiffTreeUserData extends DiffTreeUserData{
 	ImageIcon icon = null;
 	
 	public ImageDiffTreeUserData(String title) {

@@ -6,7 +6,7 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 
-public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData implements MappingImp{
+public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
 	String size;
 	String reportinfo;

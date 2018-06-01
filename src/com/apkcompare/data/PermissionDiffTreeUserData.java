@@ -14,7 +14,7 @@ import com.apkscanner.util.Log;
 
 import sun.awt.image.ToolkitImage;
 
-public class PermissionDiffTreeUserData extends ImagePassKeyDiffTreeUserData implements MappingImp{
+public class PermissionDiffTreeUserData extends ImagePassKeyDiffTreeUserData {
 	
 	public PermissionDiffTreeUserData(String title, ImageIcon icon) {
 		super(title, "Permission");

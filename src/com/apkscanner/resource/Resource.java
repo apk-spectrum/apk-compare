@@ -431,10 +431,10 @@ public enum Resource
 	IMG_DIFF_TOOLBAR_ADD			(Type.IMAGE, "diff_toolbar_add.png"),
 	IMG_DIFF_TOOLBAR_EDITOR		(Type.IMAGE, "diff_toolbar_editor.png"),
 	IMG_DIFF_TOOLBAR_IDEN			(Type.IMAGE, "diff_toolbar_iden.png"),
-	IMG_DIFF_DRAG_AND_DROP			(Type.IMAGE, "diff_draganddrop.png"),
-	
+	IMG_DIFF_DRAG_AND_DROP			(Type.IMAGE, "diff_draganddrop.png"),	
 	IMG_DIFF_TOOLBAR_SETTING			(Type.IMAGE, "diff_toolbar_setting.png"),
 	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
+	IMG_DIFF_APP_ICON				(Type.IMAGE, "diff_app_icon.png"),
 	
 	BIN_PATH					(Type.BIN, ""),	
 

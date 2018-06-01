@@ -64,4 +64,11 @@ public class DiffTreeUserData implements MappingImp{
 		// TODO Auto-generated method stub
 		return this.title.equals(data.toString());
 	}
+
+	@Override
+	public void openFileNode() {
+		// TODO Auto-generated method stub		
+	}
+	
+	
 }

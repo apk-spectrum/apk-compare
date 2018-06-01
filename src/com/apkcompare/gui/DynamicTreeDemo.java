@@ -60,6 +60,7 @@ import com.apkscanner.core.scanner.ApkScanner;
 import com.apkscanner.core.scanner.ApkScanner.Status;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.gui.MainUI;
+import com.apkcompare.gui.dialog.SettingDlg;
 import com.apkcompare.gui.dialog.AboutDlg;
 import com.apkscanner.gui.util.FileDrop;
 import com.apkscanner.resource.Resource;
@@ -67,6 +68,7 @@ import com.apkcompare.gui.DiffMain.ApkScannerDiffListener;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkscanner.util.Log;
 import com.apkcompare.ApkComparer;
+import com.apkcompare.Main;
 import com.apkcompare.data.FilePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
@@ -641,8 +643,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
         if(e.getSource() instanceof JButton) {
         	if(e.getActionCommand() == CMD_BUTTON_ABOUT) {
         		AboutDlg.showAboutDialog(this);
-        	}
-            
+        	} else if(e.getActionCommand() == CMD_BUTTON_SETTING) {
+    			SettingDlg dlg = new SettingDlg(Main.frame);
+    			dlg.setVisible(true);
+        	}            
         }
 
     }

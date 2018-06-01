@@ -15,7 +15,7 @@ import com.apkscanner.util.Log;
 
 import sun.awt.image.ToolkitImage;
 
-public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData implements MappingImp{
+public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	ImageIcon icon = null;
 	
 	public ImagePassKeyDiffTreeUserData(String title) {

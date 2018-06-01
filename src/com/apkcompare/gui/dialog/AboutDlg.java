@@ -14,9 +14,12 @@ public class AboutDlg /*extends JDialog*/
 {
 	static public void showAboutDialog(Component component)
 	{
+		String Appname = "APK Compare";
+		String AppVersion = "0.7.0";
+		
 		StringBuilder body = new StringBuilder();
 		body.append("<div id=\"about\">");
-		body.append("  <H1>" + Resource.STR_APP_NAME.getString() + " " + Resource.STR_APP_VERSION.getString() + "</H1>");
+		body.append("  <H1>" + Appname + " " + AppVersion + "</H1>");
 		body.append("  <H3>Using following tools</H3>");
 		body.append("  Android Asset Packaging Tool, Android Debug Bridge, signapk<br/>");
 		body.append("  - <a href=\"https://developer.android.com/tools/help/index.html\" title=\"Android Developer Site\">https://developer.android.com/tools/help/index.html</a><br/>");

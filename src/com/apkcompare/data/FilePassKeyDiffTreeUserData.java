@@ -16,7 +16,7 @@ import com.apkscanner.util.Log;
 
 import sun.misc.IOUtils;
 
-public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData implements MappingImp{
+public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
 	String filepath;
 	String apkfilePath;

@@ -5,7 +5,7 @@ import java.io.File;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 
-public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData implements MappingImp{
+public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	File file;
 	String size;
 	String compressed;	
