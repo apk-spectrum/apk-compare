@@ -12,6 +12,7 @@ import java.util.zip.ZipFile;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
+import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.util.Log;
 
 import sun.misc.IOUtils;
@@ -121,5 +122,10 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	    }
 	}
 	
+	@Override
+	public void openFileNode(ApkInfo apkinfo) {
+		// TODO Auto-generated method stub
+		openFile(title, apkinfo);
+	}
 	
 }

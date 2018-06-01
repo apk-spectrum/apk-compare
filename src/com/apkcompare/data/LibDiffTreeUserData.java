@@ -21,21 +21,20 @@ public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 
 	public void setFilesInfo(String size, String compressed) {
 		this.size = size;
-		this.compressed = compressed;
+		this.compressed = compressed;		
 	}	
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
-		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;
-		
+		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;		
 		
 		if(issameFile(temp.title, temp.apkfilePath)) {
 			return true;
 		} else {
-			title = title + " : " + size + " : " + compressed;
-			temp.title = temp.title + " : " + temp.size + " : " + temp.compressed;
+			//title = title + " : " + size + " : " + compressed;
+			//temp.title = temp.title + " : " + temp.size + " : " + temp.compressed;
 			return false;
 		}
 		

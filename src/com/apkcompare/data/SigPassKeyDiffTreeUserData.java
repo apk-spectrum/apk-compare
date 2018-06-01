@@ -7,6 +7,7 @@ import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
+import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.util.Log;
 
 public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
@@ -38,5 +39,13 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 		} else {
 			return original.equals(temp.original);
 		}
+	}
+	
+	@Override
+	public void openFileNode(ApkInfo apkinfo) {
+		// TODO Auto-generated method stub
+		if(isFile) openFile(original, apkinfo);
+		else openString(original, apkinfo);
+		
 	}
 }

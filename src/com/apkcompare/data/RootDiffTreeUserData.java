@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
+import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.util.SystemUtil;
 
 public class RootDiffTreeUserData extends DiffTreeUserData {
 	public RootDiffTreeUserData(String title) {
@@ -19,4 +21,10 @@ public class RootDiffTreeUserData extends DiffTreeUserData {
 		return true;
 	}
 	
+	@Override
+	public void openFileNode(ApkInfo apkinfo) {
+		// TODO Auto-generated method stub
+		
+		SystemUtil.openFile(apkinfo.filePath);
+	}
 }

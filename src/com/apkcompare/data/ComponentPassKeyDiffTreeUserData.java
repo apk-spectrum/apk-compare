@@ -5,6 +5,7 @@ import java.io.File;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
+import com.apkscanner.data.apkinfo.ApkInfo;
 
 public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
@@ -37,5 +38,12 @@ public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 		}
 		
 		//return ((FileDiffTreeUserData)data).size.equals(size) &&((FileDiffTreeUserData)data).compressed.equals(compressed);
+	}
+	
+	@Override
+	public void openFileNode(ApkInfo apkinfo) {
+		// TODO Auto-generated method stub
+		openString(reportinfo, apkinfo);
+		
 	}
 }
