@@ -14,17 +14,23 @@ public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	String reportinfo;
 	
 	public ComponentPassKeyDiffTreeUserData(String title) {
-		super(title);
+		super(title, "", null);
 		// TODO Auto-generated constructor stub
 	}
 	public ComponentPassKeyDiffTreeUserData(String title, String key) {
-		super(title, key);
+		super(title, key, null);
 		// TODO Auto-generated constructor stub
 	}
-
-	public void setinforeport(String reportinfo) {
-		this.reportinfo = reportinfo;		
-	}	
+	
+	public ComponentPassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+		super(title, key, apkinfo);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void setinforeport(String report) {
+		// TODO Auto-generated method stub
+		this.reportinfo = report;
+	}
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
@@ -42,7 +48,7 @@ public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	@Override
-	public File makeFilebyNode(ApkInfo apkinfo) {
-		return makeFileForString(reportinfo, apkinfo);
+	public File makeFilebyNode() {
+		return makeFileForString(reportinfo);
 	}
 }

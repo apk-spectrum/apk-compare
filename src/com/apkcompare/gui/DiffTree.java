@@ -242,29 +242,33 @@ class DiffTree extends JTree {
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 				boolean leaf, int row, boolean hasFocus) {
 			JLabel l = (JLabel) super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false);
-			
+
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-			
-			if(node.getUserObject() instanceof DiffTreeUserData) {
-				DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-				
-				Color nodecolor = ((DiffTree) tree).getnodeColor(row,node, selected, false);
-				//l.setBackground(new Color(0,0,0,0));
-				l.setBackground(nodecolor);
-				if(selected && selectedtree == tree) l.setForeground(Color.WHITE);
-				else l.setForeground(Color.BLACK);
-				
-				if(temp instanceof ImagePassKeyDiffTreeUserData) {
-					l.setIcon(((ImagePassKeyDiffTreeUserData)temp).getImageIcon());
-				} else if(temp instanceof ImageDiffTreeUserData) {
-					l.setIcon(((ImageDiffTreeUserData)temp).getImageIcon());
-				} else if(temp instanceof RootDiffTreeUserData) {
+
+			if (node.getUserObject() instanceof DiffTreeUserData) {
+				DiffTreeUserData temp = (DiffTreeUserData) node.getUserObject();
+
+				if (temp instanceof ImagePassKeyDiffTreeUserData) {
+					l.setIcon(((ImagePassKeyDiffTreeUserData) temp).getImageIcon());
+				} else if (temp instanceof ImageDiffTreeUserData) {
+					l.setIcon(((ImageDiffTreeUserData) temp).getImageIcon());
+				} else if (temp instanceof RootDiffTreeUserData) {
 					l.setIcon(new ImageIcon(rooticon));
-				} else if(temp.isfolder) {
+				} else if (temp.isfolder) {
 					l.setIcon(new ImageIcon(foldericon));
 				}
-				
-				l.setOpaque(true);
+				if (painting) {
+					Color nodecolor = ((DiffTree) tree).getnodeColor(row, node, selected, false);
+					// l.setBackground(new Color(0,0,0,0));
+					l.setBackground(nodecolor);
+					if (selected && selectedtree == tree)
+						l.setForeground(Color.WHITE);
+					else
+						l.setForeground(Color.BLACK);
+
+					l.setOpaque(true);
+					return l;
+				}
 			}
 			return l;
 		}

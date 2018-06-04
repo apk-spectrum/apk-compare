@@ -13,22 +13,29 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.tool.aapt.AaptNativeWrapper;
+import com.apkscanner.tool.aapt.AxmlToXml;
 import com.apkscanner.util.Log;
+import com.apkscanner.util.ZipFileUtil;
 
 import sun.misc.IOUtils;
 
 public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
-	String filepath;
-	String apkfilePath;
+	//String apkfilePath;
 	//static String apkfilePath2;
 	
 	public FilePassKeyDiffTreeUserData(String title) {
-		super(title);
+		super(title, "", null);
 		// TODO Auto-generated constructor stub
 	}
 	public FilePassKeyDiffTreeUserData(String title, String key) {
-		super(title, key);
+		super(title, key, null);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public FilePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+		super(title, key, apkinfo);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -36,17 +43,6 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 //		apkfilePath1 = mapkfilePath1;
 //		apkfilePath2 = mapkfilePath2;
 //	}
-	
-	public void setApkfilepath(String mapkfilePath1) {
-		apkfilePath = mapkfilePath1;		
-	}
-	
-	public void setFile(String filepath) {
-		//Log.d(""+ file);
-		//this.file = file;
-		
-		this.filepath = filepath;		
-	}	
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
@@ -54,38 +50,75 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 		//return this.title.equals(data.toString());
 		FilePassKeyDiffTreeUserData temp = (FilePassKeyDiffTreeUserData)data;
 		
-		//Log.d(apkfilePath + ":" + temp.apkfilePath);
+		//Log.d(temp.title + ":" + temp.apkinfo.filePath);
 		
-		return issameFile(temp.title, temp.apkfilePath);
+		return issameFile(temp);
 	}
 	
-	protected boolean issameFile(String path, String apkfilePath2) {
+	protected boolean issameFile(FilePassKeyDiffTreeUserData temp) {
 		ZipFile zipFile, zipFile2;
 		try {
-			zipFile = new ZipFile(apkfilePath);
+			zipFile = new ZipFile(apkinfo.filePath);
 			ZipEntry entry = zipFile.getEntry(title);
 			
-			zipFile2 = new ZipFile(apkfilePath2);
-			ZipEntry entry2 = zipFile2.getEntry(path);
+			zipFile2 = new ZipFile(temp.apkinfo.filePath);
+			ZipEntry entry2 = zipFile2.getEntry(temp.title);
 			
 			
 			if(entry == null || entry.isDirectory() || entry2 == null || entry2.isDirectory() ) {
-				Log.w("entry was no file " + path);
+				Log.w("entry was no file " + temp.title);
 				return true;
+			}			
+			//is = zipFile.getInputStream(entry);			
+			//return entry.getSize() == entry2.getSize();			
+			if(isEqual(zipFile.getInputStream(entry), zipFile2.getInputStream(entry2))) {
+				return true;
+			} else {
+				if(issamestringForRes(temp)) {
+					return true;
+				} else {
+					return false;
+				}
 			}
-			
-			//is = zipFile.getInputStream(entry);
-			
-			
-			//return entry.getSize() == entry2.getSize();
-			
-			return isEqual(zipFile.getInputStream(entry), zipFile2.getInputStream(entry2));
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	private String getXmlByApkinfo(ApkInfo tempapkinfo, String Res) {
+		String[] convStrings = null;
+		convStrings = AaptNativeWrapper.Dump.getXmltree(tempapkinfo.filePath, new String[] { Res });				
+		AxmlToXml a2x = new AxmlToXml(convStrings, tempapkinfo.resourceScanner);
+		a2x.setMultiLinePrint(true);
+		convStrings = a2x.toString().split(System.lineSeparator());
+		
+		StringBuilder sb = new StringBuilder();
+		for (String s : convStrings)
+			sb.append(s + "\n");
+		
+		return sb.toString();
+	}
+	
+	private boolean issamestringForRes(FilePassKeyDiffTreeUserData temp) {
+		String[] convStrings = null;
+		String extension = temp.title.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
+		
+		if (extension.endsWith(".xml")) {
+			if (temp.title.startsWith("res/") || temp.title.equals("AndroidManifest.xml")) {
+				//Log.d("title : " + title);
+				
+				if(getXmlByApkinfo(apkinfo, title).equals(getXmlByApkinfo(temp.apkinfo, temp.title))) {					
+					return true;
+				} else {
+					//Log.d(getXmlByApkinfo(apkinfo, title));
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	private boolean isEqual(InputStream i1, InputStream i2)
@@ -123,7 +156,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 		
 	@Override
-	public File makeFilebyNode(ApkInfo apkinfo) {
-		return makeFileForFile(title, apkinfo);
+	public File makeFilebyNode() {
+		return makeFileForFile(title);
 	}
 }

@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
+import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.util.Log;
 
 import sun.awt.image.ToolkitImage;
@@ -19,11 +20,16 @@ public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	ImageIcon icon = null;
 	
 	public ImagePassKeyDiffTreeUserData(String title) {
-		super(title, "Image");
+		super(title, "", null);
 		// TODO Auto-generated constructor stub
 	}
 	public ImagePassKeyDiffTreeUserData(String title, String key) {
-		super(title, key);
+		super(title, key, null);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ImagePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+		super(title, key, apkinfo);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -37,7 +43,7 @@ public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	@Override
 	public boolean compare(DiffTreeUserData data) {
 		ImagePassKeyDiffTreeUserData temp = (ImagePassKeyDiffTreeUserData)data;
-		Log.d(temp.getImageIcon() + ":" + icon);
+		//Log.d(temp.getImageIcon() + ":" + icon);
 		
 		if(compareImages(temp.getImageIcon(), icon)) {
 			return true;

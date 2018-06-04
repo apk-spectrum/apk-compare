@@ -9,8 +9,8 @@ import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 
 public class RootDiffTreeUserData extends DiffTreeUserData {
-	public RootDiffTreeUserData(String title) {
-		super(title, "Root");
+	public RootDiffTreeUserData(ApkInfo apkinfo) {
+		super(apkinfo.manifest.packageName, "Root", apkinfo);
 		this.isfolder = true;
 		// TODO Auto-generated constructor stub
 	}
@@ -23,7 +23,7 @@ public class RootDiffTreeUserData extends DiffTreeUserData {
 	}
 	
 	@Override
-	public File makeFilebyNode(ApkInfo apkinfo) {
+	public File makeFilebyNode() {		
 		Log.d(apkinfo.filePath);
 		return new File(apkinfo.filePath);
 	}

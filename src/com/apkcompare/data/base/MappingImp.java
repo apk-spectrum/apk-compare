@@ -7,5 +7,5 @@ import com.apkscanner.data.apkinfo.ApkInfo;
 public interface MappingImp {
 	boolean compare(DiffTreeUserData data);
 	//void openFileNode(ApkInfo apkinfo);
-	File makeFilebyNode(ApkInfo apkinfo);
+	File makeFilebyNode();
 }

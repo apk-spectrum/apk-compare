@@ -16,38 +16,48 @@ import com.apkscanner.util.SystemUtil;
 import com.apkscanner.util.ZipFileUtil;
 
 public class DiffTreeUserData implements MappingImp{
-    public String title;
+    
     public TreePath me;
     public TreePath other = null;
     public boolean isfolder;
     public boolean isdisplaysplit;
     public String Key;
     
+    
     public int state = NODE_STATE_NOMAL;
     public static final int NODE_STATE_NOMAL = 0;
     public static final int NODE_STATE_ADD = 2;
-    public static final int NODE_STATE_DIFF = 4;
-        
+    public static final int NODE_STATE_DIFF = 4;        
+    
+    protected ApkInfo apkinfo;
+    public String title;
     
     public DiffTreeUserData(String title) {
         this.title = title;
         this.Key = "";
+        this.isfolder = false;
+        apkinfo = null;
+    }
+    public DiffTreeUserData(String title, String key) {
+    	this(title, key, null);
+    }
+
+    public DiffTreeUserData(String title, ApkInfo apkinfo) {
+    	this(title, "", null);
     }
     
-    public DiffTreeUserData(String title, String key) {
-        this.title = title;
+    public DiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+    	this.title = title;
+        this.apkinfo = apkinfo;
         this.Key = key;
+        this.isfolder = false;
     }
     
     public DiffTreeUserData(String title, boolean isfolder) {
-    	this(title);
-    	this.isfolder = isfolder;    	
+    	this(title, "", null);
+    	this.isfolder = isfolder;
     }
-    
-    public DiffTreeUserData(String title, String key, boolean isfolder) {
-    	this(title, key);    	
-    }
-    
+        
     public void setmeTreepath(TreePath path) {
     	this.me = path;
     }
@@ -72,8 +82,13 @@ public class DiffTreeUserData implements MappingImp{
     	return this.state;
     }
 
-    protected File makeFileForFile(String filePath, ApkInfo apkinfo) {
+    protected File makeFileForFile(String filePath) {
     	Log.d("open file : " + filePath);
+    	if(apkinfo == null) {
+    		Log.d("apkinfo is null");
+    		return null;
+    	}
+    	
 		String resPath = apkinfo.tempWorkPath + File.separator + filePath.replace("/", File.separator);
 		File resFile = new File(resPath);
 		
@@ -99,10 +114,10 @@ public class DiffTreeUserData implements MappingImp{
 		String[] convStrings = null;
 		String extension = filePath.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
 		if (extension.endsWith(".xml")) {
-			if (filePath.startsWith("res/") || filePath.equals("AndroidManifest.xml")) {				
+			if (filePath.startsWith("res/") || filePath.equals("AndroidManifest.xml")) {
 				convStrings = AaptNativeWrapper.Dump.getXmltree(apkinfo.filePath, new String[] { filePath });				
 				AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.resourceScanner);
-				//a2x.setMultiLinePrint(true);
+				a2x.setMultiLinePrint(true);
 				convStrings = a2x.toString().split(System.lineSeparator());
 			}
 		} else {
@@ -130,8 +145,13 @@ public class DiffTreeUserData implements MappingImp{
 		return resFile;
     }
 
-    protected File makeFileForString(String str, ApkInfo apkinfo) {
+    protected File makeFileForString(String str) {
     	Log.d("open String : ");
+    	
+    	if(apkinfo == null) {
+    		Log.d("apkinfo is null");
+    		return null;
+    	}
     	
 		File resFile = new File(apkinfo.tempWorkPath + File.separator + "openstring");
 		if (!resFile.exists()) {
@@ -175,7 +195,7 @@ public class DiffTreeUserData implements MappingImp{
 	}
 		
 	@Override
-	public File makeFilebyNode(ApkInfo apkinfo) {
-		return makeFileForString(title, apkinfo);
+	public File makeFilebyNode() {
+		return makeFileForString(title);
 	}	
 }

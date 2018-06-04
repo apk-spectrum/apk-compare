@@ -3,7 +3,7 @@ package com.apkcompare.data;
 import java.io.File;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
+import com.apkscanner.data.apkinfo.ApkInfo;
 
 public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	File file;
@@ -11,11 +11,16 @@ public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	String compressed;	
 	
 	public LibDiffTreeUserData(String title) {
-		super(title);
+		super(title, "", null);
 		// TODO Auto-generated constructor stub
 	}
 	public LibDiffTreeUserData(String title, String key) {
-		super(title, key);
+		super(title, key, null);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public LibDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+		super(title, key, apkinfo);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -30,7 +35,7 @@ public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 		//return this.title.equals(data.toString());
 		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;		
 		
-		if(issameFile(temp.title, temp.apkfilePath)) {
+		if(issameFile(temp)) {
 			return true;
 		} else {
 			//title = title + " : " + size + " : " + compressed;
