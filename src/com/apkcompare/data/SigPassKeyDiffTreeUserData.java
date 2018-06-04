@@ -22,8 +22,9 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public SigPassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
+	public SigPassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo, boolean isFile) {
 		super(title, key, apkinfo);
+		this.isFile = isFile; 
 		// TODO Auto-generated constructor stub
 	}
 
@@ -45,8 +46,9 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	}
 
 	@Override
-	public File makeFilebyNode() {
-		if(isFile) return makeFileForFile(original);
+	public File makeFilebyNode() {		
+		Log.d(title);
+		if(isFile) return makeFileForFile(title);
 		else return makeFileForString(original);
 	}
 }

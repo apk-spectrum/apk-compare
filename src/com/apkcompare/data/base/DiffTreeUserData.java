@@ -94,12 +94,11 @@ public class DiffTreeUserData implements MappingImp{
 		
 		
 		
-		if (!resFile.exists()) {
-			if (!resFile.exists()) {
-				if (FileUtil.makeFolder(resFile.getAbsolutePath())) {
-					Log.i("sucess make folder : " + resFile.getParentFile().getAbsolutePath());
-				}
+		if (!resFile.getParentFile().exists()) {
+			if (FileUtil.makeFolder(resFile.getParentFile().getAbsolutePath())) {
+				Log.i("sucess make folder : " + resFile.getParentFile().getAbsolutePath());
 			}
+			
 		}
 		
 		Log.d("resFile : " + resFile);
@@ -119,6 +118,8 @@ public class DiffTreeUserData implements MappingImp{
 				AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.resourceScanner);
 				a2x.setMultiLinePrint(true);
 				convStrings = a2x.toString().split(System.lineSeparator());
+			} else {
+				ZipFileUtil.unZip(apkinfo.filePath, filePath, resFile.getAbsolutePath());
 			}
 		} else {
 			ZipFileUtil.unZip(apkinfo.filePath, filePath, resFile.getAbsolutePath());
@@ -154,19 +155,16 @@ public class DiffTreeUserData implements MappingImp{
     	}
     	
 		File resFile = new File(apkinfo.tempWorkPath + File.separator + "openstring");
-		if (!resFile.exists()) {
-			Log.d("not exist");
-			//resFile.mkdirs();
-			if (!resFile.exists()) {
-				if (FileUtil.makeFolder(resFile.getAbsolutePath())) {
+
+			if (!resFile.getParentFile().exists()) {
+				if (FileUtil.makeFolder(resFile.getParentFile().getAbsolutePath())) {
 					Log.i("sucess make folder : " + resFile.getParentFile().getAbsolutePath());
 				}
-			}
 		}
 		
 		try {
 						
-			resFile = File.createTempFile("openstring", ".txt", resFile);
+			resFile = File.createTempFile("openstring", ".txt", resFile.getParentFile());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -11,8 +11,10 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 
 import com.apkscanner.gui.util.FileDrop;
@@ -31,7 +33,7 @@ public class DiffLoadingPanel extends JPanel{
 	public DiffLoadingPanel() {
 		super(new CardLayout());
 		
-		loading = new JPanel();
+		loading = new JPanel(new BorderLayout());
 		empty = new JPanel(new BorderLayout());
 		
 		loading.setLayout(new BoxLayout(loading, BoxLayout.Y_AXIS));
@@ -50,11 +52,10 @@ public class DiffLoadingPanel extends JPanel{
 		gif.setAlignmentX(Component.CENTER_ALIGNMENT);
 		gif.setAlignmentY(Component.CENTER_ALIGNMENT);
 		
-		
-		//logo.setHorizontalAlignment(JLabel.CENTER);
-		//logo.setVerticalAlignment(JLabel.CENTER);
+		loading.add(Box.createVerticalGlue());
 		loading.add(logo);
 		loading.add(gif);
+		loading.add(Box.createVerticalGlue());
 		
 		JLabel emptylabel = new JLabel(Resource.IMG_DIFF_DRAG_AND_DROP.getImageIcon(150, 150));
 		emptylabel.setOpaque(true);
@@ -76,4 +77,7 @@ public class DiffLoadingPanel extends JPanel{
 	    cl.show(this, str);
 	}
 	
+	public JComponent getEmptyPanel() {
+		return empty;
+	}
 }

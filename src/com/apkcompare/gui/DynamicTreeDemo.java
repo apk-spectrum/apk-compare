@@ -263,7 +263,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        btnfileopen[index].addActionListener(this);
 	        
 	        pathtextfiled[index].setPreferredSize(new Dimension(0, textfield_height));
-	        pathtextfiled[index].setEnabled(false);
 	        		
 	        pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
 	        pathpanel[index].add(btnfileopen[index], BorderLayout.EAST);
@@ -280,7 +279,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
 
     private void setFileDrop() {
-        for(Component com: Arrays.asList(loadingpanel[LEFT], arrayTree[LEFT])) {
+        for(Component com: Arrays.asList(loadingpanel[LEFT].getEmptyPanel(), arrayTree[LEFT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
                 {   
@@ -288,7 +287,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                 }
             });
         }        
-        for(Component com: Arrays.asList(loadingpanel[RIGHT], arrayTree[RIGHT])) {
+        for(Component com: Arrays.asList(loadingpanel[RIGHT].getEmptyPanel(), arrayTree[RIGHT])) {
         	new  FileDrop( com, new FileDrop.Listener()
             {   public void  filesDropped( java.io.File[] files )
                 {   
@@ -415,7 +414,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		}
 		
 		
-		Log.w("aaaaaa:" + CurrentmergeapkfilePath[LEFT] +  " : " + CurrentmergeapkfilePath[RIGHT]);
+		Log.w("pass lock" + index);
 		
 		synchronized (Difflock) {
 		if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null && !Difflock) {
@@ -430,7 +429,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			
 			CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
 			CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
-			Log.w("change filepath" + index);
+			//Log.w("change filepath" + index);
 			
 			Difflock.valueOf(true);
 			for (int i = 0; i < 2; i++) {
@@ -457,7 +456,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 				return;
 			}
 			// }}.start();			
-		}	
+		}
+		
+		Log.w("Create end... not diff :" + index);
     }
     
     private void showCardpanel(String str, int index) {
@@ -468,10 +469,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     private void startDiff() {
-    	Log.d("Start Diff- mapping");
+    	//Log.d("Start Diff- mapping");
     	mappingtree(arraytreeNode[LEFT], arrayTree[RIGHT]);
     	mappingtree(arraytreeNode[RIGHT], arrayTree[LEFT]);
-    	Log.d("End Diff- mapping");
+    	//Log.d("End Diff- mapping");
     	
     	setfolderstate(arraytreeNode[LEFT]);
     	setfolderstate(arraytreeNode[RIGHT]);
@@ -694,8 +695,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     void setApk(int index, String filePath) {
     	
-		if(CurrentmergeapkfilePath[index] == null ||
-				!CurrentmergeapkfilePath[index].equals(filePath)) {
+		if((CurrentmergeapkfilePath[index] == null ||
+				!CurrentmergeapkfilePath[index].equals(filePath))) {
 			apkComparer.setApk(index, filePath);
 		} else {
 			MessageBoxPane.showError(Main.frame, "same APK file");

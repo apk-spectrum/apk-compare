@@ -45,7 +45,7 @@ import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.XmlPath;
 import com.apkscanner.util.ZipFileUtil;
-
+import com.sun.xml.internal.ws.util.StringUtils;
 import com.apkscanner.util.FileUtil.FSStyle;
 import com.apkcompare.data.*;
 import com.apkcompare.data.base.DiffTreeUserData;
@@ -214,16 +214,27 @@ public class DiffMappingTree {
 						String str = strtemp[i];
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
 						if(strtemp == mCertList || strtemp == tokenmCertList) {
+							
+							
 							str = strtemp[i].split(System.getProperty("line.separator"))[0];
-							str = "<html>" + str.replace(", ", "<br/>") + "</html>";
-							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo);
+							str = findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ");
+							
+							str = strtemp[i].split(System.getProperty("line.separator"))[1];
+							str = str.substring(str.indexOf("CN="));
+														 
+																					
+							str = "<html>" + "Owner : " + findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ") + "<br/>"
+							+ "Issuer : " + findString(strtemp[i].split(System.getProperty("line.separator"))[1], "CN=", ", ") + "<br/>"
+							+ "</html>";
+							
+							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
 							tempdata.setOrignalSig(strtemp[i]);
 							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
 							//"<html>Hello World!<br/>blahblahblah</html>"					
 							TabfolderchildNode.add(new SortNode(tempdata));
 						} else {
 							str = strtemp[i];
-							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo);
+							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, true);
 							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
 							//"<html>Hello World!<br/>blahblahblah</html>"					
 							TabfolderchildNode.add(new SortNode(tempdata));
@@ -313,7 +324,10 @@ public class DiffMappingTree {
 			}
 		}
 	}
-	
+	private static String findString(String ori, String begin, String end) {				
+		String temp = ori.substring(ori.indexOf(begin));
+		return temp.substring(0, temp.indexOf(end)); 
+	}
 	
 	private static Object[] getfeature(ApkInfo apkInfo) {
 		ArrayList<String> str = new ArrayList<String>();
