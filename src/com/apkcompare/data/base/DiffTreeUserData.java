@@ -76,32 +76,42 @@ public class DiffTreeUserData implements MappingImp{
     	Log.d("open file : " + filePath);
 		String resPath = apkinfo.tempWorkPath + File.separator + filePath.replace("/", File.separator);
 		File resFile = new File(resPath);
+		
+		
+		
 		if (!resFile.exists()) {
-			if (!resFile.getParentFile().exists()) {
-				if (FileUtil.makeFolder(resFile.getParentFile().getAbsolutePath())) {
+			if (!resFile.exists()) {
+				if (FileUtil.makeFolder(resFile.getAbsolutePath())) {
 					Log.i("sucess make folder : " + resFile.getParentFile().getAbsolutePath());
 				}
 			}
+		}
+		
+		Log.d("resFile : " + resFile);
+		
+		try {			
+			resFile = File.createTempFile("fileopen", filePath.substring(filePath.lastIndexOf(".")), resFile.getParentFile());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		String[] convStrings = null;
 		String extension = filePath.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
 		if (extension.endsWith(".xml")) {
 			if (filePath.startsWith("res/") || filePath.equals("AndroidManifest.xml")) {				
-				convStrings = AaptNativeWrapper.Dump.getXmltree(apkinfo.filePath, new String[] { filePath });
-				
+				convStrings = AaptNativeWrapper.Dump.getXmltree(apkinfo.filePath, new String[] { filePath });				
 				AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.resourceScanner);
-				a2x.setMultiLinePrint(true);
+				//a2x.setMultiLinePrint(true);
 				convStrings = a2x.toString().split(System.lineSeparator());
 			}
+		} else {
+			ZipFileUtil.unZip(apkinfo.filePath, filePath, resFile.getAbsolutePath());
 		} 
 //		else if ("resources.arsc".equals(filePath)) {
 //			convStrings = resourcesWithValue;
 //			resPath += ".txt";
 //		} 
-		else {
-			ZipFileUtil.unZip(apkinfo.filePath, filePath, resPath);
-		}
 		
 		if (convStrings != null) {
 			StringBuilder sb = new StringBuilder();
@@ -162,7 +172,7 @@ public class DiffTreeUserData implements MappingImp{
 	public boolean compare(DiffTreeUserData data) {
 		// TODO Auto-generated method stub
 		return this.title.equals(data.toString());
-	}	
+	}
 		
 	@Override
 	public File makeFilebyNode(ApkInfo apkinfo) {
