@@ -81,8 +81,8 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
-
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
+	
 	
 	private ApkComparer apkComparer;
     

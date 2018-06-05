@@ -225,6 +225,11 @@ public class DiffMappingTree {
 																					
 							str = "<html>" + "Owner : " + findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ") + "<br/>"
 							+ "Issuer : " + findString(strtemp[i].split(System.getProperty("line.separator"))[1], "CN=", ", ") + "<br/>"
+							+ strtemp[i].split(System.getProperty("line.separator"))[5] + "<br/>"
+							+ strtemp[i].split(System.getProperty("line.separator"))[6] + "<br/>"
+							+ strtemp[i].split(System.getProperty("line.separator"))[7] + "<br/>"
+											
+							
 							+ "</html>";
 							
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
