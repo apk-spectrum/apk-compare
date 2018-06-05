@@ -13,6 +13,7 @@ import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -90,12 +91,19 @@ public class DiffMappingTree {
 	    				if(temppath != null && (temppath.startsWith("jar:") || temppath.startsWith("file:"))) {
 	    					ImageIcon icon;
 							try {
-//								if(temppath.endsWith(".webp")) {
-//									icon = getwebpImage(temppath);
-//									
-//								}else {
+								if(temppath.endsWith(".webp")) {
+									BufferedImage image = null;
+									try {
+										image = ImageIO.read(new URL(temppath));
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(image),50,50));
+									
+								}else {
 									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(temppath)),50,50));
-//								}
+								}
 								
 								userdata.setImageIcon(icon);
 							} catch (MalformedURLException e) {
