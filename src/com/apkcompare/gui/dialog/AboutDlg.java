@@ -7,7 +7,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 
 import com.apkscanner.gui.messagebox.MessageBoxPane;
-import com.apkscanner.gui.util.JHtmlEditorPane;
+import com.apkcompare.gui.util.JHtmlEditorPane;
 import com.apkscanner.resource.Resource;
 
 public class AboutDlg /*extends JDialog*/

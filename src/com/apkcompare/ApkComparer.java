@@ -35,6 +35,10 @@ public class ApkComparer {
 		return scanner[position].getApkInfo();
 	}
 	
+	public ApkScanner getApkScanner(int position) {
+		return scanner[position];
+	}
+	
 	public void setApk(int position, String path) {
 		scanner[position].openApk(path);		
 	}

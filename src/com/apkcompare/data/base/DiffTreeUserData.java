@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.tree.TreePath;
 
 import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.gui.tabpanels.Resources.ResourceObject;
 import com.apkscanner.tool.aapt.AaptNativeWrapper;
 import com.apkscanner.tool.aapt.AxmlToXml;
 import com.apkscanner.util.FileUtil;

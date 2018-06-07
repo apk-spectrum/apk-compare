@@ -2,7 +2,6 @@ package com.apkscanner.core.scanner;
 
 import java.io.File;
 
-import com.apkscanner.Launcher;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.data.apkinfo.ResourceInfo;
 import com.apkscanner.resource.Resource;
@@ -194,7 +193,7 @@ public class AaptScanner extends ApkScanner
 			FileUtil.deleteDirectory(parent);
 			if(new File(apkPath).exists()) {
 				Log.i("failure: not delete apk file");
-				Launcher.deleteTempPath(apkPath);
+				//Launcher.deleteTempPath(apkPath);
 			}
 		}
 	}

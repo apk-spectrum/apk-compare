@@ -1,32 +1,32 @@
 package com.apkcompare.core;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.apkcompare.data.ComponentPassKeyDiffTreeUserData;
+import com.apkcompare.data.FilePassKeyDiffTreeUserData;
+import com.apkcompare.data.ImageDiffTreeUserData;
+import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
+import com.apkcompare.data.LibDiffTreeUserData;
+import com.apkcompare.data.PermissionDiffTreeUserData;
+import com.apkcompare.data.SigPassKeyDiffTreeUserData;
+import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.gui.SortNode;
+import com.apkcompare.util.ApkCompareUtil;
 import com.apkscanner.core.scanner.PermissionGroupManager;
-import com.apkscanner.data.apkinfo.ActionInfo;
 import com.apkscanner.data.apkinfo.ActivityAliasInfo;
 import com.apkscanner.data.apkinfo.ActivityInfo;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.data.apkinfo.ApkInfoHelper;
-import com.apkscanner.data.apkinfo.CategoryInfo;
 import com.apkscanner.data.apkinfo.CompatibleScreensInfo;
-import com.apkscanner.data.apkinfo.IntentFilterInfo;
 import com.apkscanner.data.apkinfo.PermissionInfo;
 import com.apkscanner.data.apkinfo.ProviderInfo;
 import com.apkscanner.data.apkinfo.ReceiverInfo;
@@ -38,19 +38,12 @@ import com.apkscanner.data.apkinfo.UsesConfigurationInfo;
 import com.apkscanner.data.apkinfo.UsesFeatureInfo;
 import com.apkscanner.data.apkinfo.UsesLibraryInfo;
 import com.apkscanner.data.apkinfo.UsesPermissionInfo;
-import com.apkscanner.data.apkinfo.WidgetInfo;
-import com.apkscanner.gui.tabpanels.Resources.ResourceObject;
-import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.FileUtil;
+import com.apkscanner.util.FileUtil.FSStyle;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.XmlPath;
 import com.apkscanner.util.ZipFileUtil;
-import com.sun.xml.internal.ws.util.StringUtils;
-import com.apkscanner.util.FileUtil.FSStyle;
-import com.apkcompare.data.*;
-import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.gui.SortNode;
 
 public class DiffMappingTree {
 	//public static String[] allowaddkey = {"Lib","Component","Resource", "Sig", "Permission"};
@@ -92,17 +85,7 @@ public class DiffMappingTree {
 	    				if(temppath != null && (temppath.startsWith("jar:") || temppath.startsWith("file:"))) {
 	    					ImageIcon icon;
 							try {
-								if(temppath.endsWith(".webp")) {
-									BufferedImage image = null;
-									
-										image = ImageIO.read(new URL(temppath));
-									
-									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(image),50,50));
-									
-								}else {
-									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(temppath)),50,50));
-								}
-								
+								icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(temppath))),50,50));
 								userdata.setImageIcon(icon);
 							} catch (MalformedURLException e) {
 								// TODO Auto-generated catch block
@@ -143,12 +126,7 @@ public class DiffMappingTree {
 	        				childNodeapkinfo.add(new SortNode(new DiffTreeUserData(str.toString(), apkInfo)));	
 	        			}
 	        		} else if(strapkinfo.equals("Permission")){
-		    			String[] temp = getPermissionString(childNodeapkinfo, apkInfo).split("\n");
-		    			
-	        			for(String str: temp) {
-	        			//	childNodeapkinfo.add(new SortNode(new DiffTreeUserData(str)));
-	        			}
-	        			
+		    			addPermissionString(childNodeapkinfo, apkInfo).split("\n");		    			
 	        		}	        	
 	        	}
 	        } else if(tabname.equals(Resource.STR_TAB_WIDGET.getString())){
@@ -160,17 +138,7 @@ public class DiffMappingTree {
 	    			ImageIcon myimageicon = null;
 	    			try {
 	    				String path = (String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name;
-	    				
-						if(path.endsWith(".webp")) {
-							Log.w(path);
-							BufferedImage image = ImageIO.read(new URL(path));							
-							myimageicon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(image),100,100));
-						} else {
-							myimageicon = new ImageIcon(new URL(path));
-			    			if(myimageicon != null) {
-			    				myimageicon.setImage(ImageScaler.getMaxScaledImage(myimageicon,100,100));
-			    			}
-						}	    				
+						myimageicon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(path))),50,50));
 	    			} catch (IOException e) {
 	    				e.printStackTrace();
 	    			}
@@ -431,7 +399,7 @@ public class DiffMappingTree {
 	}
 	
 	
-	private static String getPermissionString(SortNode childNodeapkinfo, ApkInfo apkInfo) {
+	private static String addPermissionString(SortNode childNodeapkinfo, ApkInfo apkInfo) {
 		String deprecatedPermissions = "";
 
 		boolean isSamsungSign = (apkInfo.featureFlags & ApkInfo.APP_FEATURE_SAMSUNG_SIGN) != 0 ? true : false;
@@ -511,7 +479,7 @@ public class DiffMappingTree {
 				String path = getIconPath(groupXPath.getAttributes("android:icon"));
 				try {
 					ImageIcon icon;
-					icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(new URL(path)),16,16));
+					icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(new URL(path)),16,16));
 					
 					SortNode tempnode = new SortNode(new PermissionDiffTreeUserData(temp.name + "  ["+ temp.protectionLevel+ "]", icon, apkInfo));					
 					childNodeapkinfo.add(tempnode);

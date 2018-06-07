@@ -3,14 +3,10 @@ package com.apkcompare.gui;
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -19,72 +15,47 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.text.Position;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.Launcher;
-import com.apkscanner.core.scanner.AaptScanner;
-import com.apkscanner.core.scanner.ApkScanner;
-import com.apkscanner.core.scanner.ApkScanner.Status;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.gui.MainUI;
-import com.apkscanner.gui.ToolBar.ButtonSet;
-import com.apkscanner.gui.messagebox.MessageBoxPane;
-import com.apkcompare.gui.dialog.SettingDlg;
-import com.apkcompare.gui.dialog.AboutDlg;
-import com.apkscanner.gui.util.ApkFileChooser;
-import com.apkscanner.gui.util.FileDrop;
-import com.apkscanner.resource.Resource;
-import com.apkcompare.gui.DiffMain.ApkScannerDiffListener;
-import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
 import com.apkcompare.ApkComparer;
 import com.apkcompare.Main;
 import com.apkcompare.core.DiffMappingTree;
-import com.apkcompare.data.FilePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.sun.corba.se.impl.orbutil.graph.Node;
-import com.sun.corba.se.impl.protocol.BootstrapServerRequestDispatcher;
-public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
-	
-	
+import com.apkcompare.gui.dialog.AboutDlg;
+import com.apkcompare.gui.dialog.SettingDlg;
+import com.apkcompare.gui.util.ApkFileChooser;
+import com.apkcompare.gui.util.FileDrop;
+import com.apkcompare.gui.util.MessageBoxPane;
+import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkscanner.resource.Resource;
+import com.apkscanner.util.Log;
+import com.apkscanner.util.SystemUtil;
+public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener, WindowListener{
+	private static final long serialVersionUID = -8110312211026585408L;
 	private ApkComparer apkComparer;
     
     private SortNode[] arraytreeNode = {null, null};
@@ -698,6 +669,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     	
 		if((CurrentmergeapkfilePath[index] == null ||
 				!CurrentmergeapkfilePath[index].equals(filePath))) {
+			apkComparer.getApkScanner(index).clear(false);
 			apkComparer.setApk(index, filePath);
 		} else {
 			MessageBoxPane.showError(Main.frame, "same APK file");
@@ -820,4 +792,33 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			}
 	    }
 	}
+
+	private void finished()
+	{
+		Log.v("finished()");
+
+		if((boolean)Resource.PROP_SAVE_WINDOW_SIZE.getData(false)) {
+			int width = (int)getSize().getWidth();
+			int height = (int)getSize().getHeight();
+			if(Resource.PROP_WINDOW_WIDTH.getInt() != width
+					|| Resource.PROP_WINDOW_HEIGHT.getInt() != (int)getSize().getHeight()) {
+				Resource.PROP_WINDOW_WIDTH.setData(width);
+				Resource.PROP_WINDOW_HEIGHT.setData(height);
+			}
+		}
+
+		setVisible(false);
+		
+		apkComparer.getApkScanner(LEFT).clear(true);
+		apkComparer.getApkScanner(RIGHT).clear(true);
+		System.exit(0);
+	}
+	
+	@Override public void windowClosing(WindowEvent e) { finished(); }
+	@Override public void windowClosed(WindowEvent e) { finished(); }
+	@Override public void windowOpened(WindowEvent e) { }
+	@Override public void windowIconified(WindowEvent e) { }
+	@Override public void windowDeiconified(WindowEvent e) { }
+	@Override public void windowActivated(WindowEvent e) { }
+	@Override public void windowDeactivated(WindowEvent e) { }
 }

@@ -50,7 +50,7 @@ public class Main {
 
     private static void createAndShowGUI() {
         // Create and set up the window.
-        frame = new JFrame("APK Compare");
+        frame = new JFrame(Resource.STR_APP_NAME.getString());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Create and set up the content pane.

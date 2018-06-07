@@ -1,4 +1,4 @@
-package com.apkscanner.gui.util;
+package com.apkcompare.gui.util;
 
 import java.awt.Component;
 import java.io.File;

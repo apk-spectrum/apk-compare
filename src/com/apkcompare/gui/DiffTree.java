@@ -19,7 +19,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.gui.util.ImageScaler;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkcompare.data.ImageDiffTreeUserData;
@@ -27,6 +26,7 @@ import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkcompare.util.ApkCompareUtil;
 
 
 class DiffTree extends JTree {
@@ -43,8 +43,8 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
-	static Image foldericon = ImageScaler.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
-	static Image rooticon = ImageScaler.getScaledImage(Resource.IMG_APK_FILE_ICON.getImageIcon(), 16, 16);
+	static Image foldericon = ApkCompareUtil.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
+	static Image rooticon = ApkCompareUtil.getScaledImage(Resource.IMG_APK_FILE_ICON.getImageIcon(), 16, 16);
 	
 	boolean painting = true;
 	

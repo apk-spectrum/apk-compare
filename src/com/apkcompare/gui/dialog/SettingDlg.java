@@ -36,7 +36,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileSystemView;
 
 import com.android.ddmlib.AdbVersion;
-import com.apkscanner.gui.util.ApkFileChooser;
+import com.apkcompare.gui.util.ApkFileChooser;
 import com.apkscanner.jna.FileInfo;
 import com.apkscanner.jna.FileVersion;
 import com.apkscanner.resource.Resource;
