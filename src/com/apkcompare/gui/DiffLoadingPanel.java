@@ -1,27 +1,23 @@
 package com.apkcompare.gui;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 
-import com.apkscanner.gui.util.FileDrop;
 import com.apkscanner.resource.Resource;
-import com.apkscanner.util.Log;
 
 public class DiffLoadingPanel extends JPanel{
+	private static final long serialVersionUID = 7818687226070887018L;
+
 	ImageIcon imgicon;
 	
 	public static String LOADING = "loading";

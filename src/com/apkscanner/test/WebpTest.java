@@ -3,6 +3,10 @@ package com.apkscanner.test;
 
 import javax.swing.JLabel;
 
+import com.apkscanner.resource.Resource;
+import com.apkscanner.util.Log;
+import com.apkscanner.util.SystemUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +18,18 @@ import javax.swing.JFrame;
 
 ///home/leejinhyeong/Desktop/luciad-webp-imageio-873c5677244b/src/test/resources/lossless.webp
 public class WebpTest {
+	
+//    static {
+//        String arch = System.getProperty("sun.arch.data.model");
+//        String libPath = Resource.BIN_PATH.getPath();
+//        if(SystemUtil.isWindows()) {
+//         //   System.load(libPath + "AaptNativeWrapper" + arch + ".dll");
+//        } else {
+//            //System.load(libPath + "libc++" + arch + ".so");        	
+//            System.load(libPath + "libwebp-imageio"+ ".so");
+//        }
+//    }
+	
 	public static void main(String[] args) {
 		
 		System.setProperty("java.library.path",  System.getProperty("user.dir") + "/tool/");

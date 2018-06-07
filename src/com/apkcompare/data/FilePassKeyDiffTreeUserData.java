@@ -10,15 +10,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.tool.aapt.AaptNativeWrapper;
 import com.apkscanner.tool.aapt.AxmlToXml;
 import com.apkscanner.util.Log;
-import com.apkscanner.util.ZipFileUtil;
-
-import sun.misc.IOUtils;
 
 public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;

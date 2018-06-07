@@ -3,10 +3,8 @@ package com.apkcompare.data;
 import java.io.File;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
 
 public class ComponentPassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;

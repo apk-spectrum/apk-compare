@@ -6,7 +6,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkscanner.util.Log;
 
 class FilteredTreeModel extends DefaultTreeModel {
 	 

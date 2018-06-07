@@ -1,4 +1,4 @@
-package com.apkcompare.gui;
+package com.apkcompare.core;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -50,6 +50,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 import com.apkscanner.util.FileUtil.FSStyle;
 import com.apkcompare.data.*;
 import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.gui.SortNode;
 
 public class DiffMappingTree {
 	//public static String[] allowaddkey = {"Lib","Component","Resource", "Sig", "Permission"};
@@ -93,12 +94,9 @@ public class DiffMappingTree {
 							try {
 								if(temppath.endsWith(".webp")) {
 									BufferedImage image = null;
-									try {
+									
 										image = ImageIO.read(new URL(temppath));
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+									
 									icon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(image),50,50));
 									
 								}else {
@@ -107,6 +105,9 @@ public class DiffMappingTree {
 								
 								userdata.setImageIcon(icon);
 							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -158,13 +159,22 @@ public class DiffMappingTree {
 	    		for(int i=0; i < apkInfo.widgets.length; i++) {
 	    			ImageIcon myimageicon = null;
 	    			try {
-	    				myimageicon = new ImageIcon(new URL((String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name));
-	    			} catch (MalformedURLException e) {
+	    				String path = (String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name;
+	    				
+						if(path.endsWith(".webp")) {
+							Log.w(path);
+							BufferedImage image = ImageIO.read(new URL(path));							
+							myimageicon = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(image),100,100));
+						} else {
+							myimageicon = new ImageIcon(new URL(path));
+			    			if(myimageicon != null) {
+			    				myimageicon.setImage(ImageScaler.getMaxScaledImage(myimageicon,100,100));
+			    			}
+						}	    				
+	    			} catch (IOException e) {
 	    				e.printStackTrace();
 	    			}
-	    			if(myimageicon != null) {
-	    				myimageicon.setImage(ImageScaler.getMaxScaledImage(myimageicon,100,100));
-	    			}
+
 	    			String label = ApkInfoHelper.getResourceValue(apkInfo.widgets[i].lables, preferLang);
 	    			if(label == null) label = ApkInfoHelper.getResourceValue(apkInfo.manifest.application.labels, preferLang);
 	    			String temp = label +" - " + apkInfo.widgets[i].size + " - " +  apkInfo.widgets[i].name + " - " + apkInfo.widgets[i].type;

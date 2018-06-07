@@ -75,6 +75,7 @@ import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 import com.apkcompare.ApkComparer;
 import com.apkcompare.Main;
+import com.apkcompare.core.DiffMappingTree;
 import com.apkcompare.data.FilePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
