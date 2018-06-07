@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="lib/mslinks.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/jna-4.4.0.jar"/>
-	<classpathentry kind="lib" path="lib/luciad-webp-imageio-873c5677244b-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/luciad-webp-imageio.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
