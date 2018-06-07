@@ -87,9 +87,6 @@ public class DiffMappingTree {
 							try {
 								icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(temppath))),50,50));
 								userdata.setImageIcon(icon);
-							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
