@@ -435,6 +435,10 @@ public enum Resource
 	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
 	IMG_DIFF_APP_ICON				(Type.IMAGE, "diff_app_icon.png"),
 	
+	IMG_DIFF_TREE_FOLDER_ICON				(Type.IMAGE, "diff_tree_icon_folder.png"),
+	IMG_DIFF_TREE_APK_ICON				(Type.IMAGE, "diff_tree_icon_apk.png"),
+	IMG_DIFF_APK_OPEN_ICON				(Type.IMAGE, "diff_apk_open.png"),
+	
 	BIN_PATH					(Type.BIN, ""),	
 
 	BIN_ADB_LNX					(Type.BIN, "adb", "nux"),

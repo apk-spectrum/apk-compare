@@ -201,6 +201,7 @@ public class AaptScanner extends ApkScanner
 	@Override
 	public void clear(boolean sync)
 	{
+		Log.d("clear");
 		if(apkInfo == null)
 			return;
 

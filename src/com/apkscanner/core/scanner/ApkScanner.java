@@ -12,7 +12,6 @@ import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.tool.aapt.AaptNativeWrapper;
 import com.apkscanner.tool.aapt.AaptXmlTreePath;
-import com.apkscanner.tool.adb.AdbWrapper;
 import com.apkscanner.util.ConsolCmd.ConsoleOutputObserver;
 import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.Log;
@@ -98,64 +97,64 @@ abstract public class ApkScanner
 
 	abstract public void clear(boolean sync);
 
-	public void openPackage(String devSerialNumber, String devApkFilePath, String framework)
-	{
-		if(statusListener != null) statusListener.onProgress(1, "I: Open package\n");
-		if(statusListener != null) statusListener.onProgress(1, "I: apk path in device : " + devApkFilePath + "\n");
-
-		String tempApkFilePath = "/" + devSerialNumber + devApkFilePath;
-		tempApkFilePath = tempApkFilePath.replaceAll("/", File.separator+File.separator).replaceAll("//", "/");
-		tempApkFilePath = FileUtil.makeTempPath(tempApkFilePath)+".apk";
-
-		if(framework == null) {
-			framework = (String)Resource.PROP_FRAMEWORK_RES.getData();
-		}
-
-		String frameworkRes = "";
-		if(framework != null && !framework.isEmpty()) {
-			for(String s: framework.split(";")) {
-				if(s.startsWith("@")) {
-					String devNum = s.replaceAll("^@([^/]*)/.*", "$1");
-					String path = s.replaceAll("^@[^/]*", "");
-					String dest = (new File(tempApkFilePath).getParent()) + File.separator + path.replaceAll(".*/", "");
-					if(statusListener != null) statusListener.onProgress(1, "I: start to pull resource apk " + path + "\n");
-					AdbWrapper.pullApk(devNum, path, dest, null);
-					frameworkRes += dest + ";"; 
-				} else {
-					frameworkRes += s + ";"; 
-				}
-			}
-		}
-
-		if(statusListener != null) statusListener.onProgress(1, "I: start to pull apk " + devApkFilePath + "\n");
-		boolean ret = AdbWrapper.pullApk(devSerialNumber, devApkFilePath, tempApkFilePath, new ConsoleOutputObserver() {
-			String prePercent = null;
-			@Override
-			public boolean ConsolOutput(String output) {
-				if(statusListener != null) {
-					String percent = output;//.replaceAll("\\[\\s*([0-9]*)%\\] .*", "$1");
-					//if(!percent.equals(output)) {
-					if(!percent.equals(prePercent)) {
-						prePercent = percent;
-						statusListener.onProgress(0, percent);
-					}
-					//}
-				}
-				return true;
-			}
-		});
-
-		if(!ret || !(new File(tempApkFilePath)).exists()) {
-			Log.e("openPackage() failure : apk pull - " + tempApkFilePath);
-			if(statusListener != null) {
-				statusListener.onError(ERR_FAILURE_PULL_APK);
-				statusListener.onCompleted();
-			}
-			return;
-		}
-
-		openApk(tempApkFilePath, frameworkRes);
-	}
+//	public void openPackage(String devSerialNumber, String devApkFilePath, String framework)
+//	{
+//		if(statusListener != null) statusListener.onProgress(1, "I: Open package\n");
+//		if(statusListener != null) statusListener.onProgress(1, "I: apk path in device : " + devApkFilePath + "\n");
+//
+//		String tempApkFilePath = "/" + devSerialNumber + devApkFilePath;
+//		tempApkFilePath = tempApkFilePath.replaceAll("/", File.separator+File.separator).replaceAll("//", "/");
+//		tempApkFilePath = FileUtil.makeTempPath(tempApkFilePath)+".apk";
+//
+//		if(framework == null) {
+//			framework = (String)Resource.PROP_FRAMEWORK_RES.getData();
+//		}
+//
+//		String frameworkRes = "";
+//		if(framework != null && !framework.isEmpty()) {
+//			for(String s: framework.split(";")) {
+//				if(s.startsWith("@")) {
+//					String devNum = s.replaceAll("^@([^/]*)/.*", "$1");
+//					String path = s.replaceAll("^@[^/]*", "");
+//					String dest = (new File(tempApkFilePath).getParent()) + File.separator + path.replaceAll(".*/", "");
+//					if(statusListener != null) statusListener.onProgress(1, "I: start to pull resource apk " + path + "\n");
+//					AdbWrapper.pullApk(devNum, path, dest, null);
+//					frameworkRes += dest + ";"; 
+//				} else {
+//					frameworkRes += s + ";"; 
+//				}
+//			}
+//		}
+//
+//		if(statusListener != null) statusListener.onProgress(1, "I: start to pull apk " + devApkFilePath + "\n");
+//		boolean ret = AdbWrapper.pullApk(devSerialNumber, devApkFilePath, tempApkFilePath, new ConsoleOutputObserver() {
+//			String prePercent = null;
+//			@Override
+//			public boolean ConsolOutput(String output) {
+//				if(statusListener != null) {
+//					String percent = output;//.replaceAll("\\[\\s*([0-9]*)%\\] .*", "$1");
+//					//if(!percent.equals(output)) {
+//					if(!percent.equals(prePercent)) {
+//						prePercent = percent;
+//						statusListener.onProgress(0, percent);
+//					}
+//					//}
+//				}
+//				return true;
+//			}
+//		});
+//
+//		if(!ret || !(new File(tempApkFilePath)).exists()) {
+//			Log.e("openPackage() failure : apk pull - " + tempApkFilePath);
+//			if(statusListener != null) {
+//				statusListener.onError(ERR_FAILURE_PULL_APK);
+//				statusListener.onCompleted();
+//			}
+//			return;
+//		}
+//
+//		openApk(tempApkFilePath, frameworkRes);
+//	}
 
 	public ApkInfo getApkInfo()
 	{

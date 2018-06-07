@@ -56,11 +56,12 @@ public class Main {
         // Create and set up the content pane.
         DynamicTreeDemo newContentPane = new DynamicTreeDemo(apkComparer);
         newContentPane.setOpaque(true);
-        
+        frame.addWindowListener(newContentPane);
         frame.setContentPane(newContentPane);
         frame.setSize(1000, 800);
         frame.setIconImage(Resource.IMG_DIFF_APP_ICON.getImageIcon().getImage());
         frame.setLocationRelativeTo(null);
+        
         // Display the window.
         //frame.pack();
         frame.setVisible(true);

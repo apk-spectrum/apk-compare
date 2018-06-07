@@ -228,7 +228,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        loadingpanel[index] = new DiffLoadingPanel();	        
 	        pathtextfiled[index] = new JTextField();
 	        
-	        btnfileopen[index] = new JButton(Resource.IMG_TREE_MENU_OPEN.getImageIcon());
+	        btnfileopen[index] = new JButton(Resource.IMG_DIFF_APK_OPEN_ICON.getImageIcon());
 	        btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
 	        btnfileopen[index].setPreferredSize(new Dimension(textfield_height, textfield_height));
 	        btnfileopen[index].setActionCommand(CMD_BUTTON_FILE_OPEN);

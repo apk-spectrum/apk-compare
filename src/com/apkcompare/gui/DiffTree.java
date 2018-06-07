@@ -43,8 +43,8 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
-	static Image foldericon = ApkCompareUtil.getScaledImage(Resource.IMG_TREE_FOLDER.getImageIcon(), 16, 16);
-	static Image rooticon = ApkCompareUtil.getScaledImage(Resource.IMG_APK_FILE_ICON.getImageIcon(), 16, 16);
+	static Image foldericon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_FOLDER_ICON.getImageIcon(), 16, 16);
+	static Image rooticon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_APK_ICON.getImageIcon(), 16, 16);
 	
 	boolean painting = true;
 	

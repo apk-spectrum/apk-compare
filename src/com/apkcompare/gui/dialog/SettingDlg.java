@@ -35,12 +35,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileSystemView;
 
-import com.android.ddmlib.AdbVersion;
 import com.apkcompare.gui.util.ApkFileChooser;
 import com.apkscanner.jna.FileInfo;
 import com.apkscanner.jna.FileVersion;
 import com.apkscanner.resource.Resource;
-import com.apkscanner.tool.adb.AdbVersionManager;
 import com.apkscanner.util.SystemUtil;
 
 public class SettingDlg extends JDialog implements ActionListener{
