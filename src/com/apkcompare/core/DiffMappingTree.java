@@ -226,11 +226,8 @@ public class DiffMappingTree {
 							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
 							//"<html>Hello World!<br/>blahblahblah</html>"					
 							TabfolderchildNode.add(new SortNode(tempdata));
-						}						
-						
+						}
 					}
-					
-					
 				}
 	        }
 		}

@@ -17,6 +17,7 @@ public class AboutDlg /*extends JDialog*/
 		String Appname = "APK Compare";
 		String AppVersion = "0.7.0";
 		
+		
 		StringBuilder body = new StringBuilder();
 		body.append("<div id=\"about\">");
 		body.append("  <H1>" + Appname + " " + AppVersion + "</H1>");

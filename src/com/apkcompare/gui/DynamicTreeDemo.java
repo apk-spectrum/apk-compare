@@ -91,7 +91,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	private static Boolean Difflock = false;
 	
 	
-	//https://www.picpng.com/image/scanner-png-38293
+	//https://www.shareicon.net/diff-94479
+	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
+	//https://www.shareicon.net/setting-598385
 	
     public DynamicTreeDemo(ApkComparer apkComparer) {
         super(new BorderLayout());
@@ -138,9 +140,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		temppanel.setPreferredSize(new Dimension(0, 48));
 		
 		
-		//https://www.shareicon.net/diff-94479
-		//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
-		//https://www.shareicon.net/setting-598385
+
 		
 		btnadd = new JToggleButton();
 		btndiff = new JToggleButton();

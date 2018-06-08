@@ -435,6 +435,12 @@ public enum Resource
 	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
 	IMG_DIFF_APP_ICON				(Type.IMAGE, "diff_app_icon.png"),
 	
+	//http://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/24/folder-icon.png
+	//https://www.shareicon.net/diff-94479
+	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
+	//https://www.shareicon.net/setting-598385
+	
+	
 	IMG_DIFF_TREE_FOLDER_ICON				(Type.IMAGE, "diff_tree_icon_folder.png"),
 	IMG_DIFF_TREE_APK_ICON				(Type.IMAGE, "diff_tree_icon_apk.png"),
 	IMG_DIFF_APK_OPEN_ICON				(Type.IMAGE, "diff_apk_open.png"),
