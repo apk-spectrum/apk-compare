@@ -198,14 +198,12 @@ public class DiffMappingTree {
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
 						if(strtemp == mCertList || strtemp == tokenmCertList) {
 							
-							
-							str = strtemp[i].split(System.getProperty("line.separator"))[0];
-							str = findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ");
-							
-							str = strtemp[i].split(System.getProperty("line.separator"))[1];
-							str = str.substring(str.indexOf("CN="));
+//							str = strtemp[i].split(System.getProperty("line.separator"))[0];
+//							str = findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ");
+//							
+//							str = strtemp[i].split(System.getProperty("line.separator"))[1];
+//							str = str.substring(str.indexOf("CN="));
 														 
-																					
 							str = "<html>" + "Owner : " + findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ") + "<br/>"
 							+ "Issuer : " + findString(strtemp[i].split(System.getProperty("line.separator"))[1], "CN=", ", ") + "<br/>"
 							+ strtemp[i].split(System.getProperty("line.separator"))[5] + "<br/>"
@@ -309,7 +307,12 @@ public class DiffMappingTree {
 			}
 		}
 	}
-	private static String findString(String ori, String begin, String end) {				
+	private static String findString(String ori, String begin, String end) {
+		
+		if(ori.indexOf(begin) < 0 || ori.indexOf(end) < 0) {
+			return "";
+		}
+		
 		String temp = ori.substring(ori.indexOf(begin));
 		return temp.substring(0, temp.indexOf(end)); 
 	}

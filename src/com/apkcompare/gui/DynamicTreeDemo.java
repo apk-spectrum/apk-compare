@@ -124,7 +124,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		//splitPane.setDividerLocation(400);
 		splitPane.setLeftComponent(cardpanel[LEFT]);
 		splitPane.setRightComponent(cardpanel[RIGHT]);
-		splitPane.setResizeWeight(0.5);
+		//splitPane.setResizeWeight(0.5);
+		
 		
 		splitPane.setY(textfield_height+1);
 		scrollpane = new JScrollPane(splitPane);
@@ -179,8 +180,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		add(scrollpane, BorderLayout.CENTER);
 		
 		repaint();
-		
-
     }
     private void setEnableToggleBtn(boolean enable) {
     	for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
