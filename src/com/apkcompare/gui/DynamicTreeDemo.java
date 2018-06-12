@@ -4,6 +4,7 @@ import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
@@ -193,7 +194,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		public void onStart(int position) {
 			
 			loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
-		    showCardpanel(CARD_LAYOUT_LOADING, position);		    
+		    showCardpanel(CARD_LAYOUT_LOADING, position);
+		    Log.w("change loading");
 		}
 
 		@Override
@@ -288,8 +290,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     class DiffMouseAdapter extends MouseAdapter {
-    	JTree t;
-    	public DiffMouseAdapter(JTree tree) {
+    	DiffTree t;
+    	public DiffMouseAdapter(DiffTree tree) {
     		this.t = tree;
     	}
     	
@@ -302,8 +304,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 				if (e.getY() >= closestRowBounds.getY()
 						&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
 					if (e.getX() > closestRowBounds.getX() && closestRow < t.getRowCount()) {
+						
 						if (e.getClickCount() == 1) {
-							
 							t.setSelectionRow(closestRow);
 							if (arrayTree[LEFT] == t) {
 								DiffTree.setSelectedtree(arrayTree[LEFT]);
@@ -312,7 +314,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 							}
 							splitPane.repaint();
 							
-						} else if (e.getClickCount() == 2) {
+						} else if (e.getClickCount() == 2 && t.getpaintingFlag()) {
 							DefaultMutableTreeNode node = (DefaultMutableTreeNode) (t.getSelectionPath()
 									.getLastPathComponent());							
 							DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();							
@@ -388,35 +390,38 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		Log.w("pass lock" + index);
 		
 		synchronized (Difflock) {
-		if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null && !Difflock) {
-			
-			if(CurrentmergeapkfilePath[LEFT] != null && CurrentmergeapkfilePath[RIGHT] !=null &&
-					CurrentmergeapkfilePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath) && 
-					CurrentmergeapkfilePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
-				arrayTreemodel[index].reload();
-		    	Log.w("Create end... not diff:" + index);
-		    	return;
-			}
-			
-			CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
-			CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
-			//Log.w("change filepath" + index);
-			
-			Difflock.valueOf(true);
-			for (int i = 0; i < 2; i++) {
-//				loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
-//				showCardpanel(CARD_LAYOUT_LOADING, index);
-				arrayTree[i].setpaintingFlag(false);
-			}
-			clearnodepath(arraytreeNode[otherindex]);
-			arrayTree[otherindex].setModel(arrayTreemodel[otherindex]);
-						
-			// new Thread(){
-			// public void run(){
-			
+			if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null && !Difflock) {
+
+				if (CurrentmergeapkfilePath[LEFT] != null && CurrentmergeapkfilePath[RIGHT] != null
+						&& CurrentmergeapkfilePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath)
+						&& CurrentmergeapkfilePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
+					arrayTreemodel[index].reload();
+					Log.w("in sync Create end... not diff:" + index);
+					return;
+				}
+
+				CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
+				CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
+				// Log.w("change filepath" + index);
+
+				Difflock.valueOf(true);
+				for (int i = 0; i < 2; i++) {
+					// loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
+					// showCardpanel(CARD_LAYOUT_LOADING, index);
+					arrayTree[i].setpaintingFlag(false);
+				}
+				clearnodepath(arraytreeNode[otherindex]);
+				arrayTree[otherindex].setModel(arrayTreemodel[otherindex]);
+
+				// new Thread(){
+				// public void run(){
+				arrayTree[index].setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				Log.w("start diff :" + index);
-			
+
 				startDiff();
+				
+				arrayTree[index].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				
 				for (int i = 0; i < 2; i++) {
 					arrayTreemodel[i].reload();
 					arrayTree[i].setpaintingFlag(true);
@@ -426,7 +431,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 				setEnableToggleBtn(true);
 				return;
 			}
-			// }}.start();			
+			// }}.start();	
 		}
 		
 		Log.w("Create end... not diff :" + index);

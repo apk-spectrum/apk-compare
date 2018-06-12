@@ -59,6 +59,10 @@ class DiffTree extends JTree {
 		this.painting = flag;
 	}
 	
+	public boolean getpaintingFlag() {
+		return this.painting;
+	}
+	
 	public DiffTree(DefaultTreeModel treeModel) {
 		// TODO Auto-generated constructor stub
 		super(treeModel);

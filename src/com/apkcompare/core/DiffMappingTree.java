@@ -1,6 +1,5 @@
 package com.apkcompare.core;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -195,41 +194,30 @@ public class DiffMappingTree {
 					
 					for(int i=0;i < strtemp.length; i++) {
 						String str = strtemp[i];
+						
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
 						if(strtemp == mCertList || strtemp == tokenmCertList) {
-							
-//							str = strtemp[i].split(System.getProperty("line.separator"))[0];
-//							str = findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ");
-//							
-//							str = strtemp[i].split(System.getProperty("line.separator"))[1];
-//							str = str.substring(str.indexOf("CN="));
+							String[] tempstr = strtemp[i].split(System.getProperty("line.separator"));
 														 
-							str = "<html>" + "Owner : " + findString(strtemp[i].split(System.getProperty("line.separator"))[0], "CN=", ", ") + "<br/>"
-							+ "Issuer : " + findString(strtemp[i].split(System.getProperty("line.separator"))[1], "CN=", ", ") + "<br/>"
+							str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
+							+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
 							+ strtemp[i].split(System.getProperty("line.separator"))[5] + "<br/>"
 							+ strtemp[i].split(System.getProperty("line.separator"))[6] + "<br/>"
 							+ strtemp[i].split(System.getProperty("line.separator"))[7] + "<br/>"
-											
-							
 							+ "</html>";
 							
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
 							tempdata.setOrignalSig(strtemp[i]);
-							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
-							//"<html>Hello World!<br/>blahblahblah</html>"					
 							TabfolderchildNode.add(new SortNode(tempdata));
 						} else {
 							str = strtemp[i];
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, true);
-							//SortNode tempnode = new SortNode(new DiffTreeUserData(str));
-							//"<html>Hello World!<br/>blahblahblah</html>"					
 							TabfolderchildNode.add(new SortNode(tempdata));
 						}
 					}
 				}
 	        }
-		}
-		
+		}		
 		Log.d("End create Tree");
 	}
 
@@ -310,7 +298,7 @@ public class DiffMappingTree {
 	private static String findString(String ori, String begin, String end) {
 		
 		if(ori.indexOf(begin) < 0 || ori.indexOf(end) < 0) {
-			return "";
+			return ori;
 		}
 		
 		String temp = ori.substring(ori.indexOf(begin));
