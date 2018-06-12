@@ -19,8 +19,7 @@ import javax.swing.UIManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.apkscanner.gui.theme.TabbedPaneUIManager;
-import com.apkscanner.gui.util.ImageScaler;
+import com.apkcompare.util.ApkCompareUtil;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 import com.apkscanner.util.XmlPath;
@@ -29,7 +28,7 @@ import com.apkscanner.util.ZipFileUtil;
 public enum Resource
 {
 	STR_APP_NAME				(Type.TEXT, "@app_name"),
-	STR_APP_VERSION				(Type.TEXT, "2.3.4"),
+	STR_APP_VERSION				(Type.TEXT, "0.7.0"),
 	STR_APP_BUILD_MODE			(Type.TEXT, "eng"),
 	STR_APP_MAKER				(Type.TEXT, "jin_h.lee / sunggyu.kam"),
 	STR_APP_MAKER_EMAIL			(Type.TEXT, "jin_h.lee@samsung.com;sunggyu.kam@samsung.com"),
@@ -426,7 +425,26 @@ public enum Resource
 	IMG_ADD_TO_DESKTOP			(Type.IMAGE, "add-to-desktop.png"),
 	IMG_ASSOCIATE_APK			(Type.IMAGE, "associate.png"),
 	IMG_UNASSOCIATE_APK			(Type.IMAGE, "unassociate.png"),
-
+	
+	
+	IMG_DIFF_TOOLBAR_ADD			(Type.IMAGE, "diff_toolbar_add.png"),
+	IMG_DIFF_TOOLBAR_EDITOR		(Type.IMAGE, "diff_toolbar_editor.png"),
+	IMG_DIFF_TOOLBAR_IDEN			(Type.IMAGE, "diff_toolbar_iden.png"),
+	IMG_DIFF_DRAG_AND_DROP			(Type.IMAGE, "diff_draganddrop.png"),	
+	IMG_DIFF_TOOLBAR_SETTING			(Type.IMAGE, "diff_toolbar_setting.png"),
+	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
+	IMG_DIFF_APP_ICON				(Type.IMAGE, "diff_app_icon.png"),
+	
+	//http://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/24/folder-icon.png
+	//https://www.shareicon.net/diff-94479
+	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
+	//https://www.shareicon.net/setting-598385
+	
+	
+	IMG_DIFF_TREE_FOLDER_ICON				(Type.IMAGE, "diff_tree_icon_folder.png"),
+	IMG_DIFF_TREE_APK_ICON				(Type.IMAGE, "diff_tree_icon_apk.png"),
+	IMG_DIFF_APK_OPEN_ICON				(Type.IMAGE, "diff_apk_open.png"),
+	
 	BIN_PATH					(Type.BIN, ""),	
 
 	BIN_ADB_LNX					(Type.BIN, "adb", "nux"),
@@ -459,8 +477,7 @@ public enum Resource
 	PROP_LAST_FILE_OPEN_PATH	(Type.PROP, "last_file_open_path", ""),
 	PROP_LAST_FILE_SAVE_PATH	(Type.PROP, "last_file_save_path", ""),
 	PROP_SOVE_LEAD_TIME			(Type.PROP, "solve_lead_time"),
-	PROP_CURRENT_THEME			(Type.PROP, "Current_theme", UIManager.getSystemLookAndFeelClassName()),
-	PROP_TABBED_UI_THEME		(Type.PROP, "tabbed_pane_ui", TabbedPaneUIManager.DEFAULT_TABBED_UI),
+	PROP_CURRENT_THEME			(Type.PROP, "Current_theme", UIManager.getSystemLookAndFeelClassName()),	
 	PROP_WINDOW_WIDTH			(Type.PROP, "window_size_width", Resource.INT_WINDOW_SIZE_WIDTH_MIN),
 	PROP_WINDOW_HEIGHT			(Type.PROP, "window_size_height", Resource.INT_WINDOW_SIZE_HEIGHT_MIN),
 	PROP_SAVE_WINDOW_SIZE		(Type.PROP, "save_window_size", false),
@@ -669,7 +686,7 @@ public enum Resource
 	public ImageIcon getImageIcon(int width, int height)
 	{
 		if(type != Type.IMAGE) return null;
-		ImageIcon tempImg = new ImageIcon(ImageScaler.getScaledImage(new ImageIcon(getURL()),width,height));
+		ImageIcon tempImg = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(getURL()),width,height));
 
 		return tempImg;
 	}

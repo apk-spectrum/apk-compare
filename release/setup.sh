@@ -1,10 +1,10 @@
 #!/bin/bash
 
-APP_PATH="/opt/APKScanner"
-APP_FILE="ApkScanner.jar"
+APP_PATH="/opt/APKCompare"
+APP_FILE="ApkCompare.jar"
 
 # java 버전 확인
-java_ver=$(java -version 2>&1 | sed '1!{d}; /^java version/!d; s/java version \"\([0-9].[0-9]\).*\"/\1/')
+java_ver=$(java -version 2>&1 | sed '1!{d}; /^\(java\|openjdk\) version/!d; s/\(java\|openjdk\) version \"\([0-9].[0-9]\).*\"/\2/')
 
 if [ "$java_ver" == "" ] || [ "$java_ver" != "$(echo $java_ver | awk '{ if($1 >= 1.7) { print $1 } }')" ]; then
     if [ "$java_ver" != "" ]; then
@@ -16,12 +16,12 @@ if [ "$java_ver" == "" ] || [ "$java_ver" != "$(echo $java_ver | awk '{ if($1 >=
     exit
 fi
 
-cat << EOF > ./APKScanner.sh
+cat << EOF > ./APKCompare.sh
 #!/bin/bash
 java -Xms512m -Xmx1024m -jar $APP_PATH/$APP_FILE "\$@" > /dev/null
 EOF
 
-jar -xf ApkScanner.jar icons/AppIcon.png
+jar -xf ApkCompare.jar icons/AppIcon.png
 
 echo "{}" > settings.txt
 
@@ -29,7 +29,7 @@ sudo chmod 755 tool/adb
 sudo chmod 755 tool/aapt
 sudo chmod 755 tool/d2j-dex2jar.sh
 sudo chmod 755 tool/d2j_invoke.sh
-sudo chmod 755 APKScanner.sh
+sudo chmod 755 APKCompare.sh
 
 sudo rm -rf $APP_PATH
 
@@ -57,19 +57,19 @@ sudo chmod 666 $APP_PATH/settings.txt
 #    echo "keytool 을 찾을수 없습니다."
 #fi
 
-cat << EOF > ./apkscanner.desktop
+cat << EOF > ./apkcompare.desktop
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
 Type=Application
 Exec=java -jar $APP_PATH/$APP_FILE %f
-Name=APK Scanner
-Comment=APK Scanner
+Name=APK Compare
+Comment=APK Compare
 Icon=$APP_PATH/icons/AppIcon.png
 MimeType=application/apk;application/vnd.android.package-archive;
 EOF
 
-sudo mv -f ./apkscanner.desktop /usr/share/applications/apkscanner.desktop
+sudo mv -f ./apkcompare.desktop /usr/share/applications/apkcompare.desktop
 
 if [ ! -e /usr/share/mime/application/vnd.android.package-archive.xml ]; then
 cat << EOF > ./vnd.android.package-archive.xml
@@ -115,22 +115,22 @@ EOF
     sudo rm -f /usr/share/mime/packages/vnd.android.package-archive.xml
 fi
 
-if [ -e ~/.local/share/applications/mimeapps.list ]; then
-cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
-cat ~/.local/share/applications/mimeapps_old.list \
-	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
-	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkscanner.desktop;/' > ~/.local/share/applications/mimeapps.list
-else
-cat << EOF > ~/.local/share/applications/mimeapps.list
-[Added Associations]
-application/vnd.android.package-archive=apkscanner.desktop;
-EOF
-fi
+#if [ -e ~/.local/share/applications/mimeapps.list ]; then
+#cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
+#cat ~/.local/share/applications/mimeapps_old.list \
+#	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
+#	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkcompare.desktop;/' > ~/.local/share/applications/mimeapps.list
+#else
+#cat << EOF > ~/.local/share/applications/mimeapps.list
+#[Added Associations]
+#application/vnd.android.package-archive=apkcompare.desktop;
+#EOF
+#fi
 
-if [ -e ~/.p4qt/ApplicationSettings.xml ]; then
-    cat ~/.p4qt/ApplicationSettings.xml | sed '/EditorMappings/,/StringList/{/<String>apk/d; /<String>ppk/d; s/.*<\/StringList>.*/  <String>apk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n  <String>ppk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n <\/StringList>/}' > .ApplicationSettings.xml
-    mv .ApplicationSettings.xml ~/.p4qt/ApplicationSettings.xml
-fi
+#if [ -e ~/.p4qt/ApplicationSettings.xml ]; then
+#    cat ~/.p4qt/ApplicationSettings.xml | sed '/EditorMappings/,/StringList/{/<String>apk/d; /<String>ppk/d; s/.*<\/StringList>.*/  <String>apk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n  <String>ppk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n <\/StringList>/}' > .ApplicationSettings.xml
+#    mv .ApplicationSettings.xml ~/.p4qt/ApplicationSettings.xml
+#fi
 
 echo "Complete"
 

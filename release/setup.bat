@@ -4,8 +4,8 @@
 
 cd
 
-set APP_PATH=C:\Program Files\APKScanner
-set APP_FILE=ApkScanner.exe
+set APP_PATH=C:\Program Files\APKCompare
+set APP_FILE=ApkCompare.exe
 
 set SRC_PATH=%~dp0.
 echo SRC_PATH : %SRC_PATH%
@@ -14,7 +14,7 @@ if not exist "%SRC_PATH%\%APP_FILE%" (
     set SRC_PATH=C:
     if not exist "%SRC_PATH%\%APP_FILE%" (
         echo Fail : No such %APP_FILE% file
-        echo Info : Please copy the APKScanner folder to the C:\ path.
+        echo Info : Please copy the APKCompare folder to the C:\ path.
         echo Info : And run setup.bat as administrator.
         goto exit
     )
@@ -83,14 +83,17 @@ if not exist "%APP_PATH%" (
 )
 
 rem --- Copy files ---
-copy /Y "%SRC_PATH%\ApkScanner.exe" "%APP_PATH%"
-copy /Y "%SRC_PATH%\ApkScanner.jar" "%APP_PATH%"
+copy /Y "%SRC_PATH%\ApkCompare.exe" "%APP_PATH%"
+copy /Y "%SRC_PATH%\ApkCompare.jar" "%APP_PATH%"
+copy /Y "%SRC_PATH%\ApkCompareContextMenuHandler.dll" "%APP_PATH%"
 copy /Y "%SRC_PATH%\lib\*" "%APP_PATH%\lib"
 copy /Y "%SRC_PATH%\tool\*" "%APP_PATH%\tool"
 copy /Y "%SRC_PATH%\tool\lib\*" "%APP_PATH%\tool\lib"
 copy /Y "%SRC_PATH%\data\build-master-target-product-security\*" "%APP_PATH%\data\build-master-target-product-security"
 
-rem --- Launch APK Scanner  ---
+regsvr32.exe "%APP_PATH%\ApkCompareContextMenuHandler.dll"
+
+rem --- Launch APK Compare  ---
 "%APP_PATH%\%APP_FILE%"
 
 echo Complete

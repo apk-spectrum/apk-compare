@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">APK Scanner</string>
+	<string name="app_name">APK Compare</string>
 	<string name="app_version">Ver. </string>
 
 	<string name="title_install_wizard">APK Install Wizard</string>
