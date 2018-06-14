@@ -330,12 +330,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									SystemUtil.openFile(temp.makeFilebyNode());
 								} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
 									Log.d("open diff program : " + temp.state);
-									String openner;
-									if(SystemUtil.isLinux()) {
-										openner = "/opt/p4v-2017.3.1601999/bin/p4merge";
-									} else {
-										openner = "p4merge";
-									}
+									String openner = (String)Resource.PROP_DIFF_TOOL.getData();
 									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);										
 									SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
 											othertemp.makeFilebyNode().getAbsolutePath()});
