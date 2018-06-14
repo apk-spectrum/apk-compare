@@ -44,7 +44,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	/**
 	 * The size of the transparent drag area.
 	 */
-	private int dividerDragSize = 50;
+	private int dividerDragSize = 49;
 	private int y = 0;
 	Color defaultColor = new Color(234, 234, 234);
 	Color selectdefaultColor = defaultColor.darker();
@@ -59,7 +59,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	 * Useful values are in the range 0 to {@link #dividerDragSize}.
 	 * Default is centered.
 	 */
-	private int dividerDragOffset = 1;
+	private int dividerDragOffset = 0;
 		
 	static public class SplitPaintData {		
 		int index;
