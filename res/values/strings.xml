@@ -213,6 +213,7 @@ they're removed before the application is published</string>
 
 	<string name="settings_title">Settings</string>
 	<string name="settings_editor">Editor</string>
+	<string name="settings_diff_tool">Diff Tool</string>
 	<string name="settings_res">Framework-res</string>
 	<string name="settings_check_installed">Check installed</string>
 	<string name="settings_language">Language</string>

@@ -213,6 +213,7 @@ eng 바이너리 또는 PBS user 바이너리에 사용 됩니다.</string>
 
 	<string name="settings_title">환경설정</string>
 	<string name="settings_editor">편집기</string>
+	<string name="settings_diff_tool">컴페어</string>
 	<string name="settings_res">프레임워크 리소스</string>
 	<string name="settings_check_installed">설치시 동일 패키지 팝업 유무</string>
 	<string name="settings_language">언어</string>

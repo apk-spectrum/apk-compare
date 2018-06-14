@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -32,16 +31,16 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileSystemView;
 
-import com.apkcompare.gui.util.ApkFileChooser;
+import com.apkcompare.util.SystemUtil;
 import com.apkscanner.jna.FileInfo;
 import com.apkscanner.jna.FileVersion;
 import com.apkscanner.resource.Resource;
-import com.apkscanner.util.SystemUtil;
 
 public class SettingDlg extends JDialog implements ActionListener{
+	private static final long serialVersionUID = -3310023069238192716L;
+
 	private JComboBox<String> jcbLanguage;
 	private String propStrLanguage;
 	private JComboBox<String> jcbEditors;
@@ -49,13 +48,13 @@ public class SettingDlg extends JDialog implements ActionListener{
 	private ArrayList<String> propRecentEditors;
 	private static final String ACT_CMD_EDITOR_EXPLOERE = "ACT_CMD_EDITOR_EXPLOERE";
 	private static final String ACT_CMD_CREATE_SHORTCUT = "ACT_CMD_CREATE_SHORTCUT";
-	private static final String ACT_CMD_ASSOCIATE_APK_FILE = "ACT_CMD_ASSOCIATE_APK_FILE";
+	//private static final String ACT_CMD_ASSOCIATE_APK_FILE = "ACT_CMD_ASSOCIATE_APK_FILE";
 
 	private static final String ACT_CMD_SAVE = "ACT_CMD_SAVE";
 	private static final String ACT_CMD_EXIT = "ACT_CMD_EXIT";
 	
-	private static String fontOfTheme;
-	
+	//private static String fontOfTheme;
+
 	public SettingDlg(Window owner) {
 		super(owner);
 
@@ -63,7 +62,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		Object font = UIManager.get("Label.font");
 		UIManager.put("Label.font", null);
-		fontOfTheme = new Font(new JLabel().getFont().getFamily(), Font.PLAIN, 12).getFamily();
+		//fontOfTheme = new Font(new JLabel().getFont().getFamily(), Font.PLAIN, 12).getFamily();
 		UIManager.put("Label.font", font);
 
 		initialize(owner);
@@ -191,7 +190,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		rowHeadConst.gridy++;
 		contentConst.gridy++;
 
-		panel.add(new JLabel(Resource.STR_SETTINGS_EDITOR.getString()), rowHeadConst);
+		panel.add(new JLabel(Resource.STR_SETTINGS_DIFF_TOOL.getString()), rowHeadConst);
 
 		final JTextField editorPath = new JTextField();
 		editorPath.setEditable(false);
@@ -216,16 +215,9 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		if(SystemUtil.isWindows()) {
 			try {
-				for(String suffix: new String[]{".txt", "txtfile", "textfile", ".xml", ".log"}) {
-					String cmdLine = SystemUtil.getOpenCommand(suffix);
-					if(cmdLine != null && cmdLine.indexOf("%1") >= 0) {
-						String cmd = cmdLine.replaceAll("\"?(.*\\.[eE][xX][eE])\"?.*", "$1");
-						if(!cmd.equals(cmdLine)) {
-							String path = SystemUtil.getRealPath(cmd);
-							if(path != null && !propRecentEditors.contains(path) && !path.equalsIgnoreCase(propStrEditorPath)) {
-								jcbEditors.addItem(path);
-							}
-						}
+				for(String path: SystemUtil.getCompareApps()) {
+					if(path != null && !propRecentEditors.contains(path) && !path.equalsIgnoreCase(propStrEditorPath)) {
+						jcbEditors.addItem(path);
 					}
 				}
 			} catch (Exception e) {
@@ -254,33 +246,17 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		if(SystemUtil.isWindows()) {
 			JPanel etcBtnPanel = new JPanel();
-			if(!SystemUtil.hasShortCut()) {
-				JButton btnShortcut = new JButton(Resource.STR_BTN_CREATE_SHORTCUT.getString());
-				btnShortcut.setToolTipText(Resource.STR_BTN_CREATE_SHORTCUT_LAB.getString());
-				btnShortcut.setActionCommand(ACT_CMD_CREATE_SHORTCUT);
-				btnShortcut.addActionListener(this);
-				btnShortcut.setIcon(Resource.IMG_ADD_TO_DESKTOP.getImageIcon(32,32));
-				btnShortcut.setVerticalTextPosition(JLabel.BOTTOM);
-				btnShortcut.setHorizontalTextPosition(JLabel.CENTER);
-				etcBtnPanel.add(btnShortcut);
-			}
 
-			JButton btnAssociate = new JButton();
-			if(!SystemUtil.isAssociatedWithFileType(".apk")) {
-				btnAssociate.setText(Resource.STR_BTN_ASSOC_FTYPE.getString());
-				btnAssociate.setToolTipText(Resource.STR_BTN_ASSOC_FTYPE_LAB.getString());
-				btnAssociate.setIcon(Resource.IMG_ASSOCIATE_APK.getImageIcon(32,32));
-			} else {
-				btnAssociate.setText(Resource.STR_BTN_UNASSOC_FTYPE.getString());
-				btnAssociate.setToolTipText(Resource.STR_BTN_UNASSOC_FTYPE_LAB.getString());
-				btnAssociate.setIcon(Resource.IMG_UNASSOCIATE_APK.getImageIcon(32,32));
-			}
-			btnAssociate.setActionCommand(ACT_CMD_ASSOCIATE_APK_FILE);
-			btnAssociate.addActionListener(this);
-			btnAssociate.setVerticalTextPosition(JLabel.BOTTOM);
-			btnAssociate.setHorizontalTextPosition(JLabel.CENTER);
-
-			etcBtnPanel.add(btnAssociate);
+			JButton btnShortcut = new JButton(Resource.STR_BTN_CREATE_SHORTCUT.getString());
+			btnShortcut.setToolTipText(Resource.STR_BTN_CREATE_SHORTCUT_LAB.getString());
+			btnShortcut.setActionCommand(ACT_CMD_CREATE_SHORTCUT);
+			btnShortcut.addActionListener(this);
+			btnShortcut.setIcon(Resource.IMG_ADD_TO_DESKTOP.getImageIcon(32,32));
+			btnShortcut.setVerticalTextPosition(JLabel.BOTTOM);
+			btnShortcut.setHorizontalTextPosition(JLabel.CENTER);
+			btnShortcut.setEnabled(!SystemUtil.hasShortCut());
+			
+			etcBtnPanel.add(btnShortcut);
 
 			panel.add(etcBtnPanel, contentConst);
 
@@ -312,7 +288,6 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String actCommand = e.getActionCommand();
 
 		if(ACT_CMD_EDITOR_EXPLOERE.equals(actCommand)) {
@@ -328,22 +303,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 			}
 		} else if(ACT_CMD_CREATE_SHORTCUT.equals(actCommand)) {
 			SystemUtil.createShortCut();
-			if(SystemUtil.hasShortCut()) {
-				((JButton)e.getSource()).setVisible(false);
-			}			
-		} else if(ACT_CMD_ASSOCIATE_APK_FILE.equals(actCommand)) {
-			JButton btn = (JButton)e.getSource();
-			if(!SystemUtil.isAssociatedWithFileType(".apk")) {
-				SystemUtil.setAssociateFileType(".apk");
-				btn.setText(Resource.STR_BTN_UNASSOC_FTYPE.getString());
-				btn.setToolTipText(Resource.STR_BTN_UNASSOC_FTYPE_LAB.getString());
-				btn.setIcon(Resource.IMG_UNASSOCIATE_APK.getImageIcon(32,32));
-			} else {
-				SystemUtil.unsetAssociateFileType(".apk");
-				btn.setText(Resource.STR_BTN_ASSOC_FTYPE.getString());
-				btn.setToolTipText(Resource.STR_BTN_ASSOC_FTYPE_LAB.getString());
-				btn.setIcon(Resource.IMG_ASSOCIATE_APK.getImageIcon(32,32));
-			}		
+			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut());
 		} else if(ACT_CMD_SAVE.equals(actCommand)) {
 			saveSettings();
 			this.dispose();
@@ -356,9 +316,9 @@ public class SettingDlg extends JDialog implements ActionListener{
 	{
 		propStrLanguage = (String)Resource.PROP_LANGUAGE.getData();
 
-		propStrEditorPath = SystemUtil.getRealPath((String)Resource.PROP_EDITOR.getData());
+		propStrEditorPath = SystemUtil.getRealPath((String)Resource.PROP_DIFF_TOOL.getData());
 
-		String recentEditors = (String)Resource.PROP_RECENT_EDITOR.getData();
+		String recentEditors = (String)Resource.PROP_RECENT_DIFF_TOOL.getData();
 		propRecentEditors = new ArrayList<String>();
 		for(String s: recentEditors.split(File.pathSeparator)) {
 			if(!s.isEmpty()) {
@@ -384,14 +344,14 @@ public class SettingDlg extends JDialog implements ActionListener{
 			if(propStrEditorPath != null) {
 				propRecentEditors.add(0, propStrEditorPath);
 			}
-			Resource.PROP_EDITOR.setData(editorPath);
+			Resource.PROP_DIFF_TOOL.setData(editorPath);
 
 			StringBuilder recentEditors = new StringBuilder();
 			for(String editor: propRecentEditors) {
 				recentEditors.append(editor);
 				recentEditors.append(File.pathSeparator);
 			}
-			Resource.PROP_RECENT_EDITOR.setData(recentEditors.toString());
+			Resource.PROP_RECENT_DIFF_TOOL.setData(recentEditors.toString());
 		}
 	}
 }

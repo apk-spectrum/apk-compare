@@ -20,8 +20,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.apkcompare.util.ApkCompareUtil;
+import com.apkcompare.util.SystemUtil;
 import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
 import com.apkscanner.util.XmlPath;
 import com.apkscanner.util.ZipFileUtil;
 
@@ -238,6 +238,7 @@ public enum Resource
 
 	STR_SETTINGS_TITLE			(Type.TEXT, "@settings_title"),
 	STR_SETTINGS_EDITOR			(Type.TEXT, "@settings_editor"),
+	STR_SETTINGS_DIFF_TOOL		(Type.TEXT, "@settings_diff_tool"),
 	STR_SETTINGS_RES			(Type.TEXT, "@settings_res"),
 	STR_SETTINGS_CHECK_INSTALLED(Type.TEXT, "@settings_check_installed"),
 	STR_SETTINGS_LANGUAGE		(Type.TEXT, "@settings_language"),
@@ -466,6 +467,8 @@ public enum Resource
 	PROP_LANGUAGE				(Type.PROP, "language", SystemUtil.getUserLanguage()),
 	PROP_EDITOR					(Type.PROP, "editor", null /* see getDefValue() */),
 	PROP_RECENT_EDITOR			(Type.PROP, "recent_editor", ""),
+	PROP_DIFF_TOOL				(Type.PROP, "diff_tool", null /* see getDefValue() */),
+	PROP_RECENT_DIFF_TOOL		(Type.PROP, "recent_diff_tool", ""),
 	PROP_ADB_PATH				(Type.PROP, "adb_path", ""),
 	PROP_ADB_POLICY_SHARED		(Type.PROP, "adb_policy_shared", true),
 	PROP_ADB_DEVICE_MONITORING	(Type.PROP, "adb_device_monitoring", true),
@@ -759,6 +762,13 @@ public enum Resource
 		case PROP_EDITOR:
 			try {
 				obj = SystemUtil.getDefaultEditor();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case PROP_DIFF_TOOL:
+			try {
+				obj = SystemUtil.getDefaultCompareApp();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
