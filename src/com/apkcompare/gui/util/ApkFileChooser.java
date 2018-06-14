@@ -5,9 +5,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import com.apkscanner.gui.messagebox.MessageBoxPane;
-import com.apkscanner.gui.messagebox.MessageBoxPool;
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.util.Log;
 
 public class ApkFileChooser

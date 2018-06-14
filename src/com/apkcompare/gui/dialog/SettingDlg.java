@@ -33,10 +33,10 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
+import com.apkcompare.resource.Resource;
 import com.apkcompare.util.SystemUtil;
 import com.apkscanner.jna.FileInfo;
 import com.apkscanner.jna.FileVersion;
-import com.apkscanner.resource.Resource;
 
 public class SettingDlg extends JDialog implements ActionListener{
 	private static final long serialVersionUID = -3310023069238192716L;

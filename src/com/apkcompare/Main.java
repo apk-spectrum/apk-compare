@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import com.apkcompare.gui.DynamicTreeDemo;
 import com.apkcompare.gui.dialog.AboutDlg;
 import com.apkcompare.gui.dialog.LogDlg;
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 

@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import com.apkscanner.gui.messagebox.MessageBoxPane;
-import com.apkscanner.resource.Resource;
+import com.apkcompare.gui.util.MessageBoxPane;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.util.Log;
 
 public class LogDlg

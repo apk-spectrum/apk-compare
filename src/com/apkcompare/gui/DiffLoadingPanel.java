@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 
 public class DiffLoadingPanel extends JPanel{
 	private static final long serialVersionUID = 7818687226070887018L;

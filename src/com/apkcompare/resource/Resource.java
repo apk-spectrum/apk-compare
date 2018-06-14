@@ -1,4 +1,4 @@
-package com.apkscanner.resource;
+package com.apkcompare.resource;
 
 import java.awt.Font;
 import java.io.BufferedWriter;

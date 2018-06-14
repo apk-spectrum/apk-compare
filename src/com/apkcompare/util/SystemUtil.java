@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.util.ConsolCmd;
 import com.apkscanner.util.Log;
 import com.sun.jna.platform.win32.Advapi32Util;

@@ -51,8 +51,8 @@ import com.apkcompare.gui.dialog.SettingDlg;
 import com.apkcompare.gui.util.ApkFileChooser;
 import com.apkcompare.gui.util.FileDrop;
 import com.apkcompare.gui.util.MessageBoxPane;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{

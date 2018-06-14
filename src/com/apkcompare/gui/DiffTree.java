@@ -19,13 +19,13 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkcompare.data.ImageDiffTreeUserData;
 import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
+import com.apkcompare.resource.Resource;
 import com.apkcompare.util.ApkCompareUtil;
 
 

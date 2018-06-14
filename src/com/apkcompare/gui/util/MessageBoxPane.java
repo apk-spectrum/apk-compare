@@ -20,7 +20,7 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 
 public class MessageBoxPane extends JOptionPane
 {

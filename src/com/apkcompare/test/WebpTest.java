@@ -1,9 +1,9 @@
-package com.apkscanner.test;
+package com.apkcompare.test;
 
 
 import javax.swing.JLabel;
 
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
 
