@@ -17,7 +17,7 @@ public class SystemUtil extends com.apkscanner.util.SystemUtil {
 
 	public static String getDefaultCompareApp() throws Exception {
 		String[] apps = getCompareApps();
-		return (apps != null && apps.length > 0) ? apps[0] : "";
+		return (apps != null && apps.length > 0) ? apps[0] : null;
 	}
 
 	public static String[] getCompareApps() throws Exception {

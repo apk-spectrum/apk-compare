@@ -113,6 +113,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		private class CellItem {
 			public CellItem(String path) {
+				if(path== null) return;
 				File file = new File(path);
 				text = getFileDescription(path);
 				if(text == null || text.isEmpty()) {
