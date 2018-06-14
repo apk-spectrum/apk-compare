@@ -55,7 +55,7 @@ import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.resource.Resource;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
-public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener, WindowListener{
+public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	private static final long serialVersionUID = -8110312211026585408L;
 	private ApkComparer apkComparer;
     
@@ -797,32 +797,4 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	    }
 	}
 
-	private void finished()
-	{
-		Log.v("finished()");
-
-		if((boolean)Resource.PROP_SAVE_WINDOW_SIZE.getData(false)) {
-			int width = (int)getSize().getWidth();
-			int height = (int)getSize().getHeight();
-			if(Resource.PROP_WINDOW_WIDTH.getInt() != width
-					|| Resource.PROP_WINDOW_HEIGHT.getInt() != (int)getSize().getHeight()) {
-				Resource.PROP_WINDOW_WIDTH.setData(width);
-				Resource.PROP_WINDOW_HEIGHT.setData(height);
-			}
-		}
-
-		setVisible(false);
-		
-		apkComparer.getApkScanner(LEFT).clear(true);
-		apkComparer.getApkScanner(RIGHT).clear(true);
-		System.exit(0);
-	}
-	
-	@Override public void windowClosing(WindowEvent e) { finished(); }
-	@Override public void windowClosed(WindowEvent e) { finished(); }
-	@Override public void windowOpened(WindowEvent e) { }
-	@Override public void windowIconified(WindowEvent e) { }
-	@Override public void windowDeiconified(WindowEvent e) { }
-	@Override public void windowActivated(WindowEvent e) { }
-	@Override public void windowDeactivated(WindowEvent e) { }
 }
