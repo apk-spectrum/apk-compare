@@ -34,9 +34,9 @@ SetCompressor Zlib
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 LangString APP_NAME ${LANG_ENGLISH} "APK Compare"
-LangString APP_NAME ${LANG_KOREAN} "APK 컴페어"
+LangString APP_NAME ${LANG_KOREAN} "APK Compare"
 LangString APP_NAME_DESC ${LANG_ENGLISH} "APK Compare"
-LangString APP_NAME_DESC ${LANG_KOREAN} "APK 컴페어"
+LangString APP_NAME_DESC ${LANG_KOREAN} "APK Compare"
 LangString ADD_STARTMENU ${LANG_ENGLISH} "Start Menu Shortcuts"
 LangString ADD_STARTMENU ${LANG_KOREAN} "시작메뉴에 추가"
 LangString ADD_STARTMENU_DESC ${LANG_ENGLISH} "Start Menu Shortcuts"
@@ -73,6 +73,8 @@ Section $(APP_NAME) Section1
 	File "release\tool\aapt.exe"
 	File "release\tool\AaptNativeWrapper32.dll"
 	File "release\tool\AaptNativeWrapper64.dll"
+
+    Exec '"regsvr32.exe" "$INSTDIR\ApkCompareContextMenuHandler.dll"'
 
 SectionEnd
 
@@ -120,6 +122,8 @@ Section Uninstall
 	;Remove from registry...
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PROJECTNAME}"
 	DeleteRegKey HKLM "SOFTWARE\${PROJECTNAME}"
+
+	Exec '"regsvr32.exe" /u "$INSTDIR\ApkCompareContextMenuHandler.dll"'
 
 	; Delete self
 	Delete "$INSTDIR\uninstall.exe"
