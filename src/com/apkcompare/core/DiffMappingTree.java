@@ -197,13 +197,19 @@ public class DiffMappingTree {
 						
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
 						if(strtemp == mCertList || strtemp == tokenmCertList) {
-							String[] tempstr = strtemp[i].split(System.getProperty("line.separator"));
-														 
-							str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
-							+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
-							+ strtemp[i].split(System.getProperty("line.separator"))[5] + "<br/>"
-							+ strtemp[i].split(System.getProperty("line.separator"))[6] + "<br/>"
-							+ strtemp[i].split(System.getProperty("line.separator"))[7] + "<br/>"
+							String[] tempstr = strtemp[i].split("\\r?\\n");
+							 
+							//str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
+							//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
+														
+							//Log.d(tempstr[0]);
+							
+							str =  "<html>"
+							+ tempstr[0] + "<br/>"
+							+ tempstr[1] + "<br/>"
+							+ tempstr[5] + "<br/>"
+							+ tempstr[6] + "<br/>"
+							+ tempstr[7] + "<br/>"
 							+ "</html>";
 							
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
