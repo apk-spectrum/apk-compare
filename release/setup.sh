@@ -25,20 +25,20 @@ jar -xf ApkCompare.jar icons/AppIcon.png
 
 echo "{}" > settings.txt
 
-sudo chmod 755 tool/adb
+#sudo chmod 755 tool/adb
 sudo chmod 755 tool/aapt
-sudo chmod 755 tool/d2j-dex2jar.sh
-sudo chmod 755 tool/d2j_invoke.sh
+#sudo chmod 755 tool/d2j-dex2jar.sh
+#sudo chmod 755 tool/d2j_invoke.sh
 sudo chmod 755 APKCompare.sh
 
 sudo rm -rf $APP_PATH
 
 sudo mkdir -p $APP_PATH
-sudo mkdir -p $APP_PATH/data
-sudo mkdir -p $APP_PATH/data/build-master-target-product-security
+#sudo mkdir -p $APP_PATH/data
+#sudo mkdir -p $APP_PATH/data/build-master-target-product-security
 sudo mkdir -p $APP_PATH/icons
 sudo mkdir -p $APP_PATH/tool
-sudo mkdir -p $APP_PATH/plugin
+#sudo mkdir -p $APP_PATH/plugin
 if [ ! -d $APP_PATH ]; then
     echo Fail : Not create the folder : %APP_PATH%
     exit
@@ -46,7 +46,6 @@ fi
 sudo cp -rf ./* $APP_PATH
 
 sudo chmod 666 $APP_PATH/settings.txt
-
 
 #keytool_path=$(which java)
 #keytool_path=$(readlink -f $keytool_path)

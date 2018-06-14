@@ -434,7 +434,6 @@ public enum Resource
 	IMG_DIFF_DRAG_AND_DROP			(Type.IMAGE, "diff_draganddrop.png"),	
 	IMG_DIFF_TOOLBAR_SETTING			(Type.IMAGE, "diff_toolbar_setting.png"),
 	IMG_DIFF_TOOLBAR_INFO		(Type.IMAGE, "diff_toolbar_info.png"),
-	IMG_DIFF_APP_ICON				(Type.IMAGE, "diff_app_icon.png"),
 	
 	//http://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/24/folder-icon.png
 	//https://www.shareicon.net/diff-94479

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-APP_PATH="/opt/APKScanner"
-APP_VERSION="2.3.4"
-APP_FILE="ApkScanner.jar"
+APP_PATH="/opt/APKCompare"
+APP_VERSION="0.1"
+APP_FILE="ApkCompare.jar"
 
 DEBIAN_DATA_PATH="./debian"$APP_PATH
 
@@ -13,13 +13,13 @@ rm -rf ./debian
 ##############################
 mkdir -p ./debian/DEBIAN
 cat << EOF > ./debian/DEBIAN/control
-Package: apk-scanner
+Package: apk-compare
 Version: $APP_VERSION-1
 Section: utils
 Architecture: all
-Maintainer: Sunggyu Kam <sunggyu.kam@samsung.com>
-Installed-Size: 62060
-Description: APK Scanner $APP_VERSION
+Maintainer: Jinhyeong Lee <jin_h.lee@samsung.com>
+Installed-Size: 12060
+Description: APK Compare $APP_VERSION
 EOF
 cat ./debian/DEBIAN/control
 
@@ -29,97 +29,50 @@ cat ./debian/DEBIAN/control
 ##############################
 TARGET_PATH="$DEBIAN_DATA_PATH/"
 mkdir -p "$TARGET_PATH"
-cp -f "release/ApkScanner.jar" "$TARGET_PATH"
+cp -f "release/ApkCompare.jar" "$TARGET_PATH"
+cp -f "release/ScannerCore.jar" "$TARGET_PATH"
 cp -f "res/icons/AppIcon.png" "$TARGET_PATH"
-
-TARGET_PATH="$DEBIAN_DATA_PATH/data/build-master-target-product-security/"
-mkdir -p "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/Android.mk" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/media.pk8" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/media.x509.pem" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/platform.pk8" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/platform.x509.pem" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/README" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/shared.pk8" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/shared.x509.pem" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/testkey.pk8" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/testkey.x509.pem" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/verity.pk8" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/verity.x509.pem" "$TARGET_PATH"
-cp -f "release/data/build-master-target-product-security/verity_key" "$TARGET_PATH"
 
 TARGET_PATH="$DEBIAN_DATA_PATH/lib/"
 mkdir -p "$TARGET_PATH"
 cp -f "release/lib/commons-cli-1.3.1.jar" "$TARGET_PATH"
-cp -f "release/lib/ddmlib.jar" "$TARGET_PATH"
-cp -f "release/lib/guava-18.0.jar" "$TARGET_PATH"
 cp -f "release/lib/jna-4.4.0.jar" "$TARGET_PATH"
 cp -f "release/lib/jna-platform-4.4.0.jar" "$TARGET_PATH"
 cp -f "release/lib/json-simple-1.1.1.jar" "$TARGET_PATH"
+cp -f "release/lib/libwebp-imageio64.so" "$TARGET_PATH"
+cp -f "release/lib/luciad-webp-imageio.jar" "$TARGET_PATH"
 cp -f "release/lib/mslinks.jar" "$TARGET_PATH"
-cp -f "release/lib/rsyntaxtextarea-2.6.1.jar" "$TARGET_PATH"
-cp -f "release/lib/rstaui-2.6.0.jar" "$TARGET_PATH"
-cp -f "release/lib/autocomplete-2.6.0.jar" "$TARGET_PATH"
 
 TARGET_PATH="$DEBIAN_DATA_PATH/tool/"
 mkdir -p "$TARGET_PATH"
 cp -f "release/tool/aapt" "$TARGET_PATH"
-cp -f "release/tool/adb" "$TARGET_PATH"
-cp -f "release/tool/apktool.jar" "$TARGET_PATH"
-cp -f "release/tool/d2j-dex2jar.sh" "$TARGET_PATH"
-cp -f "release/tool/d2j_invoke.sh" "$TARGET_PATH"
-cp -f "release/tool/jd-gui-1.4.0.jar" "$TARGET_PATH"
-cp -f "release/tool/jd_icon_128.png" "$TARGET_PATH"
 cp -f "release/tool/libAaptNativeWrapper32.so" "$TARGET_PATH"
 cp -f "release/tool/libAaptNativeWrapper64.so" "$TARGET_PATH"
 cp -f "release/tool/libc++32.so" "$TARGET_PATH"
 cp -f "release/tool/libc++64.so" "$TARGET_PATH"
-cp -f "release/tool/signapk.jar" "$TARGET_PATH"
-
-TARGET_PATH="$DEBIAN_DATA_PATH/tool/lib/"
-mkdir -p "$TARGET_PATH"
-cp -f "release/tool/lib/antlr-runtime-3.5.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/asm-debug-all-4.1.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/d2j-base-cmd-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/d2j-jasmin-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/d2j-smali-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-ir-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-reader-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-reader-api-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-tools-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-translator-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dex-writer-2.0.jar" "$TARGET_PATH"
-cp -f "release/tool/lib/dx-1.7.jar" "$TARGET_PATH"
-
-TARGET_PATH="$DEBIAN_DATA_PATH/tool/lib64/"
-mkdir -p "$TARGET_PATH"
-cp -f "release/tool/lib64/libc++.so" "$TARGET_PATH"
-
-TARGET_PATH="$DEBIAN_DATA_PATH/plugin/"
-mkdir -p "$TARGET_PATH"
 
 ##############################
 # etc
 ##############################
-cat << EOF > $DEBIAN_DATA_PATH/APKScanner.sh
+cat << EOF > $DEBIAN_DATA_PATH/APKCompare.sh
 #!/bin/bash
 java -Xms512m -Xmx1024m -jar $APP_PATH/$APP_FILE "\$@" > /dev/null
 EOF
 
-chmod 775 $DEBIAN_DATA_PATH/APKScanner.sh
+chmod 775 $DEBIAN_DATA_PATH/APKCompare.sh
 
 echo "{}" > $DEBIAN_DATA_PATH/settings.txt
 chmod 666 $DEBIAN_DATA_PATH/settings.txt
 
 mkdir -p ./debian/usr/share/applications/
-cat << EOF > ./debian/usr/share/applications/apkscanner.desktop
+cat << EOF > ./debian/usr/share/applications/apkcompare.desktop
 [Desktop Entry]
 Encoding=UTF-8
 Version=$APP_VERSION
 Type=Application
 Exec=java -jar $APP_PATH/$APP_FILE %f
-Name=APK Scanner
-Comment=APK Scanner
+Name=APK Compare
+Comment=APK Compare
 Icon=$APP_PATH/AppIcon.png
 MimeType=application/apk;application/vnd.android.package-archive;
 EOF
@@ -171,22 +124,22 @@ EOF
     sudo rm -f /usr/share/mime/packages/vnd.android.package-archive.xml
 fi
 
-if [ -e ~/.local/share/applications/mimeapps.list ]; then
-cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
-cat ~/.local/share/applications/mimeapps_old.list \
-	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
-	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkscanner.desktop;/' > ~/.local/share/applications/mimeapps.list
-else
-cat << EOF > ~/.local/share/applications/mimeapps.list
-[Added Associations]
-application/vnd.android.package-archive=apkscanner.desktop;
-EOF
-fi
+#if [ -e ~/.local/share/applications/mimeapps.list ]; then
+#cp -f ~/.local/share/applications/mimeapps.list ~/.local/share/applications/mimeapps_old.list
+#cat ~/.local/share/applications/mimeapps_old.list \
+#	| sed '/application\/vnd\.android\.package-archive\=/d;/^$/d' \
+#	| sed 's/^\s*\[.*\]\s*$/&\napplication\/vnd.android.package-archive=apkcompare.desktop;/' > ~/.local/share/applications/mimeapps.list
+#else
+#cat << EOF > ~/.local/share/applications/mimeapps.list
+#[Added Associations]
+#application/vnd.android.package-archive=apkcompare.desktop;
+#EOF
+#fi
 
-if [ -e ~/.p4qt/ApplicationSettings.xml ]; then
-    cat ~/.p4qt/ApplicationSettings.xml | sed '/EditorMappings/,/StringList/{/<String>apk/d; /<String>ppk/d; s/.*<\/StringList>.*/  <String>apk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n  <String>ppk\|default\|\/opt\/APKScanner\/APKScanner\.sh<\/String>\n <\/StringList>/}' > .ApplicationSettings.xml
-    mv .ApplicationSettings.xml ~/.p4qt/ApplicationSettings.xml
-fi
+#if [ -e ~/.p4qt/ApplicationSettings.xml ]; then
+#    cat ~/.p4qt/ApplicationSettings.xml | sed '/EditorMappings/,/StringList/{/<String>apk/d; /<String>ppk/d; s/.*<\/StringList>.*/  <String>apk\|default\|\/opt\/APKCompare\/APKCompare\.sh<\/String>\n  <String>ppk\|default\|\/opt\/APKCompare\/APKCompare\.sh<\/String>\n <\/StringList>/}' > .ApplicationSettings.xml
+#    mv .ApplicationSettings.xml ~/.p4qt/ApplicationSettings.xml
+#fi
 echo end postinst
 POST_EOF
 chmod 775 ./debian/DEBIAN/postinst
@@ -195,4 +148,4 @@ chmod 775 ./debian/DEBIAN/postinst
 # build
 ##############################
 dpkg-deb --build debian
-mv debian.deb APKScanner.deb
+mv debian.deb APKCompare.deb

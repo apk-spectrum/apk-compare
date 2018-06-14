@@ -71,7 +71,7 @@ public class Main {
 		
         frame.setContentPane(newContentPane);
         frame.setSize(1000, 800);
-        frame.setIconImage(Resource.IMG_DIFF_APP_ICON.getImageIcon().getImage());
+        frame.setIconImage(Resource.IMG_APP_ICON.getImageIcon().getImage());
         frame.setLocationRelativeTo(null);        
         // Display the window.
         //frame.pack();

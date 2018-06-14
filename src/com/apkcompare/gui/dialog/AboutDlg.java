@@ -52,6 +52,6 @@ public class AboutDlg /*extends JDialog*/
 		hep.setBackground(label.getBackground());
 		hep.setPreferredSize(new Dimension(400,300));
 
-		MessageBoxPane.showMessageDialog(component, hep, Resource.STR_BTN_ABOUT.getString(), MessageBoxPane.INFORMATION_MESSAGE, Resource.IMG_DIFF_APP_ICON.getImageIcon(100,100));
+		MessageBoxPane.showMessageDialog(component, hep, Resource.STR_BTN_ABOUT.getString(), MessageBoxPane.INFORMATION_MESSAGE, Resource.IMG_APP_ICON.getImageIcon(100,100));
 	}
 }

@@ -40,10 +40,10 @@ if not "%java_ver%" GEQ "1.7" (
 )
 
 rem --- Kill a running demon of adb ---
-if exist "%APP_PATH%\tool\adb.exe" (
-    echo adb kill-server
-    "%APP_PATH%\tool\adb.exe" kill-server
-)
+rem if exist "%APP_PATH%\tool\adb.exe" (
+rem     echo adb kill-server
+rem     "%APP_PATH%\tool\adb.exe" kill-server
+rem )
 
 rem --- Remove an existed folder ---
 rmdir /s /q "%APP_PATH%"
@@ -57,26 +57,26 @@ if not exist "%APP_PATH%\tool" (
      echo Create folder : %APP_PATH%\tool
      mkdir "%APP_PATH%\tool"
 )
-if not exist "%APP_PATH%\tool\lib" (
-     echo Create folder : %APP_PATH%\tool\lib
-     mkdir "%APP_PATH%\tool\lib"
-)
+rem if not exist "%APP_PATH%\tool\lib" (
+rem      echo Create folder : %APP_PATH%\tool\lib
+rem      mkdir "%APP_PATH%\tool\lib"
+rem )
 if not exist "%APP_PATH%\lib" (
      echo Create folder : %APP_PATH%\lib
      mkdir "%APP_PATH%\lib"
 )
-if not exist "%APP_PATH%\data" (
-     echo Create folder : %APP_PATH%\data
-     mkdir "%APP_PATH%\data"
-)
-if not exist "%APP_PATH%\data\build-master-target-product-security" (
-     echo Create folder : %APP_PATH%\data\build-master-target-product-security
-     mkdir "%APP_PATH%\data\build-master-target-product-security"
-)
-if not exist "%APP_PATH%\plugin" (
-     echo Create folder : %APP_PATH%\plugin
-     mkdir "%APP_PATH%\plugin"
-)
+rem if not exist "%APP_PATH%\data" (
+rem      echo Create folder : %APP_PATH%\data
+rem      mkdir "%APP_PATH%\data"
+rem )
+rem if not exist "%APP_PATH%\data\build-master-target-product-security" (
+rem      echo Create folder : %APP_PATH%\data\build-master-target-product-security
+rem      mkdir "%APP_PATH%\data\build-master-target-product-security"
+rem )
+rem if not exist "%APP_PATH%\plugin" (
+rem      echo Create folder : %APP_PATH%\plugin
+rem      mkdir "%APP_PATH%\plugin"
+rem )
 if not exist "%APP_PATH%" (
     echo Fail : No created a folder : %APP_PATH%
     goto exit
@@ -86,10 +86,11 @@ rem --- Copy files ---
 copy /Y "%SRC_PATH%\ApkCompare.exe" "%APP_PATH%"
 copy /Y "%SRC_PATH%\ApkCompare.jar" "%APP_PATH%"
 copy /Y "%SRC_PATH%\ApkCompareContextMenuHandler.dll" "%APP_PATH%"
+copy /Y "%SRC_PATH%\ScannerCore.jar" "%APP_PATH%"
 copy /Y "%SRC_PATH%\lib\*" "%APP_PATH%\lib"
 copy /Y "%SRC_PATH%\tool\*" "%APP_PATH%\tool"
-copy /Y "%SRC_PATH%\tool\lib\*" "%APP_PATH%\tool\lib"
-copy /Y "%SRC_PATH%\data\build-master-target-product-security\*" "%APP_PATH%\data\build-master-target-product-security"
+rem copy /Y "%SRC_PATH%\tool\lib\*" "%APP_PATH%\tool\lib"
+rem copy /Y "%SRC_PATH%\data\build-master-target-product-security\*" "%APP_PATH%\data\build-master-target-product-security"
 
 regsvr32.exe "%APP_PATH%\ApkCompareContextMenuHandler.dll"
 
