@@ -213,16 +213,14 @@ public class SettingDlg extends JDialog implements ActionListener{
 			jcbEditors.addItem(editor);
 		}
 
-		if(SystemUtil.isWindows()) {
-			try {
-				for(String path: SystemUtil.getCompareApps()) {
-					if(path != null && !propRecentEditors.contains(path) && !path.equalsIgnoreCase(propStrEditorPath)) {
-						jcbEditors.addItem(path);
-					}
+		try {
+			for(String path: SystemUtil.getCompareApps()) {
+				if(path != null && !propRecentEditors.contains(path) && !path.equalsIgnoreCase(propStrEditorPath)) {
+					jcbEditors.addItem(path);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		JButton btnExplorer = new JButton(Resource.STR_BTN_SELF_SEARCH.getString());
