@@ -94,8 +94,8 @@ public class Main {
 
 		frame.setVisible(false);
 		
-		apkComparer.getApkScanner(0).clear(true);
-		apkComparer.getApkScanner(1).clear(true);
+		apkComparer.getApkScanner(ApkComparer.LEFT).clear(true);
+		apkComparer.getApkScanner(ApkComparer.RIGHT).clear(true);
 		System.exit(0);
 	}
     static class Compareevent implements WindowListener, KeyEventDispatcher {
