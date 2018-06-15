@@ -45,6 +45,10 @@ public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 		ImagePassKeyDiffTreeUserData temp = (ImagePassKeyDiffTreeUserData)data;
 		//Log.d(temp.getImageIcon() + ":" + icon);
 		
+		if(icon == null || temp.getImageIcon() == null) {
+			return title.equals(temp.title);
+		}
+		
 		if(compareImages(temp.getImageIcon(), icon)) {
 			return true;
 		} else {

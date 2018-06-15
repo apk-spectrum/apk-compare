@@ -38,7 +38,11 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
 	@Override
 	public boolean compare(DiffTreeUserData data) {
 		ImageDiffTreeUserData temp = (ImageDiffTreeUserData)data;
-				
+		
+		if(icon == null || temp.getImageIcon() == null) {
+			return title.equals(temp.title);
+		}
+		
 		if(compareImages(temp.getImageIcon(), icon)) {
 			return true;
 		} else {

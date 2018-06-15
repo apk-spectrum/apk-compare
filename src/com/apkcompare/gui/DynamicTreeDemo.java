@@ -331,9 +331,12 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 								} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
 									Log.d("open diff program : " + temp.state);
 									String openner = (String)Resource.PROP_DIFF_TOOL.getData();
-									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);										
-									SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
-											othertemp.makeFilebyNode().getAbsolutePath()});
+									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);									
+									boolean result = SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
+											othertemp.makeFilebyNode().getAbsolutePath()});									
+									if(!result) {
+										MessageBoxPane.showError(Main.frame, "please check Diff program" + "(" + openner+ ")");
+									}
 									
 								}
 							}
@@ -410,12 +413,12 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
 				// new Thread(){
 				// public void run(){
-				arrayTree[index].setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				Log.w("start diff :" + index);
 
 				startDiff();
 				
-				arrayTree[index].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				
 				for (int i = 0; i < 2; i++) {
 					arrayTreemodel[i].reload();

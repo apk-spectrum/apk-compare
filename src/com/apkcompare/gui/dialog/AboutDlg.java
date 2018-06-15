@@ -29,7 +29,7 @@ public class AboutDlg /*extends JDialog*/
 		body.append("  <a href=\"https://code.google.com/archive/p/json-simple/\" title=\"json-simple Site\">json-simple-1.1.1</a>");
 		body.append("  <br/><br/><hr/>");
 		body.append("  Programmed by <a href=\"mailto:" + Resource.STR_APP_MAKER_EMAIL.getString() + "\" title=\"" + Resource.STR_APP_MAKER_EMAIL.getString() + "\">" + Resource.STR_APP_MAKER.getString() + "</a>, 2015.<br/>");
-		body.append("  It is open source project on <a href=\"https://github.sec.samsung.net/sunggyu-kam/apk-scanner\" title=\"APK Scanner Site\">SEC Github</a>");
+		body.append("  It is open source project on <a href=\"https://github.sec.samsung.net/jin-h-lee/apk-compare\" title=\"APK Compare Site\">SEC Github</a>");
 		body.append("</div>");
 
 		JLabel label = new JLabel();
