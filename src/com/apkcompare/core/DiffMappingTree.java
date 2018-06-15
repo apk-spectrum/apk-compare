@@ -203,14 +203,15 @@ public class DiffMappingTree {
 							//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
 														
 							//Log.d(tempstr[0]);
-							
-							str =  "<html>"
-							+ tempstr[0] + "<br/>"
-							+ tempstr[1] + "<br/>"
-							+ tempstr[5] + "<br/>"
-							+ tempstr[6] + "<br/>"
-							+ tempstr[7] + "<br/>"
-							+ "</html>";
+							if(tempstr.length > 8) {							
+								str =  "<html>"
+								+ tempstr[0] + "<br/>"
+								+ tempstr[1] + "<br/>"
+								+ tempstr[5] + "<br/>"
+								+ tempstr[6] + "<br/>"
+								+ tempstr[7] + "<br/>"
+								+ "</html>";
+							}
 							
 							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
 							tempdata.setOrignalSig(strtemp[i]);
