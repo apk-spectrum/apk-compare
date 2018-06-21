@@ -103,8 +103,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 		
 		if (extension.endsWith(".xml")) {
 			if (temp.title.startsWith("res/") || temp.title.equals("AndroidManifest.xml")) {
-				//Log.d("title : " + title);
-				
+				//Log.d("title : " + title);				
 				if(getXmlByApkinfo(apkinfo, title).equals(getXmlByApkinfo(temp.apkinfo, temp.title))) {					
 					return true;
 				} else {
@@ -114,7 +113,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 			}
 		}
 		
-		return true;
+		return false;
 	}
 	
 	private boolean isEqual(InputStream i1, InputStream i2)
