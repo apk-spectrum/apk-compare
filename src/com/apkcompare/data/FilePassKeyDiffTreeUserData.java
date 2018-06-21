@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -151,7 +153,26 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 		
 	@Override
-	public File makeFilebyNode() {
+	public File makeFilebyNode() {		
+		if(title.equals("resources.arsc")) {
+			Log.d("resource.arsc");
+			return makeFileForString(join(this.apkinfo.resources, System.lineSeparator()));
+		}		
 		return makeFileForFile(title);
+	}
+	
+	private String join(String[] list, String conjunction)
+	{
+	   StringBuilder sb = new StringBuilder();
+	   boolean first = true;
+	   for (String item : list)
+	   {
+	      if (first)
+	         first = false;
+	      else
+	         sb.append(conjunction);
+	      sb.append(item);
+	   }
+	   return sb.toString();
 	}
 }
