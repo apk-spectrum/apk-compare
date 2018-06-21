@@ -156,7 +156,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	public File makeFilebyNode() {		
 		if(title.equals("resources.arsc")) {
 			Log.d("resource.arsc");
-			return makeFileForString(join(this.apkinfo.resources, System.lineSeparator()));
+			return makeFileForString(join(this.apkinfo.resourcesWithValue, System.lineSeparator()));
 		}		
 		return makeFileForFile(title);
 	}
