@@ -146,7 +146,7 @@ public class DiffTreeUserData implements MappingImp{
     }
 
     protected File makeFileForString(String str) {
-    	Log.d("open String : ");
+    	Log.d("open String");
     	
     	if(apkinfo == null) {
     		Log.d("apkinfo is null");

@@ -78,6 +78,7 @@ public class DiffMappingTree {
 	        		if(strapkinfo.equals("Icon")) {
 	        			String temppath = apkInfo.manifest.application.icons[apkInfo.manifest.application.icons.length - 1].name;
 	        			String title = temppath.substring(temppath.lastIndexOf(File.separator) + 1);
+	        			String respath = temppath.substring(temppath.lastIndexOf("!") + 2);
 	        			
 	        			ImageDiffTreeUserData userdata = new ImageDiffTreeUserData(title, "Icon", apkInfo);
 	        			
@@ -85,7 +86,7 @@ public class DiffMappingTree {
 	    					ImageIcon icon;
 							try {
 								icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(temppath))),50,50));
-								userdata.setImageIcon(icon);
+								userdata.setImageIcon(icon, respath);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
