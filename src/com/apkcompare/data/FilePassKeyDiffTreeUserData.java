@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -103,8 +105,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 		
 		if (extension.endsWith(".xml")) {
 			if (temp.title.startsWith("res/") || temp.title.equals("AndroidManifest.xml")) {
-				//Log.d("title : " + title);
-				
+				//Log.d("title : " + title);				
 				if(getXmlByApkinfo(apkinfo, title).equals(getXmlByApkinfo(temp.apkinfo, temp.title))) {					
 					return true;
 				} else {
@@ -114,7 +115,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 			}
 		}
 		
-		return true;
+		return false;
 	}
 	
 	private boolean isEqual(InputStream i1, InputStream i2)
@@ -152,7 +153,25 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 		
 	@Override
-	public File makeFilebyNode() {
+	public File makeFilebyNode() {		
+		if(title.equals("resources.arsc")) {			
+			return makeFileForString(join(this.apkinfo.resourcesWithValue, System.lineSeparator()));
+		}		
 		return makeFileForFile(title);
+	}
+	
+	private String join(String[] list, String conjunction)
+	{
+	   StringBuilder sb = new StringBuilder();
+	   boolean first = true;
+	   for (String item : list)
+	   {
+	      if (first)
+	         first = false;
+	      else
+	         sb.append(conjunction);
+	      sb.append(item);
+	   }
+	   return sb.toString();
 	}
 }
