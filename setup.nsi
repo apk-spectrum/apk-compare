@@ -2,7 +2,7 @@
 
 ; Define your application name
 !define PROJECTNAME "APK Compare"
-!define PROJECTNAMEANDVERSION "APK Compare 1.0"
+!define PROJECTNAMEANDVERSION "APK Compare 1.1"
 
 ; Main Install settings
 Name "${PROJECTNAMEANDVERSION}"

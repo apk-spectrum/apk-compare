@@ -59,7 +59,7 @@ sudo chmod 666 $APP_PATH/settings.txt
 cat << EOF > ./apkcompare.desktop
 [Desktop Entry]
 Encoding=UTF-8
-Version=1.0
+Version=1.1
 Type=Application
 Exec=java -jar $APP_PATH/$APP_FILE %f
 Name=APK Compare
