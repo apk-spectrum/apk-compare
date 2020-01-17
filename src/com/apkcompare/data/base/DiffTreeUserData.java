@@ -113,10 +113,11 @@ public class DiffTreeUserData implements MappingImp{
 		String extension = filePath.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
 		if (extension.endsWith(".xml")) {
 			if (filePath.startsWith("res/") || filePath.equals("AndroidManifest.xml")) {
-				convStrings = AaptNativeWrapper.Dump.getXmltree(apkinfo.filePath, new String[] { filePath });				
-				AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.resourceScanner);
-				a2x.setMultiLinePrint(true);
-				convStrings = a2x.toString().split(System.lineSeparator());
+				convStrings = AaptNativeWrapper.Dump.getXmltree(apkinfo.filePath, new String[] { filePath });
+				
+				//AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.a2xConvert);
+				//a2x.setMultiLinePrint(true);
+				convStrings = apkinfo.a2xConvert.convertToText(convStrings).split(System.lineSeparator());
 			} else {
 				ZipFileUtil.unZip(apkinfo.filePath, filePath, resFile.getAbsolutePath());
 			}

@@ -93,7 +93,7 @@ public class SystemUtil extends com.apkscanner.util.SystemUtil {
 			// P4 Merge
 			String p4Path = getRealPath("p4v");
 			if(p4Path != null && !p4Path.trim().isEmpty()) {
-				String[] result = ConsolCmd.exc(new String[] { "readlink", "-f",  p4Path }, true, null);
+				String[] result = ConsolCmd.exec(new String[] { "readlink", "-f",  p4Path }, true, null);
 				if(result != null && result.length > 0
 						&& result[0].matches("^/.*/p4v") && new File(result[0]).exists()) {
 					String p4merge = result[0].replaceAll("/p4v$", "/p4merge");
@@ -153,7 +153,7 @@ public class SystemUtil extends com.apkscanner.util.SystemUtil {
 			
 			shortPathList.add(0, cmd);
 
-			String[] result = ConsolCmd.exc(shortPathList.toArray(new String[shortPathList.size()]), true, null);
+			String[] result = ConsolCmd.exec(shortPathList.toArray(new String[shortPathList.size()]), true, null);
 			if(result != null) {
 				for(String r: result) {
 					if(r.matches(regular) && new File(r).exists()

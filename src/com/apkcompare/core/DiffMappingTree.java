@@ -21,7 +21,8 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.SortNode;
 import com.apkcompare.resource.Resource;
 import com.apkcompare.util.ApkCompareUtil;
-import com.apkscanner.core.scanner.PermissionGroupManager;
+import com.apkscanner.core.permissionmanager.PermissionGroupInfoExt;
+import com.apkscanner.core.permissionmanager.PermissionManager;
 import com.apkscanner.data.apkinfo.ActivityAliasInfo;
 import com.apkscanner.data.apkinfo.ActivityInfo;
 import com.apkscanner.data.apkinfo.ApkInfo;
@@ -38,6 +39,7 @@ import com.apkscanner.data.apkinfo.UsesConfigurationInfo;
 import com.apkscanner.data.apkinfo.UsesFeatureInfo;
 import com.apkscanner.data.apkinfo.UsesLibraryInfo;
 import com.apkscanner.data.apkinfo.UsesPermissionInfo;
+import com.apkscanner.resource.RProp;
 import com.apkscanner.util.FileUtil;
 import com.apkscanner.util.FileUtil.FSStyle;
 import com.apkscanner.util.Log;
@@ -140,7 +142,7 @@ public class DiffMappingTree {
 	    				e.printStackTrace();
 	    			}
 
-	    			String label = ApkInfoHelper.getResourceValue(apkInfo.widgets[i].lables, preferLang);
+	    			String label = ApkInfoHelper.getResourceValue(apkInfo.widgets[i].labels, preferLang);
 	    			if(label == null) label = ApkInfoHelper.getResourceValue(apkInfo.manifest.application.labels, preferLang);
 	    			String temp = label +" - " + apkInfo.widgets[i].size + " - " +  apkInfo.widgets[i].name + " - " + apkInfo.widgets[i].type;
 	    			
@@ -186,44 +188,36 @@ public class DiffMappingTree {
 	        	
 				String[] mCertList = apkInfo.certificates;
 				String[] mCertFiles = apkInfo.certFiles;
-				String[] tokenmCertList = apkInfo.ss_tokens;
-				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
+//				String[] tokenmCertList = apkInfo.ss_tokens;
+//				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
 	        					
 				
-				for(String[] strtemp : Arrays.asList(mCertList, tokenmCertList, tokenmCertFiles)) {
-					if(strtemp == null) continue;
-					
-					for(int i=0;i < strtemp.length; i++) {
-						String str = strtemp[i];
+				for(String str : mCertList) {
+					if(str == null) continue;
 						
 						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
-						if(strtemp == mCertList || strtemp == tokenmCertList) {
-							String[] tempstr = strtemp[i].split("\\r?\\n");
-							 
-							//str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
-							//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
-														
-							//Log.d(tempstr[0]);
-							if(tempstr.length > 8) {							
-								str =  "<html>"
-								+ tempstr[0] + "<br/>"
-								+ tempstr[1] + "<br/>"
-								+ tempstr[5] + "<br/>"
-								+ tempstr[6] + "<br/>"
-								+ tempstr[7] + "<br/>"
-								+ "</html>";
-							}
-							
-							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
-							tempdata.setOrignalSig(strtemp[i]);
-							TabfolderchildNode.add(new SortNode(tempdata));
-						} else {
-							str = strtemp[i];
-							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, true);
-							TabfolderchildNode.add(new SortNode(tempdata));
+						String[] tempstr = str.split("\\r?\\n");
+						 
+						//str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
+						//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
+													
+						//Log.d(tempstr[0]);
+						if(tempstr.length > 8) {							
+							str =  "<html>"
+							+ tempstr[0] + "<br/>"
+							+ tempstr[1] + "<br/>"
+							+ tempstr[5] + "<br/>"
+							+ tempstr[6] + "<br/>"
+							+ tempstr[7] + "<br/>"
+							+ "</html>";
 						}
-					}
+						
+						SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
+						tempdata.setOrignalSig(str);
+						TabfolderchildNode.add(new SortNode(tempdata));
+						
 				}
+				
 	        }
 		}		
 		Log.d("End create Tree");
@@ -404,48 +398,18 @@ public class DiffMappingTree {
 		String notGrantPermmissions = "";
 
 		ArrayList<UsesPermissionInfo> allPermissions = new ArrayList<UsesPermissionInfo>(); 
-		StringBuilder permissionList = new StringBuilder();
+		
 		if(apkInfo.manifest.usesPermission != null && apkInfo.manifest.usesPermission.length > 0) {
 			//permissionList.append("<uses-permission> [" +  apkInfo.manifest.usesPermission.length + "]\n");
 			for(UsesPermissionInfo info: apkInfo.manifest.usesPermission) {
-				allPermissions.add(info);
-				permissionList.append(info.name + " - " + info.protectionLevel);
-				if(info.isSignatureLevel()) hasSignatureLevel = true;
-				if(info.isSignatureOrSystemLevel()) hasSignatureOrSystemLevel = true;
-				if(info.isSystemLevel()) hasSystemLevel = true;
-				if(((info.isSignatureLevel() || info.isSignatureOrSystemLevel()) && !(isSamsungSign || isPlatformSign)) || info.isSystemLevel()) {
-					notGrantPermmissions += info.name + " - " + info.protectionLevel + "\n";
-				}
-				if(info.maxSdkVersion != null) {
-					permissionList.append(", maxSdkVersion : " + info.maxSdkVersion);
-				}
-				if(info.isDeprecated()) {
-					deprecatedPermissions += info.getDeprecatedMessage() + "\n\n";
-				}
-				permissionList.append("\n");
+				allPermissions.add(info);		
 			}
 		}
 		if(apkInfo.manifest.usesPermissionSdk23 != null && apkInfo.manifest.usesPermissionSdk23.length > 0) {
-			if(permissionList.length() > 0) {
-				permissionList.append("\n");
-			}
+			
 			//permissionList.append("<uses-permission-sdk-23> [" +  apkInfo.manifest.usesPermissionSdk23.length + "]\n");
 			for(UsesPermissionInfo info: apkInfo.manifest.usesPermissionSdk23) {
-				allPermissions.add(info);
-				permissionList.append(info.name + " - " + info.protectionLevel);
-				if(info.isSignatureLevel()) hasSignatureLevel = true;
-				if(info.isSignatureOrSystemLevel()) hasSignatureOrSystemLevel = true;
-				if(info.isSystemLevel()) hasSystemLevel = true;
-				if(((info.isSignatureLevel() || info.isSignatureOrSystemLevel()) && !(isSamsungSign || isPlatformSign)) || info.isSystemLevel()) {
-					notGrantPermmissions += info.name + " - " + info.protectionLevel + "\n";
-				}
-				if(info.maxSdkVersion != null) {
-					permissionList.append(", maxSdkVersion : " + info.maxSdkVersion);
-				}
-				if(info.isDeprecated()) {
-					deprecatedPermissions += info.getDeprecatedMessage() + "\n\n";
-				}
-				permissionList.append("\n");
+				allPermissions.add(info);			
 			}
 		}
 
@@ -456,52 +420,60 @@ public class DiffMappingTree {
 //			}
 			//permissionList.append("<permission> [" +  apkInfo.manifest.permission.length + "]\n");
 			for(PermissionInfo info: apkInfo.manifest.permission) {
-				permissionList.append(info.name + " - " + info.protectionLevel + "\n");
 				if(!"normal".equals(info.protectionLevel)) {
 					signaturePermissions += info.name + " - " + info.protectionLevel + "\n";
 				}
 			}
 		}
-		XmlPath xmlPermissions = new XmlPath(PermissionGroupManager.class.getResourceAsStream("/values/permissions-info/27/AndroidManifest.xml"));
+		//XmlPath xmlPermissions = new XmlPath(PermissionGroupManager.class.getResourceAsStream("/values/permissions-info/27/AndroidManifest.xml"));
 		
+		
+		PermissionManager permissionManager = new PermissionManager();
+		permissionManager.clearPermissions();
+		permissionManager.setPlatformSigned(isPlatformSign);
+		permissionManager.setTreatSignAsRevoked(RProp.B.PERM_TREAT_SIGN_AS_REVOKED.get());
+		permissionManager.addUsesPermission(apkInfo.manifest.usesPermission);
+		permissionManager.addUsesPermission(apkInfo.manifest.usesPermissionSdk23);
+		permissionManager.addDeclarePemission(apkInfo.manifest.permission);
+		
+		int selectSdkVer = apkInfo.manifest.usesSdk.targetSdkVersion;
+		permissionManager.setSdkVersion(selectSdkVer);
 		for(int i=0; i< allPermissions.size(); i++) {
-			UsesPermissionInfo temp = allPermissions.get(i);			
-			
-			XmlPath groupXPath = xmlPermissions.getNode("/manifest/permission-group[@name='" +  temp.permissionGroup + "']");
-			if(groupXPath != null) {
-				String path = getIconPath(groupXPath.getAttributes("android:icon"));
+			UsesPermissionInfo temp = allPermissions.get(i);
+			for(PermissionGroupInfoExt g: permissionManager.getPermissionGroups()) {				
+				String path = g.getIconPath();
+				
 				try {
 					ImageIcon icon;
 					icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(new URL(path)),16,16));
 					
-					SortNode tempnode = new SortNode(new PermissionDiffTreeUserData(temp.name + "  ["+ temp.protectionLevel+ "]", icon, apkInfo));					
+					SortNode tempnode = new SortNode(new PermissionDiffTreeUserData(temp.name, icon, apkInfo));					
 					childNodeapkinfo.add(tempnode);
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-								
 			}
 		}
 		
-		return permissionList.toString();
+		return null;
 	}
 	
-	private static String getIconPath(String value)
-	{
-		if(value == null || !value.startsWith("@drawable")) {
-			value = "@drawable/perm_group_unknown";
-		}
-		String path = value.replace("@drawable/", "");
-		
-		if(PermissionGroupManager.class.getResource("/icons/" + path + ".png") != null) {
-			path = PermissionGroupManager.class.getResource("/icons/" + path + ".png").toString();
-		} else {
-			//path = getClass().getResource("/icons/perm_group_default.png").toString();
-		}
-		
-		return path;
-	}
+//	private static String getIconPath(String value)
+//	{
+//		if(value == null || !value.startsWith("@drawable")) {
+//			value = "@drawable/perm_group_unknown";
+//		}
+//		String path = value.replace("@drawable/", "");
+//		
+//		if(PermissionGroupManager.class.getResource("/icons/" + path + ".png") != null) {
+//			path = PermissionGroupManager.class.getResource("/icons/" + path + ".png").toString();
+//		} else {
+//			//path = getClass().getResource("/icons/perm_group_default.png").toString();
+//		}
+//		
+//		return path;
+//	}
 	
 	
 //	public static ImageIcon getwebpImage(String path) {

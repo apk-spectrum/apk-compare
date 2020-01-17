@@ -88,10 +88,14 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	private String getXmlByApkinfo(ApkInfo tempapkinfo, String Res) {
 		String[] convStrings = null;
 		convStrings = AaptNativeWrapper.Dump.getXmltree(tempapkinfo.filePath, new String[] { Res });				
-		AxmlToXml a2x = new AxmlToXml(convStrings, tempapkinfo.resourceScanner);
-		a2x.setMultiLinePrint(true);
-		convStrings = a2x.toString().split(System.lineSeparator());
+		//AxmlToXml a2x = new AxmlToXml(convStrings, tempapkinfo.resourceScanner);
+		//AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.a2xConvert);
+		//a2x.setMultiLinePrint(true);
+		convStrings = tempapkinfo.a2xConvert.convertToText(convStrings).split(System.lineSeparator());
 		
+//		a2x.setMultiLinePrint(true);
+//		convStrings = a2x.toString().split(System.lineSeparator());
+//		
 		StringBuilder sb = new StringBuilder();
 		for (String s : convStrings)
 			sb.append(s + "\n");

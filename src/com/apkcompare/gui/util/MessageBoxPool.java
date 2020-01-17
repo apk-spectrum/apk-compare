@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
 
-import com.apkscanner.resource.Resource;
+import com.apkcompare.resource.Resource;
 
 public class MessageBoxPool {
 	public static final int MSG_NO_SUCH_APK_FILE = 1;

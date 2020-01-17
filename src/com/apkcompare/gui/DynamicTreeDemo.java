@@ -55,6 +55,7 @@ import com.apkcompare.resource.Resource;
 import com.apkscanner.data.apkinfo.ApkInfo;
 import com.apkscanner.util.Log;
 import com.apkscanner.util.SystemUtil;
+
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	private static final long serialVersionUID = -8110312211026585408L;
 	private ApkComparer apkComparer;
@@ -332,11 +333,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									Log.d("open diff program : " + temp.state);
 									String openner = (String)Resource.PROP_DIFF_TOOL.getData();
 									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);									
-									boolean result = SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
-											othertemp.makeFilebyNode().getAbsolutePath()});									
-									if(!result) {
-										MessageBoxPane.showError(Main.frame, "please check Diff program" + "(" + openner+ ")");
-									}
+									SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
+											othertemp.makeFilebyNode().getAbsolutePath()});
+//									if(!result) {
+//										MessageBoxPane.showError(Main.frame, "please check Diff program" + "(" + openner+ ")");
+//									}
 									
 								}
 							}
