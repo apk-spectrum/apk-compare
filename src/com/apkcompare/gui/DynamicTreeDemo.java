@@ -362,7 +362,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1));
 			arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
 			
-			DiffMappingTree.createTree(apkinfodiff1, arraytreeNode[index]);
+			DiffMappingTree mappingtree = new DiffMappingTree();
+			mappingtree.createTree(apkinfodiff1, arraytreeNode[index]);
 			
 			arrayTree[index].setModel(arrayTreemodel[index]);
 			showCardpanel(CARD_LAYOUT_TREE, index);
