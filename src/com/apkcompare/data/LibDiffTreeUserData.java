@@ -12,16 +12,13 @@ public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	
 	public LibDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public LibDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public LibDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setFilesInfo(String size, String compressed) {
@@ -31,7 +28,6 @@ public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
 		LibDiffTreeUserData temp = (LibDiffTreeUserData)data;		
 		

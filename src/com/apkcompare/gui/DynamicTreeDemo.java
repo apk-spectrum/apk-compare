@@ -1,6 +1,5 @@
 package com.apkcompare.gui;
 
-import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -212,7 +211,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     class TreeAdjustmentListener implements AdjustmentListener {
     	  public void adjustmentValueChanged(AdjustmentEvent evt) {
-    	    Adjustable source = evt.getAdjustable();
+//    	    Adjustable source = evt.getAdjustable();
 //    	    if (evt.getValueIsAdjusting()) {
 //    	      return;
 //    	    }
@@ -374,7 +373,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		
 		synchronized (arrayTree[index].lock) {
 			//Log.w("start create Tree :" + index);
-			arrayTree[index].lock.valueOf(true);
+			//arrayTree[index].lock.valueOf(true);
 			pathtextfiled[index].setText(apkinfodiff1.filePath);
 			pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
 
@@ -387,7 +386,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 			arrayTree[index].setModel(arrayTreemodel[index]);
 			showCardpanel(CARD_LAYOUT_TREE, index);
 			
-			arrayTree[index].lock.valueOf(false);
+			//arrayTree[index].lock.valueOf(false);
 			arrayTree[index].lock.notify();
 			Log.w("end create Tree :" + index);
 		}
@@ -400,7 +399,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 					arrayTree[otherindex].lock.wait();
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -423,7 +421,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 				CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
 				// Log.w("change filepath" + index);
 
-				Difflock.valueOf(true);
+				//Difflock.valueOf(true);
 				for (int i = 0; i < 2; i++) {
 					// loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
 					// showCardpanel(CARD_LAYOUT_LOADING, index);
@@ -445,7 +443,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 					arrayTreemodel[i].reload();
 					arrayTree[i].setpaintingFlag(true);
 				}
-				Difflock.valueOf(false);
+				//Difflock.valueOf(false);
 				Log.w("end diff :" + index);
 				setEnableToggleBtn(true);
 				return;
@@ -479,7 +477,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     private void setfolderstate(SortNode rootmynode) {
     	
-    	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+    	@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
     	
     	while (myreenode.hasMoreElements()) {
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
@@ -503,7 +502,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     private void clearnodepath(SortNode rootmynode) {
-    	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+    	@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
     	
     	while (myreenode.hasMoreElements()) {
     		DefaultMutableTreeNode mynode = myreenode.nextElement();
@@ -519,7 +519,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     private void mappingtree(SortNode rootmynode, JTree othertree) {
     	
-    	Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+    	@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
     	TreePath samebefore = null;
     	
     	while (myreenode.hasMoreElements()) {
@@ -541,7 +542,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     		
     		
     		TreePath leftTreepath = new TreePath(mynode.getPath()); 
-            String str = leftTreepath.toString();
+//            String str = leftTreepath.toString();
             
 //            int spaceindex = str.indexOf("[");
 //            if(spaceindex > -1) {
@@ -617,7 +618,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
             // Traverse children
             if (node.getChildCount() >= 0) {
-                for (Enumeration e=node.children(); e.hasMoreElements(); ) {
+                for (Enumeration<?> e=node.children(); e.hasMoreElements(); ) {
                     TreeNode n = (TreeNode)e.nextElement();
                     TreePath path = parent.pathByAddingChild(n);
                     
@@ -649,7 +650,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
     @Override
     public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
+		//String command = e.getActionCommand();
 		// Log.d(e.toString());
 
 		if (e.getSource() instanceof JToggleButton) {
@@ -701,10 +702,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     
-    private boolean ishavevisiblenode(JTree tree, TreePath parent) {
+    @SuppressWarnings("unused")
+	private boolean ishavevisiblenode(JTree tree, TreePath parent) {
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			for (Enumeration e = node.children(); e.hasMoreElements();) {
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
 				TreeNode n = (TreeNode) e.nextElement();				
 				TreePath path = parent.pathByAddingChild(n);
 				if(tree.isVisible(path)) {
@@ -727,7 +729,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			for (Enumeration e = node.children(); e.hasMoreElements();) {
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
 				TreeNode n = (TreeNode) e.nextElement();
 				TreePath path = parent.pathByAddingChild(n);
 				getPaths(tree, path, expanded, list);
@@ -742,7 +744,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		// TODO Auto-generated method stub		
 		if(((JTree)e.getSource()).getSelectionPath() == null) return;
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getPath().getLastPathComponent();

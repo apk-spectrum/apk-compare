@@ -27,6 +27,7 @@ import com.apkcompare.resource.RImg;
 import com.apkspectrum.util.Log;
 
 
+@SuppressWarnings("serial")
 class DiffTree extends JTree {
 	public static final Color diffcolor = new Color(224,224,255);
 	public static final Color diffcolorselect = new Color(96,107,192);
@@ -62,7 +63,6 @@ class DiffTree extends JTree {
 	}
 	
 	public DiffTree(DefaultTreeModel treeModel) {
-		// TODO Auto-generated constructor stub
 		super(treeModel);
 		initTree();
 	}

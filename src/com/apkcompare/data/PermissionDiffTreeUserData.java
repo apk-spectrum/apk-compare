@@ -10,19 +10,15 @@ public class PermissionDiffTreeUserData extends ImagePassKeyDiffTreeUserData {
 	public PermissionDiffTreeUserData(String title, ImageIcon icon) {
 		super(title);
 		this.icon = icon;
-		
-		// TODO Auto-generated constructor stub
 	}
 	public PermissionDiffTreeUserData(String title, String key, ImageIcon icon, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
 		this.icon = icon;
-		// TODO Auto-generated constructor stub
 	}
 	
 	public PermissionDiffTreeUserData(String title, ImageIcon icon, ApkInfo apkinfo) {
 		super(title, "", apkinfo);
 		this.icon = icon;
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override

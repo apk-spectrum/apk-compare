@@ -15,16 +15,13 @@ public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	
 	public ImagePassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public ImagePassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public ImagePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void setImageIcon(ImageIcon icon) {

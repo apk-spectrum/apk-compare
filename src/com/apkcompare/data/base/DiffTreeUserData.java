@@ -103,7 +103,6 @@ public class DiffTreeUserData implements MappingImp{
 		try {			
 			resFile = File.createTempFile("fileopen", filePath.substring(filePath.lastIndexOf(".")), resFile.getParentFile());
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -164,7 +163,6 @@ public class DiffTreeUserData implements MappingImp{
 						
 			resFile = File.createTempFile("openstring", ".txt", resFile.getParentFile());
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		String[] convStrings = str.split(System.lineSeparator());
@@ -186,7 +184,6 @@ public class DiffTreeUserData implements MappingImp{
     
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		return this.title.equals(data.toString());
 	}
 		

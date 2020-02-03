@@ -19,11 +19,9 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
 	String respath = null;
 	public ImageDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	public ImageDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void setImageIcon(ImageIcon icon, String respath) {
@@ -83,7 +81,8 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
         return bufferedImage;
     }
     
-    private File ImageiconToFile() {
+    @SuppressWarnings("unused")
+	private File ImageiconToFile() {
         BufferedImage bi = (BufferedImage) icon.getImage();
         //File outputfile = new File("saved.png");
         
@@ -96,7 +95,6 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
         	outputfile = File.createTempFile("image", ".png", new File(apkinfo.tempWorkPath + File.separator));
 			ImageIO.write(bi, "png", outputfile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         return outputfile;

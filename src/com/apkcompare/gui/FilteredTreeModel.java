@@ -86,7 +86,8 @@ class FilteredTreeModel extends DefaultTreeModel {
             return node.getChildCount();
         } else {
             int childCount = 0;
-            Enumeration<DefaultMutableTreeNode> children = node.children();
+            @SuppressWarnings("unchecked")
+			Enumeration<DefaultMutableTreeNode> children = node.children();
             while (children.hasMoreElements()) {
                 DefaultMutableTreeNode treenode = children.nextElement();
                 

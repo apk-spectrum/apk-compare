@@ -22,16 +22,13 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	
 	public FilePassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public FilePassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public FilePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 
 //	public static void setApkfilepath(String mapkfilePath1, String mapkfilePath2) {
@@ -41,7 +38,6 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
 		FilePassKeyDiffTreeUserData temp = (FilePassKeyDiffTreeUserData)data;
 		
@@ -51,14 +47,12 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	protected boolean issameFile(FilePassKeyDiffTreeUserData temp) {
-		ZipFile zipFile, zipFile2;
-		try {
-			zipFile = new ZipFile(apkinfo.filePath);
+		try (ZipFile zipFile = new ZipFile(apkinfo.filePath);
+			ZipFile zipFile2 = new ZipFile(temp.apkinfo.filePath);
+				)
+		{
 			ZipEntry entry = zipFile.getEntry(title);
-			
-			zipFile2 = new ZipFile(temp.apkinfo.filePath);
 			ZipEntry entry2 = zipFile2.getEntry(temp.title);
-			
 			
 			if(entry == null || entry.isDirectory() || entry2 == null || entry2.isDirectory() ) {
 				Log.w("entry was no file " + temp.title);
@@ -76,7 +70,6 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -101,7 +94,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	private boolean issamestringForRes(FilePassKeyDiffTreeUserData temp) {
-		String[] convStrings = null;
+		//String[] convStrings = null;
 		String extension = temp.title.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
 		
 		if (extension.endsWith(".xml")) {

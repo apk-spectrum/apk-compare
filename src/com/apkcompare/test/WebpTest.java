@@ -33,7 +33,6 @@ public class WebpTest {
 		try {
 			image = ImageIO.read(new File("/home/leejinhyeong/Desktop/luciad-webp-imageio-873c5677244b/src/test/resources/lossless.webp"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -11,17 +11,14 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	boolean isFile;
 	public SigPassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public SigPassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SigPassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo, boolean isFile) {
 		super(title, key, apkinfo);
 		this.isFile = isFile; 
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setOrignalSig(String original) {
@@ -31,7 +28,6 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		SigPassKeyDiffTreeUserData temp = (SigPassKeyDiffTreeUserData)data;
 
 		if(isFile) {
