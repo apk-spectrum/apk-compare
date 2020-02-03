@@ -1,10 +1,9 @@
 package com.apkcompare;
 
-import com.apkscanner.core.scanner.AaptScanner;
-import com.apkscanner.core.scanner.ApkScanner;
-import com.apkscanner.core.scanner.ApkScanner.Status;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
+import com.apkspectrum.core.scanner.AaptScanner;
+import com.apkspectrum.core.scanner.ApkScanner;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
 
 public class ApkComparer {
     static public int LEFT = 0;
@@ -88,7 +87,7 @@ public class ApkComparer {
 		}
 
 		@Override
-		public void onStateChanged(Status status) {
+		public void onStateChanged(int status) {
 			Log.d("onProgress()" + status );
 		}
     }

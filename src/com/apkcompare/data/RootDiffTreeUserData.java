@@ -3,10 +3,8 @@ package com.apkcompare.data;
 import java.io.File;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
 
 public class RootDiffTreeUserData extends DiffTreeUserData {
 	public RootDiffTreeUserData(ApkInfo apkinfo) {

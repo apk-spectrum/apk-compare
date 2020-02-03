@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 
 import com.apkcompare.gui.util.MessageBoxPane;
 import com.apkcompare.resource.Resource;
-import com.apkscanner.util.Log;
+import com.apkspectrum.util.Log;
 
 public class LogDlg
 {

@@ -1,6 +1,6 @@
 package com.apkcompare.data.base;
 
-import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkspectrum.data.apkinfo.ApkInfo;
 
 public class PassKeyDiffTreeUserData extends DiffTreeUserData {
 	

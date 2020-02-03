@@ -35,8 +35,8 @@ import javax.swing.filechooser.FileSystemView;
 
 import com.apkcompare.resource.Resource;
 import com.apkcompare.util.SystemUtil;
-import com.apkscanner.jna.FileInfo;
-import com.apkscanner.jna.FileVersion;
+import com.apkspectrum.jna.FileInfo;
+import com.apkspectrum.jna.FileVersion;
 
 public class SettingDlg extends JDialog implements ActionListener{
 	private static final long serialVersionUID = -3310023069238192716L;
@@ -244,6 +244,9 @@ public class SettingDlg extends JDialog implements ActionListener{
 		contentConst.gridy++;
 
 		if(SystemUtil.isWindows()) {
+			String exePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
+			String shortCutName = Resource.STR_APP_NAME.getString();
+
 			JPanel etcBtnPanel = new JPanel();
 
 			JButton btnShortcut = new JButton(Resource.STR_BTN_CREATE_SHORTCUT.getString());
@@ -253,7 +256,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 			btnShortcut.setIcon(Resource.IMG_ADD_TO_DESKTOP.getImageIcon(32,32));
 			btnShortcut.setVerticalTextPosition(JLabel.BOTTOM);
 			btnShortcut.setHorizontalTextPosition(JLabel.CENTER);
-			btnShortcut.setEnabled(!SystemUtil.hasShortCut());
+			btnShortcut.setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
 			
 			etcBtnPanel.add(btnShortcut);
 
@@ -301,8 +304,10 @@ public class SettingDlg extends JDialog implements ActionListener{
 				jcbEditors.setSelectedItem(path);
 			}
 		} else if(ACT_CMD_CREATE_SHORTCUT.equals(actCommand)) {
-			SystemUtil.createShortCut();
-			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut());
+			String exePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
+			String shortCutName = Resource.STR_APP_NAME.getString();
+			SystemUtil.createShortCut(exePath, shortCutName);
+			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
 		} else if(ACT_CMD_SAVE.equals(actCommand)) {
 			saveSettings();
 			this.dispose();

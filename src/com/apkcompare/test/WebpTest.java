@@ -1,12 +1,6 @@
 package com.apkcompare.test;
 
 
-import javax.swing.JLabel;
-
-import com.apkcompare.resource.Resource;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 
 ///home/leejinhyeong/Desktop/luciad-webp-imageio-873c5677244b/src/test/resources/lossless.webp

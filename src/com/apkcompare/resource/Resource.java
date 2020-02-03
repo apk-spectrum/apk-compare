@@ -21,9 +21,9 @@ import org.json.simple.parser.JSONParser;
 
 import com.apkcompare.util.ApkCompareUtil;
 import com.apkcompare.util.SystemUtil;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.XmlPath;
-import com.apkscanner.util.ZipFileUtil;
+import com.apkspectrum.util.Log;
+import com.apkspectrum.util.XmlPath;
+import com.apkspectrum.util.ZipFileUtil;
 
 public enum Resource
 {

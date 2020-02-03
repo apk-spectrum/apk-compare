@@ -6,13 +6,11 @@ import java.io.IOException;
 
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.tool.aapt.AaptNativeWrapper;
-import com.apkscanner.tool.aapt.AxmlToXml;
-import com.apkscanner.util.FileUtil;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
-import com.apkscanner.util.ZipFileUtil;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.tool.aapt.AaptNativeWrapper;
+import com.apkspectrum.util.FileUtil;
+import com.apkspectrum.util.Log;
+import com.apkspectrum.util.ZipFileUtil;
 
 public class DiffTreeUserData implements MappingImp{
     

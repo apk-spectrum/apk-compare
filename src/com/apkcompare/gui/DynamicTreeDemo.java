@@ -16,8 +16,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -52,9 +50,9 @@ import com.apkcompare.gui.util.ApkFileChooser;
 import com.apkcompare.gui.util.FileDrop;
 import com.apkcompare.gui.util.MessageBoxPane;
 import com.apkcompare.resource.Resource;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
+import com.apkspectrum.util.SystemUtil;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelectionListener{
 	private static final long serialVersionUID = -8110312211026585408L;

@@ -3,7 +3,7 @@ package com.apkcompare.data;
 import java.io.File;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
+import com.apkspectrum.data.apkinfo.ApkInfo;
 
 public class LibDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	File file;

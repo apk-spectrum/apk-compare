@@ -19,7 +19,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import com.apkscanner.util.Log;
+import com.apkspectrum.util.Log;
 
 public class JHtmlEditorPane extends JEditorPane implements HyperlinkListener
 {

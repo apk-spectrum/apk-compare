@@ -1,19 +1,13 @@
 package com.apkcompare.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import com.apkcompare.resource.Resource;
-import com.apkscanner.util.ConsolCmd;
-import com.apkscanner.util.Log;
+import com.apkspectrum.util.ConsolCmd;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 
-import mslinks.ShellLink;
-import mslinks.ShellLinkException;
-
-public class SystemUtil extends com.apkscanner.util.SystemUtil {
+public class SystemUtil extends com.apkspectrum.util.SystemUtil {
 
 	public static String getDefaultCompareApp() throws Exception {
 		String[] apps = getCompareApps();
@@ -167,40 +161,5 @@ public class SystemUtil extends com.apkscanner.util.SystemUtil {
 		return !realPathList.isEmpty() ? realPathList.toArray(new String[realPathList.size()]) : null;
 	}
 
-	public static void createShortCut() {
-		if(isWindows()) {
-			String filePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
-			String lnkPath = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + Resource.STR_APP_NAME.getString() + ".lnk";
-			try {
-				ShellLink.createLink(filePath, lnkPath);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		} else if(isLinux()) {
-
-		}
-	}
-
-	public static boolean hasShortCut() {
-		if(isWindows()) {
-			String filePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
-			String lnkPath = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + Resource.STR_APP_NAME.getString() + ".lnk";
-
-			if(!new File(lnkPath).exists()) {
-				return false;
-			}
-			try {
-				String pathToExistingFile = new ShellLink(lnkPath).resolveTarget();
-				Log.v("pathToExistingFile " + pathToExistingFile);
-				if(pathToExistingFile == null || !new File(pathToExistingFile).exists()
-						|| !pathToExistingFile.equals(filePath)) {
-					return false;
-				}
-			} catch (IOException | ShellLinkException e) {
-				e.printStackTrace();
-			}
-		}
-		return true;
-	}
 
 }

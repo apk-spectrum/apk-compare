@@ -6,17 +6,14 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Arrays;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.tool.aapt.AaptNativeWrapper;
-import com.apkscanner.tool.aapt.AxmlToXml;
-import com.apkscanner.util.Log;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.tool.aapt.AaptNativeWrapper;
+import com.apkspectrum.util.Log;
 
 public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;

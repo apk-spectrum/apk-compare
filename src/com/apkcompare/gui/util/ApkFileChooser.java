@@ -6,7 +6,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 
 import com.apkcompare.resource.Resource;
-import com.apkscanner.util.Log;
+import com.apkspectrum.util.Log;
 
 public class ApkFileChooser
 {

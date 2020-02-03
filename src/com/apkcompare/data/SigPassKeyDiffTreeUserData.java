@@ -1,14 +1,10 @@
 package com.apkcompare.data;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
 
 public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	String original;

@@ -1,10 +1,8 @@
 package com.apkcompare.data;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,13 +10,9 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
-import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.FileUtil;
-import com.apkscanner.util.Log;
-
-import sun.awt.image.ToolkitImage;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.FileUtil;
+import com.apkspectrum.util.Log;
 
 public class ImageDiffTreeUserData extends DiffTreeUserData{
 	ImageIcon icon = null;

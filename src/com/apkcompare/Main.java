@@ -1,5 +1,10 @@
 package com.apkcompare;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.nio.charset.Charset;
 
 import javax.swing.JFrame;
@@ -8,14 +13,8 @@ import com.apkcompare.gui.DynamicTreeDemo;
 import com.apkcompare.gui.dialog.AboutDlg;
 import com.apkcompare.gui.dialog.LogDlg;
 import com.apkcompare.resource.Resource;
-import com.apkscanner.util.Log;
-import com.apkscanner.util.SystemUtil;
-
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import com.apkspectrum.util.Log;
+import com.apkspectrum.util.SystemUtil;
 
 public class Main {
 	private static final ApkComparer apkComparer = new ApkComparer(null, null);
