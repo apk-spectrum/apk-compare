@@ -23,8 +23,7 @@ import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
-import com.apkcompare.resource.Resource;
-import com.apkcompare.util.ApkCompareUtil;
+import com.apkcompare.resource.RImg;
 import com.apkspectrum.util.Log;
 
 
@@ -42,8 +41,8 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
-	static Image foldericon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_FOLDER_ICON.getImageIcon(), 16, 16);
-	static Image rooticon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_APK_ICON.getImageIcon(), 16, 16);
+	static Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
+	static Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
 	
 	boolean painting = true;
 	

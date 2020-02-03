@@ -33,7 +33,10 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
-import com.apkcompare.resource.Resource;
+import com.apkcompare.resource.RFile;
+import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RProp;
+import com.apkcompare.resource.RStr;
 import com.apkcompare.util.SystemUtil;
 import com.apkspectrum.jna.FileInfo;
 import com.apkspectrum.jna.FileVersion;
@@ -70,8 +73,8 @@ public class SettingDlg extends JDialog implements ActionListener{
 	
 	private void initialize(Window window)
 	{
-		setTitle(Resource.STR_SETTINGS_TITLE.getString());
-		setIconImage(Resource.IMG_DIFF_TOOLBAR_SETTING.getImageIcon().getImage());
+		setTitle(RStr.SETTINGS_TITLE.get());
+		setIconImage(RImg.DIFF_TOOLBAR_SETTING.getImage());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setSize(new Dimension(600,420));
 		setResizable(true);
@@ -79,13 +82,13 @@ public class SettingDlg extends JDialog implements ActionListener{
 		setModal(true);
 		
 		JPanel ctrPanel = new JPanel(new FlowLayout());
-		JButton savebutton = new JButton(Resource.STR_BTN_SAVE.getString());
+		JButton savebutton = new JButton(RStr.BTN_SAVE.get());
 		savebutton.setActionCommand(ACT_CMD_SAVE);
 		savebutton.addActionListener(this);
 		savebutton.setFocusable(false);
 		ctrPanel.add(savebutton);
 
-		JButton exitbutton = new JButton(Resource.STR_BTN_CANCEL.getString());
+		JButton exitbutton = new JButton(RStr.BTN_CANCEL.get());
 		exitbutton.setActionCommand(ACT_CMD_EXIT);
 		exitbutton.addActionListener(this);
 		exitbutton.setFocusable(false);
@@ -180,9 +183,9 @@ public class SettingDlg extends JDialog implements ActionListener{
 		GridBagConstraints rowHeadConst = new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(10,10,0,10),0,0);
 		GridBagConstraints contentConst = new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(10,0,0,0),0,0);
 
-		panel.add(new JLabel(Resource.STR_SETTINGS_LANGUAGE.getString()), rowHeadConst);
+		panel.add(new JLabel(RStr.SETTINGS_LANGUAGE.get()), rowHeadConst);
 
-		jcbLanguage = new JComboBox<String>(Resource.getSupportedLanguages());
+		jcbLanguage = new JComboBox<String>(RStr.getSupportedLanguages());
 		jcbLanguage.setRenderer(new ResourceLangItemRenderer());
 		jcbLanguage.setSelectedItem(propStrLanguage);
 		propStrLanguage = (String)jcbLanguage.getSelectedItem();
@@ -191,7 +194,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		rowHeadConst.gridy++;
 		contentConst.gridy++;
 
-		panel.add(new JLabel(Resource.STR_SETTINGS_DIFF_TOOL.getString()), rowHeadConst);
+		panel.add(new JLabel(RStr.SETTINGS_DIFF_TOOL.get()), rowHeadConst);
 
 		final JTextField editorPath = new JTextField();
 		editorPath.setEditable(false);
@@ -224,8 +227,8 @@ public class SettingDlg extends JDialog implements ActionListener{
 			e.printStackTrace();
 		}
 
-		JButton btnExplorer = new JButton(Resource.STR_BTN_SELF_SEARCH.getString());
-		btnExplorer.setToolTipText(Resource.STR_BTN_SELF_SEARCH_LAB.getString());
+		JButton btnExplorer = new JButton(RStr.BTN_SELF_SEARCH.get());
+		btnExplorer.setToolTipText(RStr.BTN_SELF_SEARCH_LAB.get());
 		btnExplorer.setMargin(new Insets(-1,10,-1,10));
 		btnExplorer.setActionCommand(ACT_CMD_EDITOR_EXPLOERE);
 		btnExplorer.addActionListener(this);
@@ -244,16 +247,16 @@ public class SettingDlg extends JDialog implements ActionListener{
 		contentConst.gridy++;
 
 		if(SystemUtil.isWindows()) {
-			String exePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
-			String shortCutName = Resource.STR_APP_NAME.getString();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String shortCutName = RStr.APP_NAME.get();
 
 			JPanel etcBtnPanel = new JPanel();
 
-			JButton btnShortcut = new JButton(Resource.STR_BTN_CREATE_SHORTCUT.getString());
-			btnShortcut.setToolTipText(Resource.STR_BTN_CREATE_SHORTCUT_LAB.getString());
+			JButton btnShortcut = new JButton(RStr.BTN_CREATE_SHORTCUT.get());
+			btnShortcut.setToolTipText(RStr.BTN_CREATE_SHORTCUT_LAB.get());
 			btnShortcut.setActionCommand(ACT_CMD_CREATE_SHORTCUT);
 			btnShortcut.addActionListener(this);
-			btnShortcut.setIcon(Resource.IMG_ADD_TO_DESKTOP.getImageIcon(32,32));
+			btnShortcut.setIcon(RImg.ADD_TO_DESKTOP.getImageIcon(32,32));
 			btnShortcut.setVerticalTextPosition(JLabel.BOTTOM);
 			btnShortcut.setHorizontalTextPosition(JLabel.CENTER);
 			btnShortcut.setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
@@ -304,8 +307,8 @@ public class SettingDlg extends JDialog implements ActionListener{
 				jcbEditors.setSelectedItem(path);
 			}
 		} else if(ACT_CMD_CREATE_SHORTCUT.equals(actCommand)) {
-			String exePath = Resource.getUTF8Path() + File.separator + "ApkCompare.exe";
-			String shortCutName = Resource.STR_APP_NAME.getString();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String shortCutName = RStr.APP_NAME.get();
 			SystemUtil.createShortCut(exePath, shortCutName);
 			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
 		} else if(ACT_CMD_SAVE.equals(actCommand)) {
@@ -318,11 +321,11 @@ public class SettingDlg extends JDialog implements ActionListener{
 	
 	private void readSettings()
 	{
-		propStrLanguage = (String)Resource.PROP_LANGUAGE.getData();
+		propStrLanguage = RProp.S.LANGUAGE.get();
 
-		propStrEditorPath = SystemUtil.getRealPath((String)Resource.PROP_DIFF_TOOL.getData());
+		propStrEditorPath = SystemUtil.getRealPath(RProp.S.DIFF_TOOL.get());
 
-		String recentEditors = (String)Resource.PROP_RECENT_DIFF_TOOL.getData();
+		String recentEditors = RProp.S.RECENT_DIFF_TOOL.get();
 		propRecentEditors = new ArrayList<String>();
 		for(String s: recentEditors.split(File.pathSeparator)) {
 			if(!s.isEmpty()) {
@@ -337,7 +340,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 	private void saveSettings()
 	{
 		if(!propStrLanguage.equals(jcbLanguage.getSelectedItem())) {
-			Resource.PROP_LANGUAGE.setData(jcbLanguage.getSelectedItem());
+			RProp.S.LANGUAGE.set((String) jcbLanguage.getSelectedItem());
 		}
 
 		if(!jcbEditors.getSelectedItem().equals(propStrEditorPath)){
@@ -348,14 +351,14 @@ public class SettingDlg extends JDialog implements ActionListener{
 			if(propStrEditorPath != null) {
 				propRecentEditors.add(0, propStrEditorPath);
 			}
-			Resource.PROP_DIFF_TOOL.setData(editorPath);
+			RProp.S.DIFF_TOOL.set(editorPath);
 
 			StringBuilder recentEditors = new StringBuilder();
 			for(String editor: propRecentEditors) {
 				recentEditors.append(editor);
 				recentEditors.append(File.pathSeparator);
 			}
-			Resource.PROP_RECENT_DIFF_TOOL.setData(recentEditors.toString());
+			RProp.S.RECENT_DIFF_TOOL.set(recentEditors.toString());
 		}
 	}
 }

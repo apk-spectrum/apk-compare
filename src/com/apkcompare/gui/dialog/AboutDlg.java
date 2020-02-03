@@ -6,9 +6,10 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import com.apkcompare.gui.util.JHtmlEditorPane;
-import com.apkcompare.gui.util.MessageBoxPane;
-import com.apkcompare.resource.Resource;
+import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RStr;
+import com.apkspectrum.swing.HtmlEditorPane;
+import com.apkspectrum.swing.MessageBoxPane;
 
 public class AboutDlg /*extends JDialog*/
 {
@@ -16,7 +17,7 @@ public class AboutDlg /*extends JDialog*/
 	{
 		StringBuilder body = new StringBuilder();
 		body.append("<div id=\"about\">");
-		body.append("  <H1>" + Resource.STR_APP_NAME.getString() + " " + Resource.STR_APP_VERSION.getString() + "</H1>");
+		body.append("  <H1>" + RStr.APP_NAME.get() + " " + RStr.APP_VERSION.get() + "</H1>");
 		body.append("  <H3>Using following tools</H3>");
 		body.append("  Android Asset Packaging Tool, Android Debug Bridge, signapk<br/>");
 		body.append("  - <a href=\"https://developer.android.com/tools/help/index.html\" title=\"Android Developer Site\">https://developer.android.com/tools/help/index.html</a><br/>");
@@ -28,7 +29,7 @@ public class AboutDlg /*extends JDialog*/
 		body.append("  <a href=\"https://commons.apache.org/proper/commons-cli/\" title=\"commons-cli Site\">commons-cli-1.3.1</a>,");
 		body.append("  <a href=\"https://code.google.com/archive/p/json-simple/\" title=\"json-simple Site\">json-simple-1.1.1</a>");
 		body.append("  <br/><br/><hr/>");
-		body.append("  Programmed by <a href=\"mailto:" + Resource.STR_APP_MAKER_EMAIL.getString() + "\" title=\"" + Resource.STR_APP_MAKER_EMAIL.getString() + "\">" + Resource.STR_APP_MAKER.getString() + "</a>, 2015.<br/>");
+		body.append("  Programmed by <a href=\"mailto:" + RStr.APP_MAKER_EMAIL.get() + "\" title=\"" + RStr.APP_MAKER_EMAIL.get() + "\">" + RStr.APP_MAKER.get() + "</a>, 2015.<br/>");
 		body.append("  It is open source project on <a href=\"https://github.sec.samsung.net/jin-h-lee/apk-compare\" title=\"APK Compare Site\">SEC Github</a>");
 		body.append("</div>");
 
@@ -47,11 +48,11 @@ public class AboutDlg /*extends JDialog*/
 		style.append("H3 {margin-top: 5px; margin-bottom: 0px;}");
 
 		// html content
-		JHtmlEditorPane hep = new JHtmlEditorPane("", style.toString(), body.toString());
+		HtmlEditorPane hep = new HtmlEditorPane("", style.toString(), body.toString());
 		hep.setEditable(false);
 		hep.setBackground(label.getBackground());
 		hep.setPreferredSize(new Dimension(400,300));
 
-		MessageBoxPane.showMessageDialog(component, hep, Resource.STR_BTN_ABOUT.getString(), MessageBoxPane.INFORMATION_MESSAGE, Resource.IMG_APP_ICON.getImageIcon(100,100));
+		MessageBoxPane.showMessageDialog(component, hep, RStr.BTN_ABOUT.get(), MessageBoxPane.INFORMATION_MESSAGE, RImg.APP_ICON.getImageIcon(100,100));
 	}
 }

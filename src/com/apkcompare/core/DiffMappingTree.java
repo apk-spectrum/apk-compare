@@ -17,8 +17,9 @@ import com.apkcompare.data.PermissionDiffTreeUserData;
 import com.apkcompare.data.SigPassKeyDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.SortNode;
-import com.apkcompare.resource.Resource;
-import com.apkcompare.util.ApkCompareUtil;
+import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RProp;
+import com.apkcompare.resource.RStr;
 import com.apkspectrum.core.permissionmanager.PermissionManager;
 import com.apkspectrum.data.apkinfo.ActivityAliasInfo;
 import com.apkspectrum.data.apkinfo.ActivityInfo;
@@ -36,6 +37,7 @@ import com.apkspectrum.data.apkinfo.UsesConfigurationInfo;
 import com.apkspectrum.data.apkinfo.UsesFeatureInfo;
 import com.apkspectrum.data.apkinfo.UsesLibraryInfo;
 import com.apkspectrum.data.apkinfo.UsesPermissionInfo;
+import com.apkspectrum.swing.ImageScaler;
 import com.apkspectrum.util.FileUtil;
 import com.apkspectrum.util.FileUtil.FSStyle;
 import com.apkspectrum.util.Log;
@@ -49,18 +51,20 @@ public class DiffMappingTree {
 	}
 	public void  createTree(ApkInfo apkInfo, SortNode node) {		
 		//for apk file path
-		String[] tabfolders = {Resource.STR_TAB_BASIC_INFO.getString(),
-								Resource.STR_TAB_WIDGET.getString(),
-								Resource.STR_TAB_LIB.getString(),
-								Resource.STR_TAB_IMAGE.getString(),
-								Resource.STR_TAB_ACTIVITY.getString(),
-								Resource.STR_TAB_CERT.getString()};
+		String[] tabfolders = {
+				RStr.TAB_BASIC_INFO.get(),
+				RStr.TAB_WIDGETS.get(),
+				RStr.TAB_LIBRARIES.get(),
+				RStr.TAB_RESOURCES.get(),
+				RStr.TAB_COMPONENTS.get(),
+				RStr.TAB_SIGNATURES.get()
+			};
 		
 		for(String tabname : tabfolders) {
 			SortNode TabfolderchildNode = new SortNode(new DiffTreeUserData(tabname, true));
 	        node.add(TabfolderchildNode);
 	        
-	        if(tabname.equals(Resource.STR_TAB_BASIC_INFO.getString())) {
+	        if(tabname.equals(RStr.TAB_BASIC_INFO.get())) {
 	        	Log.d("create basic Node");
 	        	String[] apkinfofolders = {"Icon",
 						"Title",
@@ -85,10 +89,9 @@ public class DiffMappingTree {
 	    				if(temppath != null && (temppath.startsWith("jar:") || temppath.startsWith("file:"))) {
 	    					ImageIcon icon;
 							try {
-								icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(temppath))),50,50));
+								icon = ImageScaler.getScaledImageIcon(ImageIO.read(new URL(temppath)), 50, 50);
 								userdata.setImageIcon(icon, respath);
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 	    				}
@@ -128,16 +131,16 @@ public class DiffMappingTree {
 		    			addPermissionString(childNodeapkinfo, apkInfo);
 	        		}	        	
 	        	}
-	        } else if(tabname.equals(Resource.STR_TAB_WIDGET.getString())){
+	        } else if(tabname.equals(RStr.TAB_WIDGETS.get())){
 	        	Log.d("create widget Node");
 	        	
 	        	
-	    		String preferLang = (String)Resource.PROP_PREFERRED_LANGUAGE.getData("");
+	    		String preferLang = RProp.S.PREFERRED_LANGUAGE.get();
 	    		for(int i=0; i < apkInfo.widgets.length; i++) {
 	    			ImageIcon myimageicon = null;
 	    			try {
 	    				String path = (String)apkInfo.widgets[i].icons[apkInfo.widgets[i].icons.length-1].name;
-						myimageicon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(ImageIO.read(new URL(path))),50,50));
+	    				myimageicon = ImageScaler.getScaledImageIcon(ImageIO.read(new URL(path)), 50, 50); 
 	    			} catch (IOException e) {
 	    				e.printStackTrace();
 	    			}
@@ -155,7 +158,7 @@ public class DiffMappingTree {
 	    		
 	    		//if(widgets.length ==0) node.remove(TabfolderchildNode);
 	        	
-	        } else if(tabname.equals(Resource.STR_TAB_LIB.getString())){
+	        } else if(tabname.equals(RStr.TAB_LIBRARIES.get())){
 	        	Log.d("create Lib Node");
 	        	
 	        	String[] libList = apkInfo.libraries;
@@ -169,7 +172,7 @@ public class DiffMappingTree {
 				}
 	        	
 	        	
-	        } else if(tabname.equals(Resource.STR_TAB_IMAGE.getString())){
+	        } else if(tabname.equals(RStr.TAB_RESOURCES.get())){
 	        	Log.d("create image Node");
 	        	
 	        	String[] nameList = apkInfo.resources;
@@ -180,10 +183,10 @@ public class DiffMappingTree {
 	        		FilePassKeyDiffTreeUserData tempdata = new FilePassKeyDiffTreeUserData(nameList[i], "Resource", apkInfo);	        		
 	        		TabfolderchildNode.add(new SortNode(tempdata));
 	        	}	        	
-	        } else if(tabname.equals(Resource.STR_TAB_ACTIVITY.getString())){
+	        } else if(tabname.equals(RStr.TAB_COMPONENTS.get())){
 	        	Log.d("create component Node");
 				getComponents(apkInfo, TabfolderchildNode);
-	        } else if(tabname.equals(Resource.STR_TAB_CERT.getString())){
+	        } else if(tabname.equals(RStr.TAB_SIGNATURES.get())){
 	        	Log.d("create cert Node");
 	        	
 				String[] mCertList = apkInfo.certificates;
@@ -358,28 +361,25 @@ public class DiffMappingTree {
 		}
 		
 		if("internalOnly".equals(installLocation)) {
-			str.add(Resource.STR_FEATURE_ILOCATION_INTERNAL_LAB.getString());			
+			str.add(RStr.FEATURE_ILOCATION_INTERNAL_LAB.get());			
 		} else if("auto".equals(installLocation)) {
-			str.add(Resource.STR_FEATURE_ILOCATION_AUTO_LAB.getString());			
+			str.add(RStr.FEATURE_ILOCATION_AUTO_LAB.get());			
 		} else if("preferExternal".equals(installLocation)) {
-			str.add(Resource.STR_FEATURE_ILOCATION_EXTERNAL_LAB.getString());
+			str.add(RStr.FEATURE_ILOCATION_EXTERNAL_LAB.get());
 		}
 		if(isHidden) {
-			str.add(Resource.STR_FEATURE_HIDDEN_LAB.getString());			
+			str.add(RStr.FEATURE_HIDDEN_LAB.get());			
 		} else {
-			str.add(Resource.STR_FEATURE_LAUNCHER_LAB.getString());			
+			str.add(RStr.FEATURE_LAUNCHER_LAB.get());			
 		}
 		if(isStartup) {
-			str.add(Resource.STR_FEATURE_STARTUP_LAB.getString());			
-		}
-		if(issignaturePermissions) {
-			str.add(Resource.STR_FEATURE_SIGNATURE_LAB.getString());		
+			str.add(RStr.FEATURE_STARTUP_LAB.get());			
 		}
 		if(sharedUserId != null && !sharedUserId.startsWith("android.uid.system") ) {
-			str.add(Resource.STR_FEATURE_SHAREDUSERID_LAB.getString());			
+			str.add(RStr.FEATURE_SHAREDUSERID_LAB.get());			
 		}
 		if(deviceReqData) {
-			str.add(Resource.STR_FEATURE_DEVICE_REQ_LAB.getString());			
+			str.add(RStr.FEATURE_DEVICE_REQ_LAB.get());			
 		}
 		
 		return str.toArray();
@@ -444,7 +444,7 @@ public class DiffMappingTree {
 			
 			UsesPermissionInfo temp = allPermissions.get(i);
 			ImageIcon icon;
-			icon = new ImageIcon(ApkCompareUtil.getScaledImage(new ImageIcon(Resource.IMG_APP_ICON.getImageIcon().getImage()),16,16));
+			icon = RImg.APP_ICON.getImageIcon(16, 16);
 			
 			SortNode tempnode = new SortNode(new PermissionDiffTreeUserData(temp.name, icon, apkInfo));					
 			childNodeapkinfo.add(tempnode);

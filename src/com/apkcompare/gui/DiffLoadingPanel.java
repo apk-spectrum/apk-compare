@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.apkcompare.resource.Resource;
+import com.apkcompare.resource.RImg;
 
 public class DiffLoadingPanel extends JPanel{
 	private static final long serialVersionUID = 7818687226070887018L;
@@ -34,14 +34,14 @@ public class DiffLoadingPanel extends JPanel{
 		
 		loading.setLayout(new BoxLayout(loading, BoxLayout.Y_AXIS));
 		
-		JLabel logo = new JLabel(Resource.IMG_APK_LOGO.getImageIcon(300, 200));
+		JLabel logo = new JLabel(RImg.APK_LOGO.getImageIcon(300, 200));
 		//logo.setOpaque(true);
 		//logo.setBackground(Color.white);
 
-		JLabel gif = new JLabel(Resource.IMG_WAIT_BAR.getImageIcon());
+		JLabel gif = new JLabel(RImg.WAIT_BAR.getImageIcon());
 		//gif.setOpaque(true);
 		//gif.setBackground(Color.white);
-		gif.setPreferredSize(new Dimension(Resource.IMG_WAIT_BAR.getImageIcon().getIconWidth(),Resource.IMG_WAIT_BAR.getImageIcon().getIconHeight()));
+		gif.setPreferredSize(new Dimension(RImg.WAIT_BAR.getImageIcon().getIconWidth(),RImg.WAIT_BAR.getImageIcon().getIconHeight()));
 		
 		logo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		logo.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -53,7 +53,7 @@ public class DiffLoadingPanel extends JPanel{
 		loading.add(gif);
 		loading.add(Box.createVerticalGlue());
 		
-		JLabel emptylabel = new JLabel(Resource.IMG_DIFF_DRAG_AND_DROP.getImageIcon(150, 150));
+		JLabel emptylabel = new JLabel(RImg.DIFF_DRAG_AND_DROP.getImageIcon(150, 150));
 		emptylabel.setOpaque(true);
 		emptylabel.setBackground(Color.white);
 		

@@ -1,6 +1,5 @@
 <resources>
 	<string name="app_name">APK Compare</string>
-	<string name="app_version">Ver. </string>
 
 	<string name="title_install_wizard">APK Install Wizard</string>
 	<string name="title_apk_signer">APK Signer</string>
@@ -9,14 +8,11 @@
 	<string name="btn_open_pacakge">Package</string>
 	<string name="btn_manifest">Manifest</string>
 	<string name="btn_explorer">Explorer</string>
-	<string name="btn_unpack">Decompile</string>
-	<string name="btn_pack">Recompile</string>
 	<string name="btn_install">Install</string>
 	<string name="btn_install_downgrad">Downgrade</string>
 	<string name="btn_install_update">Update</string>
 	<string name="btn_launch">Launch</string>
 	<string name="btn_sign">Sign</string>
-	<string name="btn_push">Push</string>
 	<string name="btn_setting">Setting</string>
 	<string name="btn_about">About</string>
 	<string name="btn_save">Save</string>
@@ -26,9 +22,8 @@
 	<string name="btn_no">No</string>
 	<string name="btn_cancel">Cancel</string>
 	<string name="btn_refresh">Refresh</string>
-	<string name="btn_del">Del</string>
 	<string name="btn_add">Add</string>
-	<string name="btn_export">Export</string>
+	<string name="btn_del">Del</string>
 	<string name="btn_opencode">Source</string>
 	<string name="btn_opening_code">Decoding...</string>
 	<string name="btn_search">Search</string>
@@ -42,8 +37,6 @@
 	<string name="btn_open_pacakge_lab">Open package(Ctrl+P)</string>
 	<string name="btn_manifest_lab">Show AndroidManifest.xml (Ctrl+M)</string>
 	<string name="btn_explorer_lab">Open APK file into Explorer. (Ctrl+E)</string>
-	<string name="btn_unpack_lab">Decompile</string>
-	<string name="btn_pack_lab">Recompile</string>
 	<string name="btn_install_lab">Install APK to the connected device (Ctrl+I)</string>
 	<string name="btn_install_downgrad_lab">Downgrade APK (Ctrl+I)</string>
 	<string name="btn_install_update_lab">Update APK (Ctrl+I)</string>
@@ -94,11 +87,12 @@
 	<string name="menu_check_installed">Check the Installation Version(T)</string>
 
 	<string name="tab_basic_info">APK Info</string>
-	<string name="tab_widget">Widgets</string>
-	<string name="tab_lib">Libraries</string>
-	<string name="tab_image">Resources</string>
-	<string name="tab_activity">Components</string>
-	<string name="tab_cert">Signatures</string>
+	<string name="tab_apex_info">APEX Info</string>
+	<string name="tab_widgets">Widgets</string>
+	<string name="tab_libraries">Libraries</string>
+	<string name="tab_resources">Resources</string>
+	<string name="tab_components">Components</string>
+	<string name="tab_signatures">Signatures</string>
 	<string name="tab_package_info">Package Info</string>
 	<string name="tab_dumpsys">Dumpsys</string>
 	<string name="tab_sys_package_info">System Package Info</string>
@@ -120,7 +114,6 @@
 	<string name="basic_create_shortcut">Create shortcut on desktop</string>
 
 	<string name="feature_lab">Feature</string>
-	<string name="feature_desc">Feature or function of the App</string>
 	<string name="feature_install_location_internal_only_lab">Install Location : Internal Only</string>
 	<string name="feature_install_location_internal_only_desc">The application must be installed on the internal device storage only.
 If this is set, the application will never be installed on the external storage.
@@ -152,10 +145,6 @@ Once installed, the user can move the application to either internal or external
 	<string name="feature_platform_sign_desc">This application to be sign by platform signature(google test-key).</string>
 	<string name="feature_samsung_sign_lab">SAMSUNG SIGN</string>
 	<string name="feature_samsung_sign_desc">This application to be sign by samsung signature.</string>
-	<string name="feature_revoke_permissions_lab">SYSTEM PERMISSIONS</string>
-	<string name="feature_revoke_permissions_desc">Need platform sign or priv-app</string>
-	<string name="feature_deprecated_prem_lab">Deprecated Permissions</string>
-	<string name="feature_deprecated_prem_desc">uses deprecated permissions</string>
 	<string name="feature_debuggable_lab">DEBUGGABLE</string>
 	<string name="feature_debuggable_desc">Whether or not the application can be debugged,
 even when running on a device in user mode. </string>
@@ -167,7 +156,6 @@ they're removed before the application is published</string>
 	<string name="feature_flag_lab">FLAGS</string>
 	<string name="feature_flag_desc">FLAGS of package</string>
 	<string name="feature_installer_lab">Installer</string>
-	<string name="feature_installer_desc">Installer and time stamp</string>
 	<string name="feature_hidden_system_package_lab">SYSTEM PACKAGE</string>
 	<string name="feature_hidden_system_package_desc">Hidden system package</string>
 	<string name="feature_disabled_package_lab">DISABLED</string>
@@ -189,25 +177,18 @@ they're removed before the application is published</string>
 	<string name="lib_column_size">Size</string>
 	<string name="lib_column_compressibility">Compressibility</string>
 
-	<string name="activity_column_class">Class</string>
-	<string name="activity_column_type">Type</string>
-	<string name="activity_column_startup">Startup</string>
-	<string name="activity_column_enabled">Enabled</string>
-	<string name="activity_column_export">Export</string>
-	<string name="activity_column_permission">Permission</string>
-	<string name="activity_type_activity">activity</string>
-	<string name="activity_type_service">service</string>
-	<string name="activity_type_receiver">receiver</string>
-	<string name="activity_label_intent_filter">Intent filter</string>
+	<string name="component_column_class">Class</string>
+	<string name="component_column_type">Type</string>
+	<string name="component_column_startup">Startup</string>
+	<string name="component_column_enabled">Enabled</string>
+	<string name="component_column_export">Export</string>
+	<string name="component_column_permission">Permission</string>
+	<string name="component_label_xml">XML Construction</string>
+	<string name="component_filter_prompt_xml">Filter by XML Construction</string>
+	<string name="component_filter_prompt_name">Filter by Class name</string>
 
 	<string name="cert_summury">Summary</string>
 	<string name="cert_certificate">Signature</string>
-
-	<string name="file_size_Bytes">Bytes</string>
-	<string name="file_size_KB">KB</string>
-	<string name="file_size_MB">MB</string>
-	<string name="file_size_GB">GB</string>
-	<string name="file_size_TB">TB</string>
 
 	<string name="tree_open_package">Open</string>
 
@@ -215,7 +196,6 @@ they're removed before the application is published</string>
 	<string name="settings_editor">Editor</string>
 	<string name="settings_diff_tool">Diff Tool</string>
 	<string name="settings_res">Framework-res</string>
-	<string name="settings_check_installed">Check installed</string>
 	<string name="settings_language">Language</string>
 	<string name="settings_remember_window_size">Remember window size</string>
 	<string name="settings_theme">Theme</string>
@@ -246,14 +226,11 @@ they're removed before the application is published</string>
 	<string name="label_question">Question</string>
 	<string name="label_log">Log</string>
 	<string name="label_installing">Installing..</string>
-	<string name="label_uninstalling">Uninstalling..</string>
-	<string name="label_sel_device">Select Device</string>
-	<string name="label_device_list">Device list</string>
 	<string name="label_app_name_list">App name list</string>
 	<string name="label_no_permission">No permissions</string>
 	<string name="label_search">Search</string>
 	<string name="label_loading">Loading...</string>
-	<string name="label_apk_file_description">Android Package(.apk)</string>
+	<string name="label_apk_file_description">Android Package(.apk | .apex)</string>
 	<string name="label_device">Device</string>
 	<string name="label_path">Path</string>
 	<string name="label_uses_resource">Uses framework resource files</string>
@@ -266,9 +243,8 @@ they're removed before the application is published</string>
 	<string name="label_how_to_install">How to install</string>
 	<string name="label_install_options">Install options</string>
 	<string name="label_push_options">Push options</string>
-	<string name="label_additional_install_options">Choose additional options:</string>
 	<string name="label_launcher_af_installed">Launcher:</string>
-	<string name="label_with_libraies">With Libraries:</string>
+	<string name="label_with_libraies">With Libraries</string>
 	<string name="label_num">No.</string>
 	<string name="label_abi">ABI</string>
 	<string name="label_destination">Destination</string>
@@ -278,38 +254,31 @@ they're removed before the application is published</string>
 	<string name="label_apk_installing">INSTALLING</string>
 	<string name="label_apk_install_finish">FINISH</string>
 
+	<string name="tree_node_device">Device</string>
+	<string name="tree_node_displayed">Currently Displayed Packages</string>
+	<string name="tree_node_recently">Recently Activity Packages</string>
+	<string name="tree_node_running">Currently Running Process Packages</string>
+
 	<string name="msg_failure_open_apk">ERROR: Can not open the APK</string>
 	<string name="msg_no_such_apk">No such APK file</string>
 	<string name="msg_device_not_found">Device not found! Please check device.</string>
-	<string name="msg_already_installed">This package was already installed.</string>
-	<string name="msg_no_such_package">No such package.</string>
 	<string name="msg_no_such_launcher">No such launcher activity.</string>
 	<string name="msg_no_such_package_device">No such device of a package installed.</string>
 	<string name="msg_no_such_classes_dex">No such classes.dex in an APK file.</string>
 	<string name="msg_failure_launch_app">Did not launch.</string>
-	<string name="msg_failure_installed">App did not install.</string>
 	<string name="msg_failure_uninstalled">App did not remove.</string>
-	<string name="msg_failure_pull_apk">Did not pull APK.</string>
 	<string name="msg_failure_dex2jar">Can't covert to jar</string>
-	<string name="msg_success_installed">Install success...</string>
 	<string name="msg_success_removed">Remove success!</string>
 	<string name="msg_success_pull_apk">Success pull apk!</string>
-	<string name="msg_success_pulled">Success pull APK file.</string>
 	<string name="msg_failure_pulled">Failure pull APK file.</string>
 	<string name="msg_device_unauthorized">Device unauthorized.
 Please check the confirmation dialog on your device.</string>
-	<string name="msg_device_unknown">device unknown</string>
-	<string name="msg_cannot_run_root">adbd cannot run as root in production builds</string>
 	<string name="msg_unsupported_preview">This type doesn't support a preview.</string>
 	<string name="msg_cannot_write_file">Can not write file.</string>
 	<string name="msg_disabled_package">Can not launch, This package was disabled.</string>
 	<string name="msg_success_clear_data">Success clear data.</string>
 	<string name="msg_failure_clear_data">Fail clear data.</string>
 
-	<string name="question_reboot_device">Restart device now?</string>
-	<string name="question_continue_install">Continue install?</string>
-	<string name="question_push_or_install">Push or Install?</string>
-	<string name="question_open_or_install">Open or Install?</string>
 	<string name="question_save_overwrite">Overwrite file?</string>
 	<string name="question_pack_info_close">Success uninstall package.
 Close this windows?</string>
@@ -318,17 +287,4 @@ Refresh this package information?</string>
 	<string name="question_remove_system_apk">It's system app, continues remove?</string>
 	<string name="question_removed_reboot">remove successful, need reboot, now?</string>
 
-	<string name="tree_node_device">Device</string>
-	<string name="tree_node_displayed">Currently Displayed Packages</string>
-	<string name="tree_node_recently">Recently Activity Packages</string>
-	<string name="tree_node_running">Currently Running Process Packages</string>
-
-	<string name="pattern_print_x509_cert">Owner: {0}\nIssuer: {1}\nSerial number: {2}\nValid from: {3} until: {4}\nCertificate fingerprints:\n\t MD5:  {5}\n\t SHA1: {6}\n\t SHA256: {7}\nSignature algorithm name: {8}\nSubject Public Key Algorithm: {9}\nVersion: {10}</string>
-	<string name="with_weak">%s (weak)</string>
-	<string name="key_bit">%d-bit %s key</string>
-	<string name="key_bit_weak">%d-bit %s key (weak)</string>
-	<string name="not_a_singed_jar_file">Not a signed jar file</string>
-	<string name="extensions">Extensions: </string>
-	<string name="empty_value">(Empty value)</string>
-	<string name="timestamp">Timestamp:</string>
 </resources>

@@ -12,7 +12,9 @@ import javax.swing.JFrame;
 import com.apkcompare.gui.DynamicTreeDemo;
 import com.apkcompare.gui.dialog.AboutDlg;
 import com.apkcompare.gui.dialog.LogDlg;
-import com.apkcompare.resource.Resource;
+import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RProp;
+import com.apkcompare.resource.RStr;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
 
@@ -25,13 +27,13 @@ public class Main {
     	//args[0] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMFacebook/zeroltedcm/DCMFacebook.apk";
     	//args[0] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMAreaMail/dream2qltedcm/DCMAreaMail.apk";
     	//args[0] = "";
-		
-		Resource.setLanguage((String)Resource.PROP_LANGUAGE.getData(SystemUtil.getUserLanguage()));
-		if("user".equalsIgnoreCase(Resource.STR_APP_BUILD_MODE.getString())) {
+		//(String)Resource.PROP_LANGUAGE.getData(SystemUtil.getUserLanguage())
+		RStr.setLanguage(RProp.S.LANGUAGE.get());
+		if("user".equalsIgnoreCase(RStr.APP_BUILD_MODE.get())) {
 			Log.enableConsoleLog(false);
 		}
 
-		Log.i(Resource.STR_APP_NAME.getString() + " " + Resource.STR_APP_VERSION.getString() + " " + Resource.STR_APP_BUILD_MODE.getString());
+		Log.i(RStr.APP_NAME.get() + " " + RStr.APP_VERSION.get() + " " + RStr.APP_BUILD_MODE.get());
 		Log.i("OS : " + SystemUtil.OS);
 		Log.i("java.version : " + System.getProperty("java.version"));
 		Log.i("java.specification.version : " + System.getProperty("java.specification.version"));
@@ -58,7 +60,7 @@ public class Main {
         // Create and set up the window.
     	Compareevent event = new Compareevent();
     	
-        frame = new JFrame(Resource.STR_APP_NAME.getString());
+        frame = new JFrame(RStr.APP_NAME.get());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Create and set up the content pane.
@@ -70,7 +72,7 @@ public class Main {
 		
         frame.setContentPane(newContentPane);
         frame.setSize(1000, 800);
-        frame.setIconImage(Resource.IMG_APP_ICON.getImageIcon().getImage());
+        frame.setIconImage(RImg.APP_ICON.getImageIcon().getImage());
         frame.setLocationRelativeTo(null);        
         // Display the window.
         //frame.pack();
@@ -81,15 +83,15 @@ public class Main {
 	{
 		Log.v("finished()");
 
-		if((boolean)Resource.PROP_SAVE_WINDOW_SIZE.getData(false)) {
-			int width = (int)frame.getWidth();
-			int height = (int)frame.getHeight();
-			if(Resource.PROP_WINDOW_WIDTH.getInt() != width
-					|| Resource.PROP_WINDOW_HEIGHT.getInt() != (int)frame.getSize().getHeight()) {
-				Resource.PROP_WINDOW_WIDTH.setData(width);
-				Resource.PROP_WINDOW_HEIGHT.setData(height);
-			}
-		}
+//		if(RProp.B.SAVE_WINDOW_SIZE.get()) {
+//			int width = (int)frame.getWidth();
+//			int height = (int)frame.getHeight();
+//			if(RProp.I.WINDOW_WIDTH.get() != width
+//					|| Resource.PROP_WINDOW_HEIGHT.getInt() != (int)frame.getSize().getHeight()) {
+//				Resource.PROP_WINDOW_WIDTH.setData(width);
+//				Resource.PROP_WINDOW_HEIGHT.setData(height);
+//			}
+//		}
 
 		frame.setVisible(false);
 		

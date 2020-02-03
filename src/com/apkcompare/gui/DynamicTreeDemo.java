@@ -46,11 +46,12 @@ import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkcompare.gui.dialog.AboutDlg;
 import com.apkcompare.gui.dialog.SettingDlg;
-import com.apkcompare.gui.util.ApkFileChooser;
-import com.apkcompare.gui.util.FileDrop;
-import com.apkcompare.gui.util.MessageBoxPane;
-import com.apkcompare.resource.Resource;
+import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.swing.ApkFileChooser;
+import com.apkspectrum.swing.FileDrop;
+import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
 
@@ -150,12 +151,12 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 		btnsetting = new JButton();
 		btninfo = new JButton();
 		
-		btnadd.setIcon(Resource.IMG_DIFF_TOOLBAR_ADD.getImageIcon());
-		btndiff.setIcon(Resource.IMG_DIFF_TOOLBAR_EDITOR.getImageIcon());
-		btniden.setIcon(Resource.IMG_DIFF_TOOLBAR_IDEN.getImageIcon());
+		btnadd.setIcon(RImg.DIFF_TOOLBAR_ADD.getImageIcon());
+		btndiff.setIcon(RImg.DIFF_TOOLBAR_EDITOR.getImageIcon());
+		btniden.setIcon(RImg.DIFF_TOOLBAR_IDEN.getImageIcon());
 		
-		btnsetting.setIcon(Resource.IMG_DIFF_TOOLBAR_SETTING.getImageIcon());
-		btninfo.setIcon(Resource.IMG_DIFF_TOOLBAR_INFO.getImageIcon());
+		btnsetting.setIcon(RImg.DIFF_TOOLBAR_SETTING.getImageIcon());
+		btninfo.setIcon(RImg.DIFF_TOOLBAR_INFO.getImageIcon());
 		
 		btnadd.setActionCommand(CMD_TOGGLE_ADD);
 		btndiff.setActionCommand(CMD_TOGGLE_EDITOR);
@@ -228,7 +229,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 	        loadingpanel[index] = new DiffLoadingPanel();	        
 	        pathtextfiled[index] = new JTextField();
 	        
-	        btnfileopen[index] = new JButton(Resource.IMG_DIFF_APK_OPEN_ICON.getImageIcon());
+	        btnfileopen[index] = new JButton(RImg.DIFF_APK_OPEN_ICON.getImageIcon());
 	        btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
 	        btnfileopen[index].setPreferredSize(new Dimension(textfield_height, textfield_height));
 	        btnfileopen[index].setActionCommand(CMD_BUTTON_FILE_OPEN);
@@ -257,6 +258,16 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                 {   
             		setApk(LEFT, files[0].getAbsolutePath());
                 }
+
+			@Override
+			public void dragEnter() {
+				
+			}
+
+			@Override
+			public void dragExit() {
+
+			}
             });
         }        
         for(Component com: Arrays.asList(loadingpanel[RIGHT].getEmptyPanel(), arrayTree[RIGHT])) {
@@ -265,6 +276,16 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
                 {   
             		setApk(RIGHT, files[0].getAbsolutePath());	            	
                 }
+
+			@Override
+			public void dragEnter() {
+
+			}
+
+			@Override
+			public void dragExit() {
+				
+			}
             });
         }
     }
@@ -329,7 +350,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
 									SystemUtil.openFile(temp.makeFilebyNode());
 								} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
 									Log.d("open diff program : " + temp.state);
-									String openner = (String)Resource.PROP_DIFF_TOOL.getData();
+									String openner = RProp.S.DIFF_TOOL.get();
 									DiffTreeUserData othertemp = getUserDatabyTreePath(temp.other);									
 									SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
 											othertemp.makeFilebyNode().getAbsolutePath()});
