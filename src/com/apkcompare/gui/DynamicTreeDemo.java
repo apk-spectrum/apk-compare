@@ -476,12 +476,12 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     }
     
     private void setfolderstate(SortNode rootmynode) {
-    	
+
     	@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
-    	
+		Enumeration<TreeNode> myreenode = (Enumeration<TreeNode>)(Enumeration<?>) rootmynode.depthFirstEnumeration();
+
     	while (myreenode.hasMoreElements()) {
-    		DefaultMutableTreeNode mynode = myreenode.nextElement();
+    		DefaultMutableTreeNode mynode = (DefaultMutableTreeNode) myreenode.nextElement();
     		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
     			DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
     			
@@ -503,10 +503,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     
     private void clearnodepath(SortNode rootmynode) {
     	@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+		Enumeration<TreeNode> myreenode = (Enumeration<TreeNode>)(Enumeration<?>) rootmynode.depthFirstEnumeration();
     	
     	while (myreenode.hasMoreElements()) {
-    		DefaultMutableTreeNode mynode = myreenode.nextElement();
+    		DefaultMutableTreeNode mynode = (DefaultMutableTreeNode) myreenode.nextElement();
     		
     		DiffTreeUserData temp = (DiffTreeUserData)mynode.getUserObject();
     		
@@ -520,11 +520,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener, TreeSelec
     private void mappingtree(SortNode rootmynode, JTree othertree) {
     	
     	@SuppressWarnings("unchecked")
-		Enumeration<DefaultMutableTreeNode> myreenode = rootmynode.depthFirstEnumeration();
+		Enumeration<TreeNode> myreenode = (Enumeration<TreeNode>)(Enumeration<?>) rootmynode.depthFirstEnumeration();
     	TreePath samebefore = null;
     	
     	while (myreenode.hasMoreElements()) {
-    		DefaultMutableTreeNode mynode = myreenode.nextElement();
+    		DefaultMutableTreeNode mynode = (DefaultMutableTreeNode) myreenode.nextElement();
     		
     		if((mynode.getUserObject() instanceof DiffTreeUserData)) {
     			if((((DiffTreeUserData)mynode.getUserObject()).me != null)) {

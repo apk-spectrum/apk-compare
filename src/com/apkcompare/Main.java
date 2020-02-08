@@ -111,7 +111,7 @@ public class Main {
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			if(!frame.isFocused()) return false;
 			if (e.getID() == KeyEvent.KEY_RELEASED) {
-					if(e.getModifiers() == 0) {
+					if(e.getModifiersEx() == 0) {
 						switch(e.getKeyCode()) {
 						case KeyEvent.VK_F1 : AboutDlg.showAboutDialog(frame);break;
 						case KeyEvent.VK_F12: LogDlg.showLogDialog(frame);	break;
