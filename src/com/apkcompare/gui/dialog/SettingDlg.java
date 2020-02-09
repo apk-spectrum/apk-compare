@@ -37,9 +37,12 @@ import com.apkcompare.resource.RFile;
 import com.apkcompare.resource.RImg;
 import com.apkcompare.resource.RProp;
 import com.apkcompare.resource.RStr;
-import com.apkcompare.util.SystemUtil;
 import com.apkspectrum.jna.FileInfo;
 import com.apkspectrum.jna.FileVersion;
+import com.apkspectrum.util.ConsolCmd;
+import com.apkspectrum.util.SystemUtil;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 
 public class SettingDlg extends JDialog implements ActionListener{
 	private static final long serialVersionUID = -3310023069238192716L;
@@ -55,7 +58,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 	private static final String ACT_CMD_SAVE = "ACT_CMD_SAVE";
 	private static final String ACT_CMD_EXIT = "ACT_CMD_EXIT";
-	
+
 	//private static String fontOfTheme;
 
 	public SettingDlg(Window owner) {
@@ -70,7 +73,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		initialize(owner);
 	}
-	
+
 	private void initialize(Window window)
 	{
 		setTitle(RStr.SETTINGS_TITLE.get());
@@ -80,7 +83,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		setResizable(true);
 		setLocationRelativeTo(window);
 		setModal(true);
-		
+
 		JPanel ctrPanel = new JPanel(new FlowLayout());
 		JButton savebutton = new JButton(RStr.BTN_SAVE.get());
 		savebutton.setActionCommand(ACT_CMD_SAVE);
@@ -108,9 +111,9 @@ public class SettingDlg extends JDialog implements ActionListener{
 				dispose();
 			}
 		});
-		
+
 	}
-	
+
 	private class EditorItemRenderer extends JLabel implements ListCellRenderer<Object> {
 		private static final long serialVersionUID = -151339243781300421L;
 
@@ -174,12 +177,12 @@ public class SettingDlg extends JDialog implements ActionListener{
 			return desc;
 		}
 	}
-	
+
 	JPanel makeGenericPanel() {
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setOpaque(true);
 
-		//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady) 
+		//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady)
 		GridBagConstraints rowHeadConst = new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(10,10,0,10),0,0);
 		GridBagConstraints contentConst = new GridBagConstraints(1,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(10,0,0,0),0,0);
 
@@ -218,7 +221,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		}
 
 		try {
-			for(String path: SystemUtil.getCompareApps()) {
+			for(String path: getCompareApps()) {
 				if(path != null && !propRecentEditors.contains(path) && !path.equalsIgnoreCase(propStrEditorPath)) {
 					jcbEditors.addItem(path);
 				}
@@ -260,7 +263,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 			btnShortcut.setVerticalTextPosition(JLabel.BOTTOM);
 			btnShortcut.setHorizontalTextPosition(JLabel.CENTER);
 			btnShortcut.setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
-			
+
 			etcBtnPanel.add(btnShortcut);
 
 			panel.add(etcBtnPanel, contentConst);
@@ -275,7 +278,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 
 		return panel;
 	}
-	
+
 	private class ResourceLangItemRenderer extends JLabel implements ListCellRenderer<Object> {
 		private static final long serialVersionUID = 3001512366576666099L;
 
@@ -296,7 +299,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		String actCommand = e.getActionCommand();
 
 		if(ACT_CMD_EDITOR_EXPLOERE.equals(actCommand)) {
-			JFileChooser jfc = new JFileChooser();										
+			JFileChooser jfc = new JFileChooser();
 			if(jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
 				return;
 
@@ -318,7 +321,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 			this.dispose();
 		}
 	}
-	
+
 	private void readSettings()
 	{
 		propStrLanguage = RProp.S.LANGUAGE.get();
@@ -360,5 +363,95 @@ public class SettingDlg extends JDialog implements ActionListener{
 			}
 			RProp.S.RECENT_DIFF_TOOL.set(recentEditors.toString());
 		}
+	}
+
+	public static String[] getCompareApps() throws Exception {
+		ArrayList<String> compareList = new ArrayList<String>();
+		if(SystemUtil.isWindows()) {
+			// Beyond Compare
+			boolean hasBeyond = false;
+			if(Advapi32Util.registryKeyExists(WinReg.HKEY_CURRENT_USER, "SOFTWARE\\Scooter Software")) {
+				String[] apps = Advapi32Util.registryGetKeys(WinReg.HKEY_CURRENT_USER, "SOFTWARE\\Scooter Software");
+				if(apps != null) {
+					for(String ver: apps) {
+						if(!ver.startsWith("Beyond Compare")) continue;
+						if(Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, "Software\\Scooter Software\\" + ver, "ExePath")) {
+							String beyond = Advapi32Util.registryGetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\Scooter Software\\" + ver, "ExePath");
+							if(!compareList.contains(beyond) && new File(beyond).canExecute()) {
+								compareList.add(beyond);
+								hasBeyond = true;
+							}
+						}
+					}
+				}
+			}
+			if(!hasBeyond) {
+				String[] expectPaths = new String[] {
+					"C:\\Program Files (x86)\\Beyond Compare\\BCompare.exe",
+					"C:\\Program Files (x86)\\Beyond Compare 5\\BCompare.exe",
+					"C:\\Program Files (x86)\\Beyond Compare 4\\BCompare.exe",
+					"C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe",
+					"C:\\Program Files\\Beyond Compare\\BCompare.exe",
+					"C:\\Program Files\\Beyond Compare 5\\BCompare.exe",
+					"C:\\Program Files\\Beyond Compare 4\\BCompare.exe",
+					"C:\\Program Files\\Beyond Compare 3\\BCompare.exe"
+				};
+				for(String path: SystemUtil.getRealPaths(expectPaths)) {
+					if(!compareList.contains(path)) {
+						compareList.add(path);
+						hasBeyond = true;
+					}
+				}
+			}
+
+			// P4 Merge
+			boolean hasP4merge = false;
+			if(Advapi32Util.registryKeyExists(WinReg.HKEY_CURRENT_USER, "Software\\Perforce")
+					&& Advapi32Util.registryKeyExists(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Perforce\\Environment")
+					&& Advapi32Util.registryValueExists(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Perforce\\Environment", "P4INSTROOT")) {
+				String perforceRoot = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Perforce\\Environment", "P4INSTROOT");
+				String p4merge = SystemUtil.getRealPath(perforceRoot + "p4merge.exe");
+				if(p4merge != null) {
+					compareList.add(p4merge);
+					hasP4merge = true;
+				}
+			}
+			if(!hasP4merge) {
+				String[] expectPaths = new String[] {
+					"C:\\Program Files (x86)\\Perforce\\p4merge.exe",
+					"C:\\Program Files\\Perforce\\p4merge.exe"
+				};
+				for(String path: SystemUtil.getRealPaths(expectPaths)) {
+					if(!compareList.contains(path)) {
+						compareList.add(path);
+						hasP4merge = true;
+					}
+				}
+			}
+		} else if(SystemUtil.isLinux()) {
+			// Beyond Compare
+			String beyond = SystemUtil.getRealPath("bcompare");
+			if(beyond != null && new File(beyond).canExecute()) {
+				compareList.add(beyond);
+			}
+
+			// P4 Merge
+			String p4Path = SystemUtil.getRealPath("p4v");
+			if(p4Path != null && !p4Path.trim().isEmpty()) {
+				String[] result = ConsolCmd.exec(new String[] { "readlink", "-f",  p4Path }, true, null);
+				if(result != null && result.length > 0
+						&& result[0].matches("^/.*/p4v") && new File(result[0]).exists()) {
+					String p4merge = result[0].replaceAll("/p4v$", "/p4merge");
+					if(new File(p4merge).canExecute()) {
+						compareList.add(p4merge);
+					}
+				}
+			}
+		} else if(SystemUtil.isMac()) {
+
+		} else {
+			throw new Exception("Unknown OS : " + SystemUtil.OS);
+		}
+		return compareList.toArray(new String[compareList.size()]);
 	}
 }
