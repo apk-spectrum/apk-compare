@@ -1,33 +1,26 @@
 package com.apkcompare;
 
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.nio.charset.Charset;
 
 import javax.swing.JFrame;
 
 import com.apkcompare.gui.DynamicTreeDemo;
-import com.apkcompare.gui.dialog.AboutDlg;
-import com.apkcompare.gui.dialog.LogDlg;
+import com.apkcompare.gui.UiEventHandler;
 import com.apkcompare.resource.RImg;
 import com.apkcompare.resource.RProp;
 import com.apkcompare.resource.RStr;
+import com.apkspectrum.swing.WindowSizeMemorizer;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
 
-public class Main {
+public class Main
+{
 	private static final ApkComparer apkComparer = new ApkComparer(null, null);
-	public static JFrame frame;
+
 	public static void main(final String[] args) {
-		
-    	//args[1] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMFacebook/hero2qltedcm/DCMFacebook.apk";
-    	//args[0] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMFacebook/zeroltedcm/DCMFacebook.apk";
-    	//args[0] = "/media/leejinhyeong/Perforce/DCM_APP_DEV_LJH_DEV/NILE/Cinnamon/applications/3rd_party/jpn/dcm/DCMAreaMail/dream2qltedcm/DCMAreaMail.apk";
-    	//args[0] = "";
-		//(String)Resource.PROP_LANGUAGE.getData(SystemUtil.getUserLanguage())
+
 		RStr.setLanguage(RProp.S.LANGUAGE.get());
 		if("user".equalsIgnoreCase(RStr.APP_BUILD_MODE.get())) {
 			Log.enableConsoleLog(false);
@@ -42,10 +35,12 @@ public class Main {
 		Log.i("Default Charset : " + Charset.defaultCharset());
 		Log.i("sun.arch.data.model : " + System.getProperty("sun.arch.data.model"));
 
-    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		WindowSizeMemorizer.setEnabled(RProp.B.SAVE_WINDOW_SIZE);
+
+		EventQueue.invokeLater(new Runnable() {
             public void run() {
             	createAndShowGUI();
-            	 
+
 				if(args.length > 0) {
 					apkComparer.setApk(ApkComparer.LEFT, args[0]);
 				}
@@ -53,74 +48,30 @@ public class Main {
 					apkComparer.setApk(ApkComparer.RIGHT, args[1]);
 				}
             }
-        });    	
+        });
 	}
 
     private static void createAndShowGUI() {
         // Create and set up the window.
-    	Compareevent event = new Compareevent();
-    	
-        frame = new JFrame(RStr.APP_NAME.get());
+    	UiEventHandler event = new UiEventHandler(apkComparer);
+
+    	JFrame frame = new JFrame(RStr.APP_NAME.get());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         // Create and set up the content pane.
         DynamicTreeDemo newContentPane = new DynamicTreeDemo(apkComparer);
         newContentPane.setOpaque(true);
-        frame.addWindowListener(event);
-		KeyboardFocusManager ky=KeyboardFocusManager.getCurrentKeyboardFocusManager();
-		ky.addKeyEventDispatcher(event);
-		
+
         frame.setContentPane(newContentPane);
-        frame.setSize(1000, 800);
-        frame.setIconImage(RImg.APP_ICON.getImageIcon().getImage());
-        frame.setLocationRelativeTo(null);        
+        WindowSizeMemorizer.apply(frame, new Dimension(1000, 800));
+        //frame.setSize(1000, 800);
+        frame.setIconImage(RImg.APP_ICON.getImage());
+        frame.setLocationRelativeTo(null);
         // Display the window.
         //frame.pack();
         frame.setVisible(true);
-    }
 
-	private static void finished()
-	{
-		Log.v("finished()");
-
-//		if(RProp.B.SAVE_WINDOW_SIZE.get()) {
-//			int width = (int)frame.getWidth();
-//			int height = (int)frame.getHeight();
-//			if(RProp.I.WINDOW_WIDTH.get() != width
-//					|| Resource.PROP_WINDOW_HEIGHT.getInt() != (int)frame.getSize().getHeight()) {
-//				Resource.PROP_WINDOW_WIDTH.setData(width);
-//				Resource.PROP_WINDOW_HEIGHT.setData(height);
-//			}
-//		}
-
-		frame.setVisible(false);
-		
-		apkComparer.getApkScanner(ApkComparer.LEFT).clear(true);
-		apkComparer.getApkScanner(ApkComparer.RIGHT).clear(true);
-		System.exit(0);
-	}
-    static class Compareevent implements WindowListener, KeyEventDispatcher {
-    	@Override public void windowClosing(WindowEvent e) { finished(); }
-    	@Override public void windowClosed(WindowEvent e) { finished(); }
-    	@Override public void windowOpened(WindowEvent e) { }
-    	@Override public void windowIconified(WindowEvent e) { }
-    	@Override public void windowDeiconified(WindowEvent e) { }
-    	@Override public void windowActivated(WindowEvent e) { }
-    	@Override public void windowDeactivated(WindowEvent e) { }
-		@Override
-		public boolean dispatchKeyEvent(KeyEvent e) {
-			if(!frame.isFocused()) return false;
-			if (e.getID() == KeyEvent.KEY_RELEASED) {
-					if(e.getModifiersEx() == 0) {
-						switch(e.getKeyCode()) {
-						case KeyEvent.VK_F1 : AboutDlg.showAboutDialog(frame);break;
-						case KeyEvent.VK_F12: LogDlg.showLogDialog(frame);	break;
-						default: return false;
-					}
-					return true;
-				}
-			}
-			return false;
-		}    	
+        frame.addWindowListener(event);
+        event.registerKeyStrokeAction(newContentPane);
     }
 }

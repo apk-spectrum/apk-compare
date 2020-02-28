@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +79,18 @@ class DiffTree extends JTree {
 		//left.setShowsRootHandles(true);
 		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
 		setToggleClickCount(0);
+
+		addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				e.getComponent().repaint();
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				e.getComponent().repaint();
+			}
+		});
 	}
 	
 	public static void setScrollPane(JScrollPane scrollpane) {
