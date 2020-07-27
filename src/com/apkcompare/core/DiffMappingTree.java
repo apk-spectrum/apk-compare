@@ -187,33 +187,33 @@ public class DiffMappingTree {
 //				String[] tokenmCertList = apkInfo.ss_tokens;
 //				String[] tokenmCertFiles = apkInfo.ss_tokenFiles;
 	        					
-				
-				for(String str : mCertList) {
-					if(str == null) continue;
-						
-						//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
-						String[] tempstr = str.split("\\r?\\n");
-						 
-						//str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
-						//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
-													
-						//Log.d(tempstr[0]);
-						if(tempstr.length > 8) {							
-							str =  "<html>"
-							+ tempstr[0] + "<br/>"
-							+ tempstr[1] + "<br/>"
-							+ tempstr[5] + "<br/>"
-							+ tempstr[6] + "<br/>"
-							+ tempstr[7] + "<br/>"
-							+ "</html>";
-						}
-						
-						SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
-						tempdata.setOrignalSig(str);
-						TabfolderchildNode.add(new SortNode(tempdata));
-						
-				}
-				
+				if (mCertList != null) {
+					for(String str : mCertList) {
+						if(str == null) continue;
+							
+							//str = "<html>" + str.replace("\n", "<br/>") + "</html>";
+							String[] tempstr = str.split("\\r?\\n");
+							 
+							//str = "<html>" + "Owner : " + findString(tempstr[0], "CN=", ", ") + "<br/>"
+							//+ "Issuer : " + findString(tempstr[1], "CN=", ", ") + "<br/>"
+														
+							//Log.d(tempstr[0]);
+							if(tempstr.length > 8) {							
+								str =  "<html>"
+								+ tempstr[0] + "<br/>"
+								+ tempstr[1] + "<br/>"
+								+ tempstr[5] + "<br/>"
+								+ tempstr[6] + "<br/>"
+								+ tempstr[7] + "<br/>"
+								+ "</html>";
+							}
+							
+							SigPassKeyDiffTreeUserData tempdata = new SigPassKeyDiffTreeUserData(str, "Sig", apkInfo, false);
+							tempdata.setOrignalSig(str);
+							TabfolderchildNode.add(new SortNode(tempdata));
+							
+					}
+				}				
 	        }
 		}		
 		Log.d("End create Tree");
