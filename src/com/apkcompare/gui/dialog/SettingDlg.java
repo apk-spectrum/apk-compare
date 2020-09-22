@@ -417,14 +417,16 @@ public class SettingDlg extends JDialog implements ActionListener{
 				}
 			}
 			if(!hasP4merge) {
-				String[] expectPaths = new String[] {
+				String[] expectPaths = SystemUtil.getRealPaths(new String[] {
 					"C:\\Program Files (x86)\\Perforce\\p4merge.exe",
 					"C:\\Program Files\\Perforce\\p4merge.exe"
-				};
-				for(String path: SystemUtil.getRealPaths(expectPaths)) {
-					if(!compareList.contains(path)) {
-						compareList.add(path);
-						hasP4merge = true;
+				});
+				if(expectPaths != null) {
+					for(String path: SystemUtil.getRealPaths(expectPaths)) {
+						if(!compareList.contains(path)) {
+							compareList.add(path);
+							hasP4merge = true;
+						}
 					}
 				}
 			}
