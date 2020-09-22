@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP_PATH="/opt/APKCompare"
-APP_VERSION="1.0"
+APP_VERSION="1.1"
 APP_FILE="ApkCompare.jar"
 
 DEBIAN_DATA_PATH="./debian"$APP_PATH

@@ -1,54 +1,10 @@
-# APK Scanner 
+# APK Compare 
 [![Software License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.sec.samsung.net/sunggyu-kam/apk-scanner/blob/master/LICENSE)  
-Welcome to the APK Scanner!  
+Welcome to the APK Compare!  
 
-WEBSITE : https://github.sec.samsung.net/pages/sunggyu-kam/apk-scanner/  
-WIKI : https://github.sec.samsung.net/sunggyu-kam/apk-scanner/wiki  
+WEBSITE : https://github.sec.samsung.net/jin-h-lee/apk-compare/
 
 Download : [M STORE](http://mosaic.sec.samsung.net/kms/wagleLayout.do?method=link&type=store.application&id=93478035)
-
-## Introduce the APK Scanner  
-The APK scanner analyzes the APK file to show all the APK information,  
-And provides functions such as installing in the device and extracting and analyzing the installed apps,  
-It is a tool to dramatically streamline APK management. [(more..)](https://github.sec.samsung.net/pages/sunggyu-kam/apk-scanner/)
-
-![](https://github.sec.samsung.net/sunggyu-kam/apk-scanner/blob/gh-pages/img/manual/apk-scanner-launch-img.png)
-
-## Build
-This repository have .project and .class files for be build by eclipse.[(more..)](https://github.sec.samsung.net/sunggyu-kam/apk-scanner/wiki/2.-How-to-build-by-eclipse)  
-
-### Requirements
-JDK (7 or 8).  
-Eclipse with git plugin
-
-### Create Eclipse project  
-1. source code download  
-> git clone https://github.sec.samsung.net/sunggyu-kam/apk-scanner  
-
-2. import Eclipse project  
-> Eclipse > File > Import > Git > Project from Git  
-> \> Existing local repository > add "your project path" > <b>Import existing Eclipse projects</b>  
-
-3. Run Configuration, Main Class : <b>com.apkscanner.Main</b>  
-
-## Setup & Launch  
-Supported OS : Windows7/10, Linux Ubuntu 10.04/12.04  
-※ Based on verified OS version.  
-
-### Setup  
-
-#### for Windows  
-1. Uncompress APKScanner.tar  
-2. run setup.bat (right click > Run as administrator)  
-
-#### for Linux (ubuntu)  
-$ tar -xvf APKScanner.tar  
-$ cd APKScanner  
-$ ./setup.sh  
-
-### Launch
-1. Double click to an APK File on the explorer or p4v.  
-
 
 ## External Tools & Resources  
 Using following tools & libraries  
@@ -75,12 +31,4 @@ RSyntaxTextArea with AutoComplete, RSTAUI [![Software License](https://img.shiel
 json-simple [![Software License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.com/fangyidong/json-simple/blob/master/LICENSE.txt)  
 \- https://code.google.com/archive/p/json-simple/  
 commons-cli [![Software License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](http://www.apache.org/licenses/)  
-\- https://commons.apache.org/proper/commons-cli/  
-
-### Images  
-Toolbar icons : https://dribbble.com/shots/1925117-Filo-Icon-Set-Free   
-Othres : https://github.com/ioBroker/ioBroker.icons-open-icon-library-png
-
-## License [![Software License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.sec.samsung.net/sunggyu-kam/apk-scanner/blob/master/LICENSE)  
-APK Sanner are released under the Apache 2.0 license.  
-
+\- https://commons.apache.org/proper/commons-cli/ 
