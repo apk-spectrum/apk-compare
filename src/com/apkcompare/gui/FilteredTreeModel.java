@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 
@@ -86,9 +87,10 @@ class FilteredTreeModel extends DefaultTreeModel {
             return node.getChildCount();
         } else {
             int childCount = 0;
-            Enumeration<DefaultMutableTreeNode> children = node.children();
+            @SuppressWarnings("unchecked")
+			Enumeration<TreeNode> children = (Enumeration<TreeNode>)(Enumeration<?>) node.children();
             while (children.hasMoreElements()) {
-                DefaultMutableTreeNode treenode = children.nextElement();
+                DefaultMutableTreeNode treenode = (DefaultMutableTreeNode) children.nextElement();
                 
                 int state = ((DiffTreeUserData)treenode.getUserObject()).state;
                 

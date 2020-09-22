@@ -1,15 +1,14 @@
 package com.apkcompare;
 
-import com.apkscanner.core.scanner.AaptScanner;
-import com.apkscanner.core.scanner.ApkScanner;
-import com.apkscanner.core.scanner.ApkScanner.Status;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
+import com.apkspectrum.core.scanner.AaptScanner;
+import com.apkspectrum.core.scanner.ApkScanner;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
 
 public class ApkComparer {
-    static public int LEFT = 0;
-    static public int RIGHT = 1;
-    
+    static public final int LEFT = 0;
+    static public final int RIGHT = 1;
+
 	public interface StatusListener {
 		public void onStart(int position);
 		public void onSuccess(int position);
@@ -20,29 +19,38 @@ public class ApkComparer {
 	private ApkScanner scanner[] = { new AaptScanner(null), new AaptScanner(null) };
 	private StatusListener listener;
 
-	public ApkComparer(String path1, String path2) {
+	public ApkComparer() {
 		scanner[LEFT].setStatusListener(new ApkScannerDiffListener(LEFT));
 		scanner[RIGHT].setStatusListener(new ApkScannerDiffListener(RIGHT));
+	}
+
+	public ApkComparer(String path1, String path2) {
+		this();
 		if(path1 != null) {
-			scanner[LEFT].openApk(path1);	
+			scanner[LEFT].openApk(path1);
 		}
 		if(path2 != null) {
-			scanner[RIGHT].openApk(path2);	
+			scanner[RIGHT].openApk(path2);
 		}
 	}
 
 	public ApkInfo getApkInfo(int position) {
 		return scanner[position].getApkInfo();
 	}
-	
+
 	public ApkScanner getApkScanner(int position) {
 		return scanner[position];
 	}
-	
+
 	public void setApk(int position, String path) {
-		scanner[position].openApk(path);		
+		scanner[position].openApk(path);
 	}
-	
+
+	public void clear(boolean sync) {
+		scanner[LEFT].clear(sync);
+		scanner[RIGHT].clear(sync);
+	}
+
 	public void setStatusListener(StatusListener listener) {
 		this.listener = listener;
 	}
@@ -50,12 +58,12 @@ public class ApkComparer {
     class ApkScannerDiffListener implements ApkScanner.StatusListener {
     	private int position;
     	private int error;
-    	
+
     	public ApkScannerDiffListener(int position) {
     		this.position = position;
     		this.error = 0;
 		}
-    	
+
 		@Override
 		public void onStart(long estimatedTime) {
 			error = 0;
@@ -88,7 +96,7 @@ public class ApkComparer {
 		}
 
 		@Override
-		public void onStateChanged(Status status) {
+		public void onStateChanged(int status) {
 			Log.d("onProgress()" + status );
 		}
     }

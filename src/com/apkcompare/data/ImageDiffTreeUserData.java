@@ -1,10 +1,8 @@
 package com.apkcompare.data;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,24 +10,18 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
-import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.FileUtil;
-import com.apkscanner.util.Log;
-
-import sun.awt.image.ToolkitImage;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.FileUtil;
+import com.apkspectrum.util.Log;
 
 public class ImageDiffTreeUserData extends DiffTreeUserData{
 	ImageIcon icon = null;
 	String respath = null;
 	public ImageDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	public ImageDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void setImageIcon(ImageIcon icon, String respath) {
@@ -89,7 +81,8 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
         return bufferedImage;
     }
     
-    private File ImageiconToFile() {
+    @SuppressWarnings("unused")
+	private File ImageiconToFile() {
         BufferedImage bi = (BufferedImage) icon.getImage();
         //File outputfile = new File("saved.png");
         
@@ -102,7 +95,6 @@ public class ImageDiffTreeUserData extends DiffTreeUserData{
         	outputfile = File.createTempFile("image", ".png", new File(apkinfo.tempWorkPath + File.separator));
 			ImageIO.write(bi, "png", outputfile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         return outputfile;

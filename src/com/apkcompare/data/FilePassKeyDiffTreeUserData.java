@@ -6,17 +6,14 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Arrays;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.tool.aapt.AaptNativeWrapper;
-import com.apkscanner.tool.aapt.AxmlToXml;
-import com.apkscanner.util.Log;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.tool.aapt.AaptNativeWrapper;
+import com.apkspectrum.util.Log;
 
 public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	File file;
@@ -25,16 +22,13 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	
 	public FilePassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public FilePassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public FilePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 
 //	public static void setApkfilepath(String mapkfilePath1, String mapkfilePath2) {
@@ -44,7 +38,6 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		//return this.title.equals(data.toString());
 		FilePassKeyDiffTreeUserData temp = (FilePassKeyDiffTreeUserData)data;
 		
@@ -54,14 +47,12 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	protected boolean issameFile(FilePassKeyDiffTreeUserData temp) {
-		ZipFile zipFile, zipFile2;
-		try {
-			zipFile = new ZipFile(apkinfo.filePath);
+		try (ZipFile zipFile = new ZipFile(apkinfo.filePath);
+			ZipFile zipFile2 = new ZipFile(temp.apkinfo.filePath);
+				)
+		{
 			ZipEntry entry = zipFile.getEntry(title);
-			
-			zipFile2 = new ZipFile(temp.apkinfo.filePath);
 			ZipEntry entry2 = zipFile2.getEntry(temp.title);
-			
 			
 			if(entry == null || entry.isDirectory() || entry2 == null || entry2.isDirectory() ) {
 				Log.w("entry was no file " + temp.title);
@@ -79,7 +70,6 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -88,10 +78,14 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	private String getXmlByApkinfo(ApkInfo tempapkinfo, String Res) {
 		String[] convStrings = null;
 		convStrings = AaptNativeWrapper.Dump.getXmltree(tempapkinfo.filePath, new String[] { Res });				
-		AxmlToXml a2x = new AxmlToXml(convStrings, tempapkinfo.resourceScanner);
-		a2x.setMultiLinePrint(true);
-		convStrings = a2x.toString().split(System.lineSeparator());
+		//AxmlToXml a2x = new AxmlToXml(convStrings, tempapkinfo.resourceScanner);
+		//AxmlToXml a2x = new AxmlToXml(convStrings, apkinfo.a2xConvert);
+		//a2x.setMultiLinePrint(true);
+		convStrings = tempapkinfo.a2xConvert.convertToText(convStrings).split(System.lineSeparator());
 		
+//		a2x.setMultiLinePrint(true);
+//		convStrings = a2x.toString().split(System.lineSeparator());
+//		
 		StringBuilder sb = new StringBuilder();
 		for (String s : convStrings)
 			sb.append(s + "\n");
@@ -100,7 +94,7 @@ public class FilePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	}
 	
 	private boolean issamestringForRes(FilePassKeyDiffTreeUserData temp) {
-		String[] convStrings = null;
+		//String[] convStrings = null;
 		String extension = temp.title.replaceAll(".*/", "").replaceAll(".*\\.", ".").toLowerCase();
 		
 		if (extension.endsWith(".xml")) {

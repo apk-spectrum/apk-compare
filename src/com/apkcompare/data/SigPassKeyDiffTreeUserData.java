@@ -1,31 +1,24 @@
 package com.apkcompare.data;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
+import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.util.Log;
 
 public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	String original;
 	boolean isFile;
 	public SigPassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public SigPassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SigPassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo, boolean isFile) {
 		super(title, key, apkinfo);
 		this.isFile = isFile; 
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setOrignalSig(String original) {
@@ -35,7 +28,6 @@ public class SigPassKeyDiffTreeUserData extends FilePassKeyDiffTreeUserData {
 	    
 	@Override
 	public boolean compare(DiffTreeUserData data) {
-		// TODO Auto-generated method stub
 		SigPassKeyDiffTreeUserData temp = (SigPassKeyDiffTreeUserData)data;
 
 		if(isFile) {

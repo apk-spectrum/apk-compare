@@ -1,36 +1,27 @@
 package com.apkcompare.data;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.data.base.MappingImp;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkscanner.data.apkinfo.ApkInfo;
-import com.apkscanner.util.Log;
-
-import sun.awt.image.ToolkitImage;
+import com.apkspectrum.data.apkinfo.ApkInfo;
 
 public class ImagePassKeyDiffTreeUserData extends PassKeyDiffTreeUserData {
 	ImageIcon icon = null;
 	
 	public ImagePassKeyDiffTreeUserData(String title) {
 		super(title, "", null);
-		// TODO Auto-generated constructor stub
 	}
 	public ImagePassKeyDiffTreeUserData(String title, String key) {
 		super(title, key, null);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public ImagePassKeyDiffTreeUserData(String title, String key, ApkInfo apkinfo) {
 		super(title, key, apkinfo);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void setImageIcon(ImageIcon icon) {

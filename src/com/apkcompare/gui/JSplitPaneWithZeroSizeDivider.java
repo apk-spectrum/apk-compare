@@ -40,6 +40,7 @@ import com.apkcompare.data.base.DiffTreeUserData;
  * A JSplitPane that uses a 1 pixel thin visible divider,
  * but a 9 pixel wide transparent drag area.
  */
+@SuppressWarnings("serial")
 public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 	/**
 	 * The size of the transparent drag area.
@@ -72,7 +73,7 @@ public class JSplitPaneWithZeroSizeDivider extends JSplitPane {
 		boolean isleft;
 		Color color;
 		public SplitPaintData() {
-			// TODO Auto-generated constructor stub			
+			
 		}
 	}
 	

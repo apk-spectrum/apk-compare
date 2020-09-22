@@ -5,7 +5,8 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
-
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +20,16 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.apkscanner.util.Log;
 import com.apkcompare.data.ImageDiffTreeUserData;
 import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
-import com.apkcompare.resource.Resource;
-import com.apkcompare.util.ApkCompareUtil;
+import com.apkcompare.resource.RImg;
+import com.apkspectrum.util.Log;
 
 
+@SuppressWarnings("serial")
 class DiffTree extends JTree {
 	public static final Color diffcolor = new Color(224,224,255);
 	public static final Color diffcolorselect = new Color(96,107,192);
@@ -43,8 +44,8 @@ class DiffTree extends JTree {
 	static DiffTree left,right;
 	static JSplitPaneWithZeroSizeDivider splitPane;
 	static JScrollPane hostingScrollPane;
-	static Image foldericon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_FOLDER_ICON.getImageIcon(), 16, 16);
-	static Image rooticon = ApkCompareUtil.getScaledImage(Resource.IMG_DIFF_TREE_APK_ICON.getImageIcon(), 16, 16);
+	static Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
+	static Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
 	
 	boolean painting = true;
 	
@@ -64,7 +65,6 @@ class DiffTree extends JTree {
 	}
 	
 	public DiffTree(DefaultTreeModel treeModel) {
-		// TODO Auto-generated constructor stub
 		super(treeModel);
 		initTree();
 	}
@@ -79,6 +79,18 @@ class DiffTree extends JTree {
 		//left.setShowsRootHandles(true);
 		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
 		setToggleClickCount(0);
+
+		addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				e.getComponent().repaint();
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				e.getComponent().repaint();
+			}
+		});
 	}
 	
 	public static void setScrollPane(JScrollPane scrollpane) {
