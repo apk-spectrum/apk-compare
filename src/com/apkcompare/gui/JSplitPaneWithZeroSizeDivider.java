@@ -1,4 +1,6 @@
 /*
+ * https://www.formdev.com/blog/swing-tip-jsplitpane-with-zero-size-divider/
+ * 
  * Copyright (c) 2011 Karl Tauber <karl at jformdesigner dot com>
  * All rights reserved.
  *

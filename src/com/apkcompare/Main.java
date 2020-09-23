@@ -18,6 +18,7 @@ import com.apkspectrum.util.SystemUtil;
 public class Main
 {
 	private static final ApkComparer apkComparer = new ApkComparer(null, null);
+	private static final UiEventHandler evtHandler = new UiEventHandler(apkComparer);
 
 	public static void main(final String[] args) {
 
@@ -53,25 +54,21 @@ public class Main
 
     private static void createAndShowGUI() {
         // Create and set up the window.
-    	UiEventHandler event = new UiEventHandler(apkComparer);
-
     	JFrame frame = new JFrame(RStr.APP_NAME.get());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(RImg.APP_ICON.getImage());
 
         // Create and set up the content pane.
-        DynamicTreeDemo newContentPane = new DynamicTreeDemo(apkComparer);
-        newContentPane.setOpaque(true);
+        frame.setContentPane(new DynamicTreeDemo(apkComparer, evtHandler));
 
-        frame.setContentPane(newContentPane);
         WindowSizeMemorizer.apply(frame, new Dimension(1000, 800));
         //frame.setSize(1000, 800);
-        frame.setIconImage(RImg.APP_ICON.getImage());
+
         frame.setLocationRelativeTo(null);
         // Display the window.
         //frame.pack();
         frame.setVisible(true);
 
-        frame.addWindowListener(event);
-        event.registerKeyStrokeAction(newContentPane);
+        frame.addWindowListener(evtHandler);
     }
 }

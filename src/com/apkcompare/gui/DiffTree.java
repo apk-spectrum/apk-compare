@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -26,11 +33,18 @@ import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkcompare.resource.RImg;
+import com.apkcompare.resource.RProp;
 import com.apkspectrum.util.Log;
+import com.apkspectrum.util.SystemUtil;
 
 
 @SuppressWarnings("serial")
-class DiffTree extends JTree {
+class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionListener, MouseListener {
+
+	public static final int UNASSIGNED = -1;
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+
 	public static final Color diffcolor = new Color(224,224,255);
 	public static final Color diffcolorselect = new Color(96,107,192);
 	public static final Color addcolor = new Color(255,247,217);
@@ -40,22 +54,31 @@ class DiffTree extends JTree {
 	
 	public static final Color[] colorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
 	//public static final Color[] focuscolorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
-	static JTree selectedtree;
-	static DiffTree left,right;
-	static JSplitPaneWithZeroSizeDivider splitPane;
-	static JScrollPane hostingScrollPane;
-	static Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
-	static Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
-	
+	private static JTree selectedtree;
+	private static JSplitPaneWithZeroSizeDivider splitPane;
+	private static JScrollPane hostingScrollPane;
+	private static Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
+	private static Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
+
+	private int position = UNASSIGNED;
+	private DiffTree linkedTree;
+
 	boolean painting = true;
-	
+
 	public Boolean lock= false;
-	
+
 	public DiffTree() {
 		super();
 		initTree();	
 	}
-	
+
+	public static void setLinkedPosition(DiffTree left, DiffTree right) {
+		left.position = LEFT;
+		right.position = RIGHT;
+		left.linkedTree = right;
+		right.linkedTree = left;
+	}
+
 	public void setpaintingFlag(boolean flag) {
 		this.painting = flag;
 	}
@@ -91,8 +114,12 @@ class DiffTree extends JTree {
 				e.getComponent().repaint();
 			}
 		});
+
+		addTreeExpansionListener(this);
+		addTreeSelectionListener(this);
+		addMouseListener(this);
 	}
-	
+
 	public static void setScrollPane(JScrollPane scrollpane) {
 		hostingScrollPane = scrollpane;
 	}
@@ -101,9 +128,8 @@ class DiffTree extends JTree {
 		selectedtree = tree;
 	}
 	
-	public static void setleftrighttree(DiffTree lefttree, DiffTree righttree) {
-		left = lefttree;
-		right = righttree;
+	public void setLinkedTargetTree(DiffTree linkedTree) {
+		this.linkedTree = linkedTree; 
 	}
 	
 	public static void setJSplitPane(JSplitPaneWithZeroSizeDivider pane) {
@@ -140,6 +166,25 @@ class DiffTree extends JTree {
 		}
     }
 	
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		if(((JTree)e.getSource()).getSelectionPath() == null) return;
+
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getPath().getLastPathComponent();
+
+		if(node.getUserObject() instanceof DiffTreeUserData) {
+			DiffTreeUserData temp =(DiffTreeUserData)node.getUserObject();
+
+//			Log.d("is expended : " + ((JTree)e.getSource()).isExpanded(new TreePath(node.getPath())));
+
+			linkedTree.setSelectionPath(temp.other);
+
+			splitPane.repaint();
+		}
+		//splitPane.setheight(left.getUI().getPathBounds(left, left.getSelectionPath()).y);
+		//splitPane.updateUI();
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.WHITE);
@@ -181,50 +226,46 @@ class DiffTree extends JTree {
 				tempSplitPaintData.index = i;
 				tempSplitPaintData.state = temp.state;
 				tempSplitPaintData.isleaf = node.isLeaf() && !temp.isfolder;
-				tempSplitPaintData.isleft = (left == this);
+				tempSplitPaintData.isleft = (position == LEFT);
 				tempSplitPaintData.startposition = this.getRowBounds(i).y;
 				tempSplitPaintData.ohterheight = tempSplitPaintData.height = this.getRowBounds(i).height;
 
-				DiffTree tempothertree = (left == this) ? right : left;
-
 				//exception working diff 
-
-				
 				if (temp.other != null) {
-					if(tempothertree.getPathBounds(temp.other)== null) {
-						Log.d(tempothertree.getPathBounds(temp.other) + ": " + temp.other);
+					if(linkedTree.getPathBounds(temp.other)== null) {
+						Log.d(linkedTree.getPathBounds(temp.other) + ": " + temp.other);
 						tempSplitPaintData.endposition = tempSplitPaintData.startposition;
 						super.paintComponent(g);
 						return;
 					} else {
-						tempSplitPaintData.endposition = tempothertree.getPathBounds(temp.other).y;
+						tempSplitPaintData.endposition = linkedTree.getPathBounds(temp.other).y;
 					}
 				} else {
-					if (left == this) {
+					if (position == LEFT) {
 						for (int j = i; j >= 0; j--) {
 							Object otemp = getPathForRow(j).getLastPathComponent();
 							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
 							DiffTreeUserData filetemp = (DiffTreeUserData) nodetemp.getUserObject();
 							if (filetemp.other != null) {
 								// Log.d(i + " : " + j);
-								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y;
-								tempSplitPaintData.ohterheight = tempothertree.getPathBounds(filetemp.other).height;
+								tempSplitPaintData.endposition = linkedTree.getPathBounds(filetemp.other).y;
+								tempSplitPaintData.ohterheight = linkedTree.getPathBounds(filetemp.other).height;
 								break;
 							}
 						}
 					} else {
 						boolean found = false;
 						DiffTreeUserData filetemp = null;
-						for (int j = i; j < right.getRowCount(); j++) {
+						for (int j = i; j < getRowCount(); j++) {
 							Object otemp = getPathForRow(j).getLastPathComponent();
 							DefaultMutableTreeNode nodetemp = (DefaultMutableTreeNode) otemp;
 							filetemp = (DiffTreeUserData) nodetemp.getUserObject();
 
 							// Log.d("i = " + i + filetemp);
 							if (filetemp.other != null) {
-								tempSplitPaintData.endposition = tempothertree.getPathBounds(filetemp.other).y
-										- tempothertree.getPathBounds(filetemp.other).height;
-								tempSplitPaintData.ohterheight = tempothertree.getPathBounds(filetemp.other).height;
+								tempSplitPaintData.endposition = linkedTree.getPathBounds(filetemp.other).y
+										- linkedTree.getPathBounds(filetemp.other).height;
+								tempSplitPaintData.ohterheight = linkedTree.getPathBounds(filetemp.other).height;
 
 								 //Log.d(filetemp.toString());
 								// tempSplitPaintData
@@ -233,8 +274,8 @@ class DiffTree extends JTree {
 							}
 						}
 						if(!found) {							
-							tempSplitPaintData.endposition = tempothertree.getRowBounds(tempothertree.getRowCount()-1).y;
-							tempSplitPaintData.ohterheight = tempothertree.getRowBounds(tempothertree.getRowCount()-1).height;
+							tempSplitPaintData.endposition = linkedTree.getRowBounds(linkedTree.getRowCount()-1).y;
+							tempSplitPaintData.ohterheight = linkedTree.getRowBounds(linkedTree.getRowCount()-1).height;
 						}
 						
 					}
@@ -301,6 +342,92 @@ class DiffTree extends JTree {
 			}
 			return l;
 		}
-	};
+	}
+
+	@Override
+	public void treeExpanded(TreeExpansionEvent event) {
+		TreePath path = event.getPath();
+		//Log.d("ex");
+		//        Log.d(event + "");
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+
+		if(node.getUserObject() instanceof DiffTreeUserData) {
+			DiffTreeUserData temp = (DiffTreeUserData) node.getUserObject();
+			linkedTree.expandPath(temp.other);
+			//scrollpane.revalidate();
+			//scrollpane.repaint();
+		}
+	}
+
+	@Override
+	public void treeCollapsed(TreeExpansionEvent event) {
+		TreePath path = event.getPath();
+		//Log.d("col");
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+
+		if(node.getUserObject() instanceof DiffTreeUserData) {
+			DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+			linkedTree.expandPath(temp.other);
+			//scrollpane.revalidate();
+			//scrollpane.repaint();
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// Log.d("click : " + e.getClickCount());
+		if (SwingUtilities.isLeftMouseButton(e)) {
+			int closestRow = getClosestRowForLocation(e.getX(), e.getY());
+			Rectangle closestRowBounds = getRowBounds(closestRow);
+
+			if (e.getY() >= closestRowBounds.getY()
+					&& e.getY() < closestRowBounds.getY() + closestRowBounds.getHeight()) {
+				if (e.getX() > closestRowBounds.getX() && closestRow < getRowCount()) {
+
+					if (e.getClickCount() == 1) {
+						setSelectionRow(closestRow);
+						DiffTree.setSelectedtree(this);
+						splitPane.repaint();
+					} else if (e.getClickCount() == 2 && getpaintingFlag()) {
+						DefaultMutableTreeNode node = (DefaultMutableTreeNode) (getSelectionPath()
+								.getLastPathComponent());
+						DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
+						if ((!node.isLeaf() || temp.isfolder) && !node.isRoot() ) {
+							if (isCollapsed(closestRow)) {
+								expandRow(closestRow);
+							} else {
+								collapseRow(closestRow);
+							}
+						} else {
+							if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD	 || node.isRoot()) {
+								Log.d("open program : " + temp);
+								SystemUtil.openFile(temp.makeFilebyNode());
+							} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
+								Log.d("open diff program : " + temp.state);
+								String openner = RProp.S.DIFF_TOOL.get();
+								DiffTreeUserData othertemp = null;
+						    	DefaultMutableTreeNode otherNode = (DefaultMutableTreeNode)temp.other.getLastPathComponent();
+								if(otherNode.getUserObject() instanceof DiffTreeUserData) {
+									othertemp = (DiffTreeUserData)otherNode.getUserObject();
+								}
+								SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
+										othertemp.makeFilebyNode().getAbsolutePath()});
+//								if(!result) {
+//									MessageBoxPane.showError(Main.frame, "please check Diff program" + "(" + openner+ ")");
+//								}
+
+							}
+						}
+					}
+				}
+			} // else
+				// temp.setSelectionRow(-1);
+		}
+	}
+
+	@Override public void mouseClicked(MouseEvent e) { }
+	@Override public void mouseReleased(MouseEvent e) { }
+	@Override public void mouseEntered(MouseEvent e) { }
+	@Override public void mouseExited(MouseEvent e) {	}
 }
 
