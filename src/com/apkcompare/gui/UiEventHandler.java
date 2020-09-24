@@ -18,8 +18,11 @@ import com.apkcompare.ApkComparer;
 import com.apkcompare.gui.action.AbstractApkScannerAction;
 import com.apkcompare.gui.action.AbstractUIAction;
 import com.apkcompare.gui.action.ActionEventHandler;
+import com.apkcompare.gui.action.OpenApkAction;
+import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
+import com.apkcompare.gui.action.ShowSettingDlgAction;
 import com.apkspectrum.plugin.IPlugIn;
 import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.swing.KeyStrokeAction;
@@ -31,8 +34,11 @@ public class UiEventHandler extends ActionEventHandler implements WindowListener
 	public static final String APK_COMPARER_KEY	= AbstractApkScannerAction.APK_COMPARER_KEY;
 	public static final String OWNER_WINDOW_KEY	= AbstractApkScannerAction.OWNER_WINDOW_KEY;
 
-	public static final String ACT_CMD_SHOW_ABOUT				= ShowAboutAction.ACTION_COMMAND;
-	public static final String ACT_CMD_SHOW_LOGS				= ShowLogsAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OPEN_APK				= OpenApkAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OEPN_DIFFTREE_FILE	= OpenDiffTreeFileAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_ABOUT			= ShowAboutAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_LOGS			= ShowLogsAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_SETTINGS		= ShowSettingDlgAction.ACTION_COMMAND;
 
 	public UiEventHandler(ApkComparer apkComparer) {
 		setApkComparer(apkComparer);

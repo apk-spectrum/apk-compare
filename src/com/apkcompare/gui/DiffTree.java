@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -34,9 +36,7 @@ import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.resource.RImg;
-import com.apkcompare.resource.RProp;
 import com.apkspectrum.util.Log;
-import com.apkspectrum.util.SystemUtil;
 
 
 @SuppressWarnings("serial")
@@ -60,13 +60,20 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 	private int position = UNASSIGNED;
 	private DiffTree linkedTree;
+	private ActionListener actListener;
 
 	boolean painting = true;
 
 	public Boolean lock= false;
 
-	public DiffTree() {
+	public DiffTree(ActionListener listener) {
 		super();
+		actListener = listener;
+		initTree();
+	}
+
+	public DiffTree(DefaultTreeModel treeModel, ActionListener listener) {
+		super(treeModel);
 		initTree();
 	}
 
@@ -84,10 +91,9 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public boolean getpaintingFlag() {
 		return this.painting;
 	}
-
-	public DiffTree(DefaultTreeModel treeModel) {
-		super(treeModel);
-		initTree();
+	
+	public void setActionListener(ActionListener listener) {
+		actListener = listener;
 	}
 
 	private void initTree() {
@@ -395,25 +401,6 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 							} else {
 								collapseRow(closestRow);
 							}
-						} else {
-							if(temp.state == DiffTreeUserData.NODE_STATE_NOMAL || temp.state == DiffTreeUserData.NODE_STATE_ADD	 || node.isRoot()) {
-								Log.d("open program : " + temp);
-								SystemUtil.openFile(temp.makeFilebyNode());
-							} else if(temp.state == DiffTreeUserData.NODE_STATE_DIFF) {
-								Log.d("open diff program : " + temp.state);
-								String openner = RProp.S.DIFF_TOOL.get();
-								DiffTreeUserData othertemp = null;
-								DefaultMutableTreeNode otherNode = (DefaultMutableTreeNode)temp.other.getLastPathComponent();
-								if(otherNode.getUserObject() instanceof DiffTreeUserData) {
-									othertemp = (DiffTreeUserData)otherNode.getUserObject();
-								}
-								SystemUtil.exec(new String[]{openner, temp.makeFilebyNode().getAbsolutePath(),
-										othertemp.makeFilebyNode().getAbsolutePath()});
-//								if(!result) {
-//									MessageBoxPane.showError(Main.frame, "please check Diff program" + "(" + openner+ ")");
-//								}
-
-							}
 						}
 					}
 				}
@@ -422,7 +409,16 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 		}
 	}
 
-	@Override public void mouseClicked(MouseEvent e) { }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(actListener == null) return;
+		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && getpaintingFlag()) {
+			if (getPathForLocation(e.getX(), e.getY()) == null) return;
+			actListener.actionPerformed(new ActionEvent(e.getSource(), ActionEvent.ACTION_PERFORMED,
+					UiEventHandler.ACT_CMD_OEPN_DIFFTREE_FILE, e.getWhen(), e.getModifiersEx()));
+		}
+	}
+
 	@Override public void mouseReleased(MouseEvent e) { }
 	@Override public void mouseEntered(MouseEvent e) { }
 	@Override public void mouseExited(MouseEvent e) {	}

@@ -23,7 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -33,11 +32,8 @@ import com.apkcompare.core.DiffMappingTree;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
-import com.apkcompare.gui.dialog.AboutDlg;
-import com.apkcompare.gui.dialog.SettingDlg;
 import com.apkcompare.resource.RImg;
 import com.apkspectrum.data.apkinfo.ApkInfo;
-import com.apkspectrum.swing.ApkFileChooser;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.Log;
@@ -45,6 +41,18 @@ import com.apkspectrum.util.Log;
 public class DynamicTreeDemo extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = -8110312211026585408L;
+
+	private static final int LEFT = DiffTree.LEFT;
+	private static final int RIGHT = DiffTree.RIGHT;
+	private static final int TEXTFIELD_HEIGHT = 28;
+
+	private static final String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
+	private static final String CMD_TOGGLE_EDITOR = "CMD_TOGGLE_EDITOR";
+	private static final String CMD_TOGGLE_IDEN = "CMD_TOGGLE_IDEN";
+
+	private static final String CARD_LAYOUT_TREE = "CARD_LAYOUT_TREE";
+	private static final String CARD_LAYOUT_LOADING = "CARD_LAYOUT_LOADING";
+
 	private ApkComparer apkComparer;
 
 	private SortNode[] arraytreeNode = {null, null};
@@ -54,30 +62,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 	private String CurrentmergeapkfilePath[] = {null, null};
 
 	private JToggleButton btnadd, btndiff, btniden;
-	private JButton btnsetting, btninfo;
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
-	private JButton[] btnfileopen = {null, null};
-
-	private static final int LEFT = DiffTree.LEFT;
-	private static final int RIGHT = DiffTree.RIGHT;
-	private static final int TEXTFIELD_HEIGHT = 28;
-
-	private JScrollPane scrollpane;
-
-	private static final String CMD_TOGGLE_ADD = "CMD_TOGGLE_ADD";
-	private static final String CMD_TOGGLE_EDITOR = "CMD_TOGGLE_EDITOR";
-	private static final String CMD_TOGGLE_IDEN = "CMD_TOGGLE_IDEN";
-	private static final String CMD_BUTTON_ABOUT = "CMD_BUTTON_ABOUT";
-
-	private static final String CMD_BUTTON_SETTING = "CMD_BUTTON_SETTING";
-	private static final String CMD_BUTTON_FILE_OPEN = "CMD_BUTTON_OPEN";
-
-	private static final String CARD_LAYOUT_TREE = "card_tree";
-	private static final String CARD_LAYOUT_LOADING = "card_loading";
 
 	private static Boolean Difflock = false;
-
 
 	//https://www.shareicon.net/diff-94479
 	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
@@ -93,11 +81,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			apkComparer.setStatusListener(new ApkComparerListener());
 		}
 
-		arrayTree[LEFT] = new DiffTree();
-		arrayTree[RIGHT] = new DiffTree();
+		arrayTree[LEFT] = new DiffTree(uiEvtHandler);
+		arrayTree[RIGHT] = new DiffTree(uiEvtHandler);
 		DiffTree.setLinkedPosition(arrayTree[LEFT], arrayTree[RIGHT]);
 
-		setCardPanel();
+		setCardPanel(uiEvtHandler);
 		setFileDrop();
 
 		final JSplitPaneWithZeroSizeDivider splitPane = new JSplitPaneWithZeroSizeDivider();
@@ -105,6 +93,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		splitPane.setLeftComponent(cardpanel[LEFT]);
 		splitPane.setRightComponent(cardpanel[RIGHT]);
 		splitPane.setResizeWeight(0.5);
+		splitPane.setY(TEXTFIELD_HEIGHT+1);
 
 		AdjustmentListener scrollListener = new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent evt) {
@@ -116,8 +105,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			}
 		};
 
-		splitPane.setY(TEXTFIELD_HEIGHT+1);
-		scrollpane = new JScrollPane(splitPane);
+		JScrollPane scrollpane = new JScrollPane(splitPane);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
 		scrollpane.getVerticalScrollBar().addAdjustmentListener(scrollListener);
 		scrollpane.getHorizontalScrollBar().addAdjustmentListener(scrollListener);
@@ -129,8 +117,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		btndiff = new JToggleButton();
 		btniden = new JToggleButton();
 
-		btnsetting = new JButton();
-		btninfo = new JButton();
+		JButton btnsetting = new JButton();
+		JButton btninfo = new JButton();
 
 		btnadd.setIcon(RImg.DIFF_TOOLBAR_ADD.getImageIcon());
 		btndiff.setIcon(RImg.DIFF_TOOLBAR_EDITOR.getImageIcon());
@@ -143,16 +131,19 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		btndiff.setActionCommand(CMD_TOGGLE_EDITOR);
 		btniden.setActionCommand(CMD_TOGGLE_IDEN);
 
-		btnsetting.setActionCommand(CMD_BUTTON_SETTING);
-		btninfo.setActionCommand(CMD_BUTTON_ABOUT);
+		btnsetting.setActionCommand(UiEventHandler.ACT_CMD_SHOW_SETTINGS);
+		btninfo.setActionCommand(UiEventHandler.ACT_CMD_SHOW_ABOUT);
 
 		for(AbstractButton btn: Arrays.asList(btniden, btnadd, btndiff, btnsetting, btninfo)) {
 			//btn.setBorderPainted( false );
 			//btn.setContentAreaFilled( false );
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 			btn.setFocusPainted(false);
-			btn.addActionListener(this);
-			btn.addActionListener(uiEvtHandler);
+			if(uiEvtHandler.getAction(btn.getActionCommand()) != null) {
+				btn.addActionListener(uiEvtHandler);	
+			} else {
+				btn.addActionListener(this);				
+			}
 			btn.setSelected(true);
 			temppanel.add(btn);
 		}
@@ -175,7 +166,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 	private class ApkComparerListener implements ApkComparer.StatusListener {
 		@Override
 		public void onStart(int position) {
-
 			loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
 			showCardpanel(CARD_LAYOUT_LOADING, position);
 			Log.w("change loading");
@@ -193,9 +183,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		}
 	}
 
-	private void setCardPanel() {
+	private void setCardPanel(ActionListener listener) {
 		JPanel []bordertreepanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
 		JPanel []pathpanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
+		JButton[] btnfileopen = {null, null};
 
 		for(int index=0;index <2; index++) {
 			cardpanel[index] = new JPanel(new CardLayout());
@@ -205,8 +196,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			btnfileopen[index] = new JButton(RImg.DIFF_APK_OPEN_ICON.getImageIcon());
 			btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
 			btnfileopen[index].setPreferredSize(new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
-			btnfileopen[index].setActionCommand(CMD_BUTTON_FILE_OPEN);
-			btnfileopen[index].addActionListener(this);
+			btnfileopen[index].setActionCommand(UiEventHandler.ACT_CMD_OPEN_APK);
+			btnfileopen[index].addActionListener(listener);
+			btnfileopen[index].putClientProperty("POSITION", Integer.valueOf(index));
 
 			pathtextfiled[index].setPreferredSize(new Dimension(0, TEXTFIELD_HEIGHT));
 
@@ -286,7 +278,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			Log.w("end create Tree :" + index);
 		}
 
-
 		synchronized (arrayTree[otherindex].lock) {
 			try {
 				while (arrayTree[otherindex].lock) {
@@ -297,7 +288,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 				e.printStackTrace();
 			}
 		}
-
 
 		Log.w("pass lock" + index);
 
@@ -350,9 +340,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 	}
 
 	private void showCardpanel(String str, int index) {
-		if(index==LEFT) {
-				((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
-		} else  ((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
+		((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
 		cardpanel[index].repaint();
 	}
 
@@ -569,25 +557,10 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 				}
 			}
 		}
-		if (e.getSource() instanceof JButton) {
-			if (e.getActionCommand() == CMD_BUTTON_ABOUT) {
-				AboutDlg.showAboutDialog(this);
-			} else if (e.getActionCommand() == CMD_BUTTON_SETTING) {
-				SettingDlg dlg = new SettingDlg(SwingUtilities.getWindowAncestor(this));
-				dlg.setVisible(true);
-			} else if (e.getActionCommand() == CMD_BUTTON_FILE_OPEN) {
-				final String apkFilePath = ApkFileChooser.openApkFilePath(this);
-				if (apkFilePath == null) {
-					Log.v("Not choose apk file");
-					return;
-				}
-				setApk(e.getSource().equals(btnfileopen[LEFT]) ? LEFT : RIGHT, apkFilePath);
-			}
-		}
 	}
 
 	private void setApk(int index, String filePath) {
-
+		Log.e(CurrentmergeapkfilePath[index]);
 		if((CurrentmergeapkfilePath[index] == null ||
 				!CurrentmergeapkfilePath[index].equals(filePath))) {
 			apkComparer.getApkScanner(index).clear(false);
@@ -595,7 +568,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		} else {
 			MessageBoxPane.showError(this, "same APK file");
 		}
-
 	}
 
 	@SuppressWarnings("unused")
