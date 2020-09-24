@@ -39,8 +39,8 @@ public class Main
 		WindowSizeMemorizer.setEnabled(RProp.B.SAVE_WINDOW_SIZE);
 
 		EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            	createAndShowGUI();
+			public void run() {
+				createAndShowGUI();
 
 				if(args.length > 0) {
 					apkComparer.setApk(ApkComparer.LEFT, args[0]);
@@ -48,27 +48,27 @@ public class Main
 				if(args.length > 1) {
 					apkComparer.setApk(ApkComparer.RIGHT, args[1]);
 				}
-            }
-        });
+			}
+		});
 	}
 
-    private static void createAndShowGUI() {
-        // Create and set up the window.
-    	JFrame frame = new JFrame(RStr.APP_NAME.get());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setIconImage(RImg.APP_ICON.getImage());
+	private static void createAndShowGUI() {
+		// Create and set up the window.
+		JFrame frame = new JFrame(RStr.APP_NAME.get());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setIconImage(RImg.APP_ICON.getImage());
 
-        // Create and set up the content pane.
-        frame.setContentPane(new DynamicTreeDemo(apkComparer, evtHandler));
+		// Create and set up the content pane.
+		frame.setContentPane(new DynamicTreeDemo(apkComparer, evtHandler));
 
-        WindowSizeMemorizer.apply(frame, new Dimension(1000, 800));
-        //frame.setSize(1000, 800);
+		WindowSizeMemorizer.apply(frame, new Dimension(1000, 800));
+		//frame.setSize(1000, 800);
 
-        frame.setLocationRelativeTo(null);
-        // Display the window.
-        //frame.pack();
-        frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+		// Display the window.
+		//frame.pack();
+		frame.setVisible(true);
 
-        frame.addWindowListener(evtHandler);
-    }
+		frame.addWindowListener(evtHandler);
+	}
 }

@@ -2,6 +2,7 @@ package com.apkcompare.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -16,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeExpansionEvent;
@@ -31,7 +33,6 @@ import com.apkcompare.data.ImageDiffTreeUserData;
 import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
-import com.apkcompare.gui.JSplitPaneWithZeroSizeDivider.SplitPaintData;
 import com.apkcompare.resource.RImg;
 import com.apkcompare.resource.RProp;
 import com.apkspectrum.util.Log;
@@ -42,8 +43,8 @@ import com.apkspectrum.util.SystemUtil;
 class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionListener, MouseListener {
 
 	public static final int UNASSIGNED = -1;
-    public static final int LEFT = 0;
-    public static final int RIGHT = 1;
+	public static final int LEFT = 0;
+	public static final int RIGHT = 1;
 
 	public static final Color diffcolor = new Color(224,224,255);
 	public static final Color diffcolorselect = new Color(96,107,192);
@@ -51,14 +52,11 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public static final Color addcolorselect = new Color(190,150,30);
 	public static final Color nomal = Color.white;
 	public static final Color nomalselect = new Color(109,120,128);
-	
+
 	public static final Color[] colorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
 	//public static final Color[] focuscolorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
-	private static JTree selectedtree;
-	private static JSplitPaneWithZeroSizeDivider splitPane;
-	private static JScrollPane hostingScrollPane;
-	private static Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
-	private static Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
+	private static final Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
+	private static final Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
 
 	private int position = UNASSIGNED;
 	private DiffTree linkedTree;
@@ -69,7 +67,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 	public DiffTree() {
 		super();
-		initTree();	
+		initTree();
 	}
 
 	public static void setLinkedPosition(DiffTree left, DiffTree right) {
@@ -82,22 +80,22 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public void setpaintingFlag(boolean flag) {
 		this.painting = flag;
 	}
-	
+
 	public boolean getpaintingFlag() {
 		return this.painting;
 	}
-	
+
 	public DiffTree(DefaultTreeModel treeModel) {
 		super(treeModel);
 		initTree();
 	}
-	
+
 	private void initTree() {
 		//getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-	    //getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
-	    //getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+		//getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
+		//getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		setCellRenderer(new DiffTreeCellRenderer());
-		setOpaque(false);	
+		setOpaque(false);
 		//setRootVisible(false);
 		//left.setShowsRootHandles(true);
 		setBorder(BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ));
@@ -120,28 +118,16 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 		addMouseListener(this);
 	}
 
-	public static void setScrollPane(JScrollPane scrollpane) {
-		hostingScrollPane = scrollpane;
-	}
-	
-	public static void setSelectedtree(JTree tree) {
-		selectedtree = tree;
-	}
-	
 	public void setLinkedTargetTree(DiffTree linkedTree) {
-		this.linkedTree = linkedTree; 
+		this.linkedTree = linkedTree;
 	}
-	
-	public static void setJSplitPane(JSplitPaneWithZeroSizeDivider pane) {
-		splitPane = pane;
-	}
-	
+
 	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected, boolean forsplitpane) {
 		DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-		
-    	if(isExpanded(row) && !node.isLeaf()){
+
+		if(isExpanded(row) && !node.isLeaf()){
 			if(selected) {
-				if(selectedtree == this || forsplitpane) {
+				if(isFocusOwner() || forsplitpane) {
 					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL+1];
 				} else{
 					return colorarray[DiffTreeUserData.NODE_STATE_NOMAL];
@@ -151,7 +137,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 			}
 		} else {
 			if(selected) {
-				if(selectedtree == this || forsplitpane) {
+				if(isFocusOwner() || forsplitpane) {
 					return colorarray[temp.getState()+1];
 				} else {
 					return colorarray[temp.getState()].darker();
@@ -164,8 +150,8 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 				}
 			}
 		}
-    }
-	
+	}
+
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		if(((JTree)e.getSource()).getSelectionPath() == null) return;
@@ -179,7 +165,8 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 			linkedTree.setSelectionPath(temp.other);
 
-			splitPane.repaint();
+			Container splitPanel = SwingUtilities.getAncestorOfClass(JSplitPane.class, this);
+			if(splitPanel != null) splitPanel.repaint();
 		}
 		//splitPane.setheight(left.getUI().getPathBounds(left, left.getSelectionPath()).y);
 		//splitPane.updateUI();
@@ -188,23 +175,27 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	@Override
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.WHITE);
-		
+
 		g.fillRect(0, 0, getWidth()+1, getHeight()+1);
 		//g.drawRect(0, 0, getWidth()+1, getHeight()+1);
-		
+
 		if(!painting) {
 			super.paintComponent(g);
 			return;
 		}
-		
+
+		JScrollPane hostingScrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, this);
+
 		if(hostingScrollPane != null && getRowCount() > 0) {
-			List<TreePath> visiblenode = getVisibleNodes(this);
-			
+			List<TreePath> visiblenode = getVisibleNodes(hostingScrollPane);
+			List<SplitPaintData> splitPaintData = null;
+			if(position != UNASSIGNED) splitPaintData = new ArrayList<>();
+
 			if(visiblenode==null) {
 				super.paintComponent(g);
 				return;
 			}
-			
+
 			for (int k = 0; k < visiblenode.size(); k++) {
 				g.setColor(Color.WHITE);
 				TreePath o = visiblenode.get(k);
@@ -216,8 +207,8 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 				g.setColor(nodecolor);
 				//Log.d(getRowCount() + "");
 				Rectangle r = getRowBounds(i);
-				
-				
+
+
 				g.fillRect(0, r.y, getWidth(), r.height);
 
 				// if(this == left) {
@@ -230,7 +221,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 				tempSplitPaintData.startposition = this.getRowBounds(i).y;
 				tempSplitPaintData.ohterheight = tempSplitPaintData.height = this.getRowBounds(i).height;
 
-				//exception working diff 
+				//exception working diff
 				if (temp.other != null) {
 					if(linkedTree.getPathBounds(temp.other)== null) {
 						Log.d(linkedTree.getPathBounds(temp.other) + ": " + temp.other);
@@ -273,40 +264,48 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 								break;
 							}
 						}
-						if(!found) {							
+						if(!found) {
 							tempSplitPaintData.endposition = linkedTree.getRowBounds(linkedTree.getRowCount()-1).y;
 							tempSplitPaintData.ohterheight = linkedTree.getRowBounds(linkedTree.getRowCount()-1).height;
 						}
-						
+
 					}
 					// tempSplitPaintData.endposition = 0;
 				}
-				if (tempSplitPaintData.endposition != 0) {
-					splitPane.setsplitPanedata(tempSplitPaintData);
-					//splitPane.repaint();
+				if (tempSplitPaintData.endposition != 0 && splitPaintData != null) {
+					if(splitPaintData.size() <= tempSplitPaintData.index) {
+						splitPaintData.add(tempSplitPaintData);
+					} else {
+						splitPaintData.set(tempSplitPaintData.index, tempSplitPaintData);
+					}
 				}
 			}
-			
+
+			JSplitPane splitPane = (JSplitPane) SwingUtilities.getAncestorOfClass(JSplitPane.class, this);
+			if(splitPane != null) {
+				splitPane.putClientProperty(position == LEFT ?
+						SplitPaintData.LEFT_DATA : SplitPaintData.RIGHT_DATA, splitPaintData);
+			}
 		}
-		
+
 		super.paintComponent(g);
 	}
-	
-    private static List<TreePath> getVisibleNodes(JTree hostingJTree){
-        //Find the first and last visible row within the scroll pane.
-        final Rectangle visibleRectangle = hostingScrollPane.getViewport().getViewRect();
-        final int firstRow = hostingJTree.getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y);
-        final int lastRow  = hostingJTree.getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y + visibleRectangle.height);   
-        //Iterate through each visible row, identify the object at this row, and add it to a result list.
-        List<TreePath> resultList = new ArrayList<TreePath>();          
-        for (int currentRow = firstRow; currentRow<=lastRow; currentRow++){
-            TreePath currentPath = hostingJTree.getPathForRow(currentRow);            
-            if(currentPath==null) return null;
-            resultList.add(currentPath);                       
-        }
-        return(resultList);
-    }  
-	
+
+	private List<TreePath> getVisibleNodes(JScrollPane hostingScrollPane){
+		//Find the first and last visible row within the scroll pane.
+		final Rectangle visibleRectangle = hostingScrollPane.getViewport().getViewRect();
+		final int firstRow = getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y);
+		final int lastRow  = getClosestRowForLocation(visibleRectangle.x, visibleRectangle.y + visibleRectangle.height);
+		//Iterate through each visible row, identify the object at this row, and add it to a result list.
+		List<TreePath> resultList = new ArrayList<TreePath>();
+		for (int currentRow = firstRow; currentRow<=lastRow; currentRow++){
+			TreePath currentPath = getPathForRow(currentRow);
+			if(currentPath==null) return null;
+			resultList.add(currentPath);
+		}
+		return(resultList);
+	}
+
 	private class DiffTreeCellRenderer extends DefaultTreeCellRenderer {
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
@@ -331,7 +330,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 					Color nodecolor = ((DiffTree) tree).getnodeColor(row, node, selected, false);
 					// l.setBackground(new Color(0,0,0,0));
 					l.setBackground(nodecolor);
-					if (selected && selectedtree == tree)
+					if (selected && tree.isFocusOwner())
 						l.setForeground(Color.WHITE);
 					else
 						l.setForeground(Color.BLACK);
@@ -348,7 +347,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public void treeExpanded(TreeExpansionEvent event) {
 		TreePath path = event.getPath();
 		//Log.d("ex");
-		//        Log.d(event + "");
+		//		Log.d(event + "");
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
 		if(node.getUserObject() instanceof DiffTreeUserData) {
@@ -386,8 +385,6 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 					if (e.getClickCount() == 1) {
 						setSelectionRow(closestRow);
-						DiffTree.setSelectedtree(this);
-						splitPane.repaint();
 					} else if (e.getClickCount() == 2 && getpaintingFlag()) {
 						DefaultMutableTreeNode node = (DefaultMutableTreeNode) (getSelectionPath()
 								.getLastPathComponent());
@@ -406,7 +403,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 								Log.d("open diff program : " + temp.state);
 								String openner = RProp.S.DIFF_TOOL.get();
 								DiffTreeUserData othertemp = null;
-						    	DefaultMutableTreeNode otherNode = (DefaultMutableTreeNode)temp.other.getLastPathComponent();
+								DefaultMutableTreeNode otherNode = (DefaultMutableTreeNode)temp.other.getLastPathComponent();
 								if(otherNode.getUserObject() instanceof DiffTreeUserData) {
 									othertemp = (DiffTreeUserData)otherNode.getUserObject();
 								}
