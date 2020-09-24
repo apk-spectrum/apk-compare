@@ -2,11 +2,13 @@ package com.apkcompare.gui;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.Action;
@@ -23,13 +25,17 @@ import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
+import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.plugin.IPlugIn;
 import com.apkspectrum.plugin.PlugInManager;
+import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
+import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.ClassFinder;
 import com.apkspectrum.util.Log;
 
-public class UiEventHandler extends ActionEventHandler implements WindowListener
+public class UiEventHandler	extends ActionEventHandler
+	implements WindowListener, FileDrop.Listener
 {
 	public static final String APK_COMPARER_KEY	= AbstractApkScannerAction.APK_COMPARER_KEY;
 	public static final String OWNER_WINDOW_KEY	= AbstractApkScannerAction.OWNER_WINDOW_KEY;
@@ -115,6 +121,53 @@ public class UiEventHandler extends ActionEventHandler implements WindowListener
 		}
 		Log.e("Unknown action command : " + actCmd);
 	}
+
+	@Override
+	public void filesDropped(File[] files) {
+		AWTEvent evt = EventQueue.getCurrentEvent();
+		if(evt == null || evt.getSource() == null) return;
+		
+		JComponent c = null;
+		if("FILE_DROP_TOP".equals(((Component)evt.getSource()).getName())) {
+			c = (JComponent) evt.getSource();
+		} else {
+			c = (JComponent) SwingUtilities.getAncestorNamed("FILE_DROP_TOP",
+					(Component) evt.getSource());
+		}
+		if(c == null) return;
+
+		Integer propPos = (Integer) c.getClientProperty("POSITION");
+		if(propPos == null) return;
+
+		final int position = propPos.intValue();
+		if(position == -1) return;
+
+		final ApkComparer compare = getApkComparer();
+		if(compare == null) {
+			Log.v("evtOpenApkFile() compare is null");
+			return;
+		}
+		
+		final String apkFilePath = files[0].getAbsolutePath();
+		ApkInfo info = compare.getApkInfo(position);
+
+		if(info != null && apkFilePath.equals(info.filePath)) {
+			MessageBoxPane.showError(getWindow(), "same APK file");
+			return;
+		}
+
+		Thread thread = new Thread(new Runnable() {
+			public void run() {
+				compare.getApkScanner(position).clear(false);
+				compare.setApk(position, apkFilePath);
+			}
+		});
+		thread.setPriority(Thread.NORM_PRIORITY);
+		thread.start();
+	}
+
+	@Override public void dragEnter() { }
+	@Override public void dragExit() { }
 
 	private void finished(AWTEvent e) {
 		Log.v("finished()");

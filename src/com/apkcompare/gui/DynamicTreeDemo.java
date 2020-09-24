@@ -2,7 +2,6 @@ package com.apkcompare.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -18,6 +17,7 @@ import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -35,7 +35,6 @@ import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkcompare.resource.RImg;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.FileDrop;
-import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.Log;
 
 public class DynamicTreeDemo extends JPanel implements ActionListener
@@ -86,7 +85,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		DiffTree.setLinkedPosition(arrayTree[LEFT], arrayTree[RIGHT]);
 
 		setCardPanel(uiEvtHandler);
-		setFileDrop();
+		setFileDrop(uiEvtHandler);
 
 		final JSplitPaneWithZeroSizeDivider splitPane = new JSplitPaneWithZeroSizeDivider();
 		//splitPane.setDividerLocation(400);
@@ -216,42 +215,16 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		}
 	}
 
-	private void setFileDrop() {
-		for(Component com: Arrays.asList(loadingpanel[LEFT].getEmptyPanel(), arrayTree[LEFT])) {
-			new  FileDrop( com, new FileDrop.Listener()
-			{   public void  filesDropped( java.io.File[] files )
-				{
-					setApk(LEFT, files[0].getAbsolutePath());
-				}
-
-			@Override
-			public void dragEnter() {
-
-			}
-
-			@Override
-			public void dragExit() {
-
-			}
-			});
+	private void setFileDrop(FileDrop.Listener listener) {
+		for(JComponent com: Arrays.asList(loadingpanel[LEFT].getEmptyPanel(), arrayTree[LEFT])) {
+			com.setName("FILE_DROP_TOP");
+			com.putClientProperty("POSITION", Integer.valueOf(LEFT));
+			new FileDrop(com, listener);
 		}
-		for(Component com: Arrays.asList(loadingpanel[RIGHT].getEmptyPanel(), arrayTree[RIGHT])) {
-			new  FileDrop( com, new FileDrop.Listener()
-			{   public void  filesDropped( java.io.File[] files )
-				{
-					setApk(RIGHT, files[0].getAbsolutePath());
-				}
-
-			@Override
-			public void dragEnter() {
-
-			}
-
-			@Override
-			public void dragExit() {
-
-			}
-			});
+		for(JComponent com: Arrays.asList(loadingpanel[RIGHT].getEmptyPanel(), arrayTree[RIGHT])) {
+			com.setName("FILE_DROP_TOP");
+			com.putClientProperty("POSITION", Integer.valueOf(RIGHT));
+			new FileDrop(com, listener);
 		}
 	}
 
@@ -556,17 +529,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 					arrayTree[LEFT].expandPath(expandedpath.get(i));
 				}
 			}
-		}
-	}
-
-	private void setApk(int index, String filePath) {
-		Log.e(CurrentmergeapkfilePath[index]);
-		if((CurrentmergeapkfilePath[index] == null ||
-				!CurrentmergeapkfilePath[index].equals(filePath))) {
-			apkComparer.getApkScanner(index).clear(false);
-			apkComparer.setApk(index, filePath);
-		} else {
-			MessageBoxPane.showError(this, "same APK file");
 		}
 	}
 
