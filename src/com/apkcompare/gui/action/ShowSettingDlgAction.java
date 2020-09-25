@@ -3,6 +3,8 @@ package com.apkcompare.gui.action;
 import java.awt.event.ActionEvent;
 
 import com.apkcompare.gui.dialog.SettingDlg;
+import com.apkspectrum.swing.AbstractUIAction;
+import com.apkspectrum.swing.ActionEventHandler;
 
 @SuppressWarnings("serial")
 public class ShowSettingDlgAction extends AbstractUIAction

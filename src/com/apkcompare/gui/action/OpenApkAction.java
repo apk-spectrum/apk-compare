@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 
 import com.apkcompare.ApkComparer;
 import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.ApkFileChooser;
 import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.Log;

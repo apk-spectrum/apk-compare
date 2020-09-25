@@ -18,17 +18,17 @@ import javax.swing.SwingUtilities;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.gui.action.AbstractApkScannerAction;
-import com.apkcompare.gui.action.ActionEventHandler;
 import com.apkcompare.gui.action.OpenApkAction;
 import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
-import com.apkcompare.gui.action.UIAction;
 import com.apkspectrum.plugin.IPlugIn;
 import com.apkspectrum.plugin.PlugInManager;
+import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
+import com.apkspectrum.swing.UIAction;
 import com.apkspectrum.util.ClassFinder;
 import com.apkspectrum.util.Log;
 

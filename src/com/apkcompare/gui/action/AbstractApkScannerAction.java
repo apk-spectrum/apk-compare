@@ -4,6 +4,8 @@ import java.awt.Window;
 
 import com.apkcompare.ApkComparer;
 import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.swing.AbstractUIAction;
+import com.apkspectrum.swing.ActionEventHandler;
 
 @SuppressWarnings("serial")
 public abstract class AbstractApkScannerAction extends AbstractUIAction

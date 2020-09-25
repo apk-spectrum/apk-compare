@@ -7,6 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.resource.RProp;
+import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
 
