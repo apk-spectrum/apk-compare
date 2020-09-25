@@ -18,19 +18,17 @@ import javax.swing.SwingUtilities;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.gui.action.AbstractApkScannerAction;
-import com.apkcompare.gui.action.AbstractUIAction;
 import com.apkcompare.gui.action.ActionEventHandler;
 import com.apkcompare.gui.action.OpenApkAction;
 import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
-import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkcompare.gui.action.UIAction;
 import com.apkspectrum.plugin.IPlugIn;
 import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
-import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.util.ClassFinder;
 import com.apkspectrum.util.Log;
 
@@ -53,16 +51,16 @@ public class UiEventHandler	extends ActionEventHandler
 
 	private void loadAllActions() {
 		try {
-			for(Class<?> cls : ClassFinder.getClasses(AbstractUIAction.class.getPackage().getName())) {
+			for(Class<?> cls : ClassFinder.getClasses(AbstractApkScannerAction.class.getPackage().getName())) {
 				if(cls.isMemberClass() || cls.isInterface()
-					|| !AbstractUIAction.class.isAssignableFrom(cls)) continue;
-				AbstractUIAction action = null;
+					|| !Action.class.isAssignableFrom(cls)) continue;
+				Action action = null;
 				try {
-					action = (AbstractUIAction) cls.getDeclaredConstructor(ActionEventHandler.class).newInstance(this);
+					action = (Action) cls.getDeclaredConstructor(ActionEventHandler.class).newInstance(this);
 				} catch (Exception e) { }
 				if(action == null) {
 					try {
-						action = (AbstractUIAction) cls.getDeclaredConstructor().newInstance();
+						action = (Action) cls.getDeclaredConstructor().newInstance();
 					} catch (Exception e1) { }
 				}
 				if(action != null) {
@@ -105,11 +103,17 @@ public class UiEventHandler	extends ActionEventHandler
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		actionPerformed(e, null);
+	}
+
+	public void actionPerformed(ActionEvent e, Object userObject) {
 		String actCmd = e.getActionCommand();
 		if(actCmd != null) {
 			Action act = actionMap.get(actCmd);
 			if(act != null) {
+				if(userObject != null) act.putValue(UIAction.USER_OBJECT, userObject);
 				act.actionPerformed(e);
+				if(userObject != null) act.putValue(UIAction.USER_OBJECT, null);
 				return;
 			}
 
@@ -126,7 +130,7 @@ public class UiEventHandler	extends ActionEventHandler
 	public void filesDropped(File[] files) {
 		AWTEvent evt = EventQueue.getCurrentEvent();
 		if(evt == null || evt.getSource() == null) return;
-		
+
 		JComponent c = null;
 		if("FILE_DROP_TOP".equals(((Component)evt.getSource()).getName())) {
 			c = (JComponent) evt.getSource();
@@ -136,34 +140,7 @@ public class UiEventHandler	extends ActionEventHandler
 		}
 		if(c == null) return;
 
-		Integer propPos = (Integer) c.getClientProperty("POSITION");
-		if(propPos == null) return;
-
-		final int position = propPos.intValue();
-		if(position == -1) return;
-
-		final ApkComparer compare = getApkComparer();
-		if(compare == null) {
-			Log.v("evtOpenApkFile() compare is null");
-			return;
-		}
-		
-		final String apkFilePath = files[0].getAbsolutePath();
-		ApkInfo info = compare.getApkInfo(position);
-
-		if(info != null && apkFilePath.equals(info.filePath)) {
-			MessageBoxPane.showError(getWindow(), "same APK file");
-			return;
-		}
-
-		Thread thread = new Thread(new Runnable() {
-			public void run() {
-				compare.getApkScanner(position).clear(false);
-				compare.setApk(position, apkFilePath);
-			}
-		});
-		thread.setPriority(Thread.NORM_PRIORITY);
-		thread.start();
+		actionPerformed(new ActionEvent(c, ActionEvent.ACTION_PERFORMED, ACT_CMD_OPEN_APK), files);
 	}
 
 	@Override public void dragEnter() { }

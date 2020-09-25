@@ -13,10 +13,8 @@ import com.apkspectrum.swing.KeyStrokeAction;
 import com.apkspectrum.util.Log;
 
 @SuppressWarnings("serial")
-public abstract class AbstractUIAction extends AbstractAction
+public abstract class AbstractUIAction extends AbstractAction implements UIAction
 {
-	public static final String ACTION_COMMAND_FIELD = "ACTION_COMMAND";
-
 	protected ActionEventHandler handler;
 
 	public AbstractUIAction() { }
@@ -25,7 +23,7 @@ public abstract class AbstractUIAction extends AbstractAction
 		setHandler(h);
 	}
 
-	protected static Window getWindow(ActionEvent e) {
+	protected Window getWindow(ActionEvent e) {
 		Object source = null;
 
 		if(e != null) {
@@ -46,9 +44,12 @@ public abstract class AbstractUIAction extends AbstractAction
 		return null;
 	}
 
-	public AbstractUIAction setHandler(ActionEventHandler h) {
+	public void setHandler(ActionEventHandler h) {
 		handler = h;
-		return this;
+	}
+
+	public ActionEventHandler getHandler() {
+		return handler;
 	}
 
 	public String getActionCommand() {
@@ -57,6 +58,15 @@ public abstract class AbstractUIAction extends AbstractAction
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			Log.w("No such field : " + e.getMessage() + " from " + getClass().getName());
 		}
-		return getClass().getName();
+		String actCmd = (String) getValue(ACTION_COMMAND_KEY);
+		return actCmd != null ? actCmd : getClass().getName();
+	}
+
+	public void setUserObject(Object obj) {
+		putValue(USER_OBJECT, obj);
+	}
+
+	public Object getUserObject() {
+		return getValue(USER_OBJECT);
 	}
 }

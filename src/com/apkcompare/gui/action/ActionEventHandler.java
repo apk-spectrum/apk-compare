@@ -19,8 +19,8 @@ abstract public class ActionEventHandler implements ActionListener
 	protected Map<String, Action> actionMap = new HashMap<>();
 	protected Map<Object, Object> dataMap;
 
-	public void addAction(AbstractUIAction action) {
-		addAction(action.getActionCommand(), action);
+	public void addAction(Action action) {
+		addAction(getActionCommand(action), action);
 	}
 
 	public void addAction(String actionCommand, Action action) {
@@ -31,9 +31,9 @@ abstract public class ActionEventHandler implements ActionListener
 		actionMap.put(actionCommand, action);
 	}
 
-	public void removeAction(AbstractUIAction action) {
+	public void removeAction(Action action) {
 		if(action == null) return;
-		removeAction(action.getActionCommand());
+		removeAction(getActionCommand(action));
 	}
 
 	public void removeAction(String actionCommand) {
@@ -72,6 +72,17 @@ abstract public class ActionEventHandler implements ActionListener
 		} else {
 			dataMap.put(key, value);
 		}
+	}
+
+	private String getActionCommand(Action action) {
+		String actCmd = null;
+		if(action instanceof UIAction) {
+			actCmd = ((UIAction) action).getActionCommand();
+		} else {
+			actCmd = (String) action.getValue(Action.ACTION_COMMAND_KEY);
+			if(actCmd == null) actCmd = getClass().getName();
+		}
+		return actCmd;
 	}
 
 	protected static Window getWindow() {
