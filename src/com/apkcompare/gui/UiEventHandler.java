@@ -9,9 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
-import java.io.IOException;
 
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -23,13 +21,9 @@ import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
-import com.apkspectrum.plugin.IPlugIn;
-import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
-import com.apkspectrum.swing.UIAction;
-import com.apkspectrum.util.ClassFinder;
 import com.apkspectrum.util.Log;
 
 public class UiEventHandler	extends ActionEventHandler
@@ -45,31 +39,8 @@ public class UiEventHandler	extends ActionEventHandler
 	public static final String ACT_CMD_SHOW_SETTINGS		= ShowSettingDlgAction.ACTION_COMMAND;
 
 	public UiEventHandler(ApkComparer apkComparer) {
+		super(AbstractApkScannerAction.class.getPackage());
 		setApkComparer(apkComparer);
-		loadAllActions();
-	}
-
-	private void loadAllActions() {
-		try {
-			for(Class<?> cls : ClassFinder.getClasses(AbstractApkScannerAction.class.getPackage().getName())) {
-				if(cls.isMemberClass() || cls.isInterface()
-					|| !Action.class.isAssignableFrom(cls)) continue;
-				Action action = null;
-				try {
-					action = (Action) cls.getDeclaredConstructor(ActionEventHandler.class).newInstance(this);
-				} catch (Exception e) { }
-				if(action == null) {
-					try {
-						action = (Action) cls.getDeclaredConstructor().newInstance();
-					} catch (Exception e1) { }
-				}
-				if(action != null) {
-					addAction(action);
-				}
-			}
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void registerKeyStrokeAction(JComponent c) {
@@ -99,31 +70,6 @@ public class UiEventHandler	extends ActionEventHandler
 
 	public ApkComparer getApkComparer() {
 		return (ApkComparer) getData(APK_COMPARER_KEY);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		actionPerformed(e, null);
-	}
-
-	public void actionPerformed(ActionEvent e, Object userObject) {
-		String actCmd = e.getActionCommand();
-		if(actCmd != null) {
-			Action act = actionMap.get(actCmd);
-			if(act != null) {
-				if(userObject != null) act.putValue(UIAction.USER_OBJECT, userObject);
-				act.actionPerformed(e);
-				if(userObject != null) act.putValue(UIAction.USER_OBJECT, null);
-				return;
-			}
-
-			IPlugIn plugin = PlugInManager.getPlugInByActionCommand(actCmd);
-			if(plugin != null) {
-				plugin.launch();
-				return;
-			}
-		}
-		Log.e("Unknown action command : " + actCmd);
 	}
 
 	@Override
