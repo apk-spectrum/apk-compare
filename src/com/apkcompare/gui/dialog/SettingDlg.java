@@ -250,7 +250,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		contentConst.gridy++;
 
 		if(SystemUtil.isWindows()) {
-			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.getPath();
 			String shortCutName = RStr.APP_NAME.get();
 
 			JPanel etcBtnPanel = new JPanel();
@@ -310,7 +310,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 				jcbEditors.setSelectedItem(path);
 			}
 		} else if(ACT_CMD_CREATE_SHORTCUT.equals(actCommand)) {
-			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.getPath();
 			String shortCutName = RStr.APP_NAME.get();
 			SystemUtil.createShortCut(exePath, shortCutName);
 			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));

@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import com.apkspectrum.resource.ResImage;
 import com.apkspectrum.swing.ImageScaler;
 
-public enum RImg implements ResImage<URL>
+public enum RImg implements ResImage<Image>
 {
 	TOOLBAR_OPEN				("toolbar_open.png"),
 	TOOLBAR_MANIFEST			("toolbar_manifast.png"),
@@ -155,8 +155,8 @@ public enum RImg implements ResImage<URL>
 	}
 
 	@Override
-	public URL get() {
-		return getURL();
+	public Image get() {
+		return getImage();
 	}
 
 	@Override
