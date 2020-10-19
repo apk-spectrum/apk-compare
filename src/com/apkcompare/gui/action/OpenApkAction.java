@@ -11,6 +11,7 @@ import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.ApkFileChooser;
 import com.apkspectrum.swing.MessageBoxPane;
+import com.apkspectrum.swing.UIActionEvent;
 import com.apkspectrum.util.Log;
 
 @SuppressWarnings("serial")
@@ -32,13 +33,18 @@ public class OpenApkAction extends AbstractApkScannerAction
 			Log.e("Unknown position");
 			return;
 		}
-	
-		evtOpenApkFile(getWindow(e), position);
+		Window owner = getWindow(e);
+		evtOpenApkFile(owner, getTargetPath(owner, e), position);
 	}
 
-	protected String getTargetPath(Window owner) {
+	protected String getTargetPath(Window owner, ActionEvent e) {
 		String path = null;
-		Object userObj = getUserObject();
+		Object userObj = null;
+
+		if(e instanceof UIActionEvent) {
+			userObj = ((UIActionEvent) e).getUserObject();
+		}
+
 		if(userObj instanceof File) {
 			path = ((File)userObj).getAbsolutePath();
 		} else if(userObj instanceof File[]) {
@@ -53,8 +59,8 @@ public class OpenApkAction extends AbstractApkScannerAction
 		return path;
 	}
 
-	protected void evtOpenApkFile(Window owner, final int position) {
-		final String apkFilePath = getTargetPath(owner);
+	protected void evtOpenApkFile(Window owner, final String apkFilePath,
+			final int position) {
 		if(apkFilePath == null) {
 			Log.v("Not choose apk file");
 			return;

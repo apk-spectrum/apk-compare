@@ -21,9 +21,11 @@ import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
+import com.apkcompare.resource.RAct;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
+import com.apkspectrum.swing.UIActionEvent;
 import com.apkspectrum.util.Log;
 
 public class UiEventHandler	extends ActionEventHandler
@@ -39,13 +41,14 @@ public class UiEventHandler	extends ActionEventHandler
 	public static final String ACT_CMD_SHOW_SETTINGS		= ShowSettingDlgAction.ACTION_COMMAND;
 
 	public UiEventHandler(ApkComparer apkComparer) {
-		super(AbstractApkScannerAction.class.getPackage());
+		super(AbstractApkScannerAction.class.getPackage(), RAct.class);
 		setApkComparer(apkComparer);
 	}
 
 	public void registerKeyStrokeAction(JComponent c) {
 		// Shortcut key event processing
-		KeyStrokeAction.registerKeyStrokeActions(c, JComponent.WHEN_IN_FOCUSED_WINDOW,
+		KeyStrokeAction.registerKeyStrokeActions(c,
+			JComponent.WHEN_IN_FOCUSED_WINDOW,
 			new KeyStroke[] {
 				KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
 				KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)
@@ -86,7 +89,8 @@ public class UiEventHandler	extends ActionEventHandler
 		}
 		if(c == null) return;
 
-		actionPerformed(new ActionEvent(c, ActionEvent.ACTION_PERFORMED, ACT_CMD_OPEN_APK), files);
+		actionPerformed(new UIActionEvent(c,
+				ActionEvent.ACTION_PERFORMED, ACT_CMD_OPEN_APK, files));
 	}
 
 	@Override public void dragEnter() { }
@@ -97,7 +101,7 @@ public class UiEventHandler	extends ActionEventHandler
 
 		Object source = e.getSource();
 		if(source instanceof Component) {
-			Window window = SwingUtilities.getWindowAncestor((Component) source);
+			Window window = SwingUtilities.getWindowAncestor((Component)source);
 			if(window != null) {
 				window.setVisible(false);
 			}
