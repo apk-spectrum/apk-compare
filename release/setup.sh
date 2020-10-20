@@ -25,11 +25,7 @@ jar -xf ApkCompare.jar icons/AppIcon.png
 
 echo "{}" > settings.txt
 
-#sudo chmod 755 tool/adb
-sudo chmod 755 tool/aapt
-#sudo chmod 755 tool/d2j-dex2jar.sh
-#sudo chmod 755 tool/d2j_invoke.sh
-sudo chmod 755 APKCompare.sh
+
 
 sudo rm -rf $APP_PATH
 
@@ -45,21 +41,20 @@ if [ ! -d $APP_PATH ]; then
 fi
 sudo cp -rf ./* $APP_PATH
 
-sudo chmod 666 $APP_PATH/settings.txt
+#sudo chmod 755 $APP_PATH/tool/linux/adb
+#sudo chmod 755 $APP_PATH/tool/linux/aapt
+#sudo chmod 755 $APP_PATH/tool/dex2jar/d2j-dex2jar.sh
+#sudo chmod 755 $APP_PATH/tool/dex2jar/d2j_invoke.sh
+#sudo chmod 755 $APP_PATH/tool/jadx/bin/jadx
+#sudo chmod 755 $APP_PATH/tool/jadx/bin/jadx-gui
+sudo chmod 755 $APP_PATH/APKCompare.sh
 
-#keytool_path=$(which java)
-#keytool_path=$(readlink -f $keytool_path)
-#keytool_path=$(echo $keytool_path | sed 's/\/java$/\/keytool/')
-#if [ -x "$keytool_path" ]; then
-#    sudo ln -sf $keytool_path $APP_PATH/tool/keytool
-#else
-#    echo "keytool 을 찾을수 없습니다."
-#fi
+sudo chmod 666 $APP_PATH/settings.txt
 
 cat << EOF > ./apkcompare.desktop
 [Desktop Entry]
 Encoding=UTF-8
-Version=1.1
+Version=1.2
 Type=Application
 Exec=java -jar $APP_PATH/$APP_FILE %f
 Name=APK Compare
@@ -106,6 +101,7 @@ cat << EOF > ./vnd.android.package-archive.xml
     <comment xml:lang="zh_TW">Android 套件</comment>
     <sub-class-of type="application/x-java-archive"/>
     <glob pattern="*.apk"/>
+    <glob pattern="*.apex"/>
   </mime-type>
 </mime-info>
 EOF

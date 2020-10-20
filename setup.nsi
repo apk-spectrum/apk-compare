@@ -2,13 +2,13 @@
 
 ; Define your application name
 !define PROJECTNAME "APK Compare"
-!define PROJECTNAMEANDVERSION "APK Compare 1.1"
+!define PROJECTNAMEANDVERSION "APK Compare 1.2"
 
 ; Main Install settings
 Name "${PROJECTNAMEANDVERSION}"
 InstallDir "$PROGRAMFILES64\APKCompare"
 InstallDirRegKey HKLM "Software\${PROJECTNAME}" ""
-OutFile "setup.exe"
+OutFile "APKCompare.exe"
 
 ; Use compression
 SetCompressor Zlib
@@ -59,21 +59,17 @@ Section $(APP_NAME) Section1
 	File "release\ApkCompare.jar"
 	File "release\ApkCompare.exe"
 	File "release\ApkCompareContextMenuHandler.dll"
-	File "release\ScannerCore.jar"
 	SetOutPath "$INSTDIR\lib\"
-	File "release\lib\commons-cli-1.3.1.jar"
-	File "release\lib\jna-4.4.0.jar"
-	File "release\lib\jna-platform-4.4.0.jar"
-	File "release\lib\json-simple-1.1.1.jar"
-	File "release\lib\luciad-webp-imageio.jar"
-	File "release\lib\mslinks.jar"
-	File "release\lib\webp-imageio32.dll"
-	File "release\lib\webp-imageio64.dll"
+	File "release\lib\*.jar"
+	SetOutPath "$INSTDIR\lib\lib\"
+	File "release\lib\lib\*.dll"
+	SetOutPath "$INSTDIR\lib\lib64\"
+	File "release\lib\lib64\*.dll"
 	SetOutPath "$INSTDIR\tool\"
-	File "release\tool\aapt.exe"
-	File "release\tool\AaptNativeWrapper32.dll"
-	File "release\tool\AaptNativeWrapper64.dll"
+	SetOutPath "$INSTDIR\tool\windows\"
+	File "release\tool\windows\*"
 
+    Exec '"cmd.exe" /c icacls "$INSTDIR" /grant Users:(OI)(CI)F'
     Exec '"regsvr32.exe" "$INSTDIR\ApkCompareContextMenuHandler.dll"'
 
 SectionEnd
@@ -137,22 +133,18 @@ Section Uninstall
 	Delete "$INSTDIR\ApkCompare.jar"
 	Delete "$INSTDIR\ApkCompare.exe"
 	Delete "$INSTDIR\ApkCompareContextMenuHandler.dll"
-	Delete "$INSTDIR\ScannerCore.jar"
-	Delete "$INSTDIR\lib\commons-cli-1.3.1.jar"
-	Delete "$INSTDIR\lib\jna-4.4.0.jar"
-	Delete "$INSTDIR\lib\jna-platform-4.4.0.jar"
-	Delete "$INSTDIR\lib\json-simple-1.1.1.jar"
-	Delete "$INSTDIR\lib\luciad-webp-imageio.jar"
-	Delete "$INSTDIR\lib\mslinks.jar"
-	Delete "$INSTDIR\lib\webp-imageio32.dll"
-	Delete "$INSTDIR\lib\webp-imageio64.dll"
-	Delete "$INSTDIR\tool\aapt.exe"
-	Delete "$INSTDIR\tool\AaptNativeWrapper32.dll"
-	Delete "$INSTDIR\tool\AaptNativeWrapper64.dll"
+	Delete "$INSTDIR\lib\*"
+	Delete "$INSTDIR\lib\lib\*"
+	Delete "$INSTDIR\lib\lib64\*"
+	Delete "$INSTDIR\tool\*"
+	Delete "$INSTDIR\tool\windows\*"
 
 	; Remove remaining directories
 	RMDir "$SMPROGRAMS\APK Compare"
+	RMDir "$INSTDIR\tool\windows\"
 	RMDir "$INSTDIR\tool\"
+	RMDir "$INSTDIR\lib\lib64\"
+	RMDir "$INSTDIR\lib\lib\"
 	RMDir "$INSTDIR\lib\"
 	RMDir "$INSTDIR\data\"
 	RMDir "$INSTDIR\"

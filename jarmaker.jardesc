@@ -4,7 +4,7 @@
     <options buildIfNeeded="true" compress="true" descriptionLocation="/apk-compare/jarmaker.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="false" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
-    <manifest generateManifest="false" mainClassHandleIdentifier="=apk-compare/src&lt;com.apkcompare{Main.java[Main" manifestLocation="/apk-compare/MANIFEST.MF" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+    <manifest generateManifest="false" mainClassHandleIdentifier="=apk-compare/src&lt;com.apkcompare{Main.java[Main" manifestLocation="/apk-compare/raw/META-INF/MANIFEST.MF" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
         <sealing sealJar="false">
             <packagesToSeal/>
             <packagesToUnSeal/>
@@ -13,5 +13,8 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=apk-compare/src"/>
         <javaElement handleIdentifier="=apk-compare/res"/>
+        <javaElement handleIdentifier="=apk-compare/core\/src"/>
+        <javaElement handleIdentifier="=apk-compare/core\/res"/>
+        <javaElement handleIdentifier="=apk-compare/raw"/>
     </selectedElements>
 </jardesc>
