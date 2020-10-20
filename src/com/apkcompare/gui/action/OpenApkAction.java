@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
 
 import com.apkcompare.ApkComparer;
 import com.apkspectrum.data.apkinfo.ApkInfo;
@@ -53,6 +54,25 @@ public class OpenApkAction extends AbstractApkScannerAction
 			}
 		} else if(userObj instanceof String) {
 			path = (String) userObj;
+		} else if(e.getSource() instanceof JTextComponent) {
+			String text = ((JTextComponent) e.getSource()).getText();
+			if(text == null || text.trim().isEmpty()) return null;
+			text = text.trim();
+			File selectedFile = new File(text);
+			if(!selectedFile.exists()) {
+				MessageBoxPane.showError(owner, "No such file : " + text);
+				return null;
+			}
+			if(!text.toLowerCase().endsWith(".apk") || !selectedFile.isFile()) {
+				MessageBoxPane.showError(owner, "No APK file : " + text);
+				return null;
+			}
+			if(!selectedFile.canRead()) {
+				MessageBoxPane.showError(owner, "Can not read file : " + text);
+				return null;
+			}
+			path = selectedFile.getAbsolutePath();
+			((JTextComponent) e.getSource()).transferFocus();
 		} else {
 			path = ApkFileChooser.openApkFilePath(owner);
 		}

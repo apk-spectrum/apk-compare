@@ -83,13 +83,13 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		arrayTree[RIGHT] = new DiffTree(uiEvtHandler);
 		DiffTree.setLinkedPosition(arrayTree[LEFT], arrayTree[RIGHT]);
 
-		setCardPanel(uiEvtHandler);
+		JPanel[] contentPanel = setCardPanel(uiEvtHandler);
 		setFileDrop(uiEvtHandler);
 
 		final JSplitPaneWithZeroSizeDivider splitPane = new JSplitPaneWithZeroSizeDivider();
 		//splitPane.setDividerLocation(400);
-		splitPane.setLeftComponent(cardpanel[LEFT]);
-		splitPane.setRightComponent(cardpanel[RIGHT]);
+		splitPane.setLeftComponent(contentPanel[LEFT]);
+		splitPane.setRightComponent(contentPanel[RIGHT]);
 		splitPane.setResizeWeight(0.5);
 		splitPane.setY(TEXTFIELD_HEIGHT+1);
 
@@ -149,7 +149,7 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		repaint();
 	}
 
-	private void setCardPanel(ActionListener listener) {
+	private JPanel[] setCardPanel(UiEventHandler handler) {
 		JPanel []bordertreepanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
 		JPanel []pathpanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
 		JButton[] btnfileopen = {null, null};
@@ -159,27 +159,27 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			loadingpanel[index] = new DiffLoadingPanel();
 			pathtextfiled[index] = new JTextField();
 
-			btnfileopen[index] = new JButton(RImg.DIFF_APK_OPEN_ICON.getImageIcon());
+			btnfileopen[index] = new JButton(handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
 			btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
 			btnfileopen[index].setPreferredSize(new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
-			btnfileopen[index].setActionCommand(UiEventHandler.ACT_CMD_OPEN_APK);
-			btnfileopen[index].addActionListener(listener);
 			btnfileopen[index].putClientProperty("POSITION", Integer.valueOf(index));
 
 			pathtextfiled[index].setPreferredSize(new Dimension(0, TEXTFIELD_HEIGHT));
+			pathtextfiled[index].setAction(handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
+			pathtextfiled[index].putClientProperty("POSITION", Integer.valueOf(index));
 
 			pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
 			pathpanel[index].add(btnfileopen[index], BorderLayout.EAST);
 
-			bordertreepanel[index].add(pathpanel[index], BorderLayout.NORTH);
-
-			bordertreepanel[index].add(arrayTree[index], BorderLayout.CENTER);
-
-			cardpanel[index].add(bordertreepanel[index], CARD_LAYOUT_TREE);
+			cardpanel[index].add(arrayTree[index], CARD_LAYOUT_TREE);
 			cardpanel[index].add(loadingpanel[index], CARD_LAYOUT_LOADING);
 
 			((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],CARD_LAYOUT_LOADING);
+
+			bordertreepanel[index].add(pathpanel[index], BorderLayout.NORTH);
+			bordertreepanel[index].add(cardpanel[index], BorderLayout.CENTER);
 		}
+		return bordertreepanel;
 	}
 
 	private void setFileDrop(FileDrop.Listener listener) {
