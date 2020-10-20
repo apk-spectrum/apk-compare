@@ -2,69 +2,53 @@ package com.apkcompare.gui;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
+import java.io.File;
 
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.gui.action.AbstractApkScannerAction;
-import com.apkcompare.gui.action.AbstractUIAction;
-import com.apkcompare.gui.action.ActionEventHandler;
+import com.apkcompare.gui.action.OpenApkAction;
+import com.apkcompare.gui.action.OpenDiffTreeFileAction;
 import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
-import com.apkspectrum.plugin.IPlugIn;
-import com.apkspectrum.plugin.PlugInManager;
+import com.apkcompare.gui.action.ShowSettingDlgAction;
+import com.apkcompare.resource.RAct;
+import com.apkspectrum.swing.ActionEventHandler;
+import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
-import com.apkspectrum.util.ClassFinder;
+import com.apkspectrum.swing.UIActionEvent;
 import com.apkspectrum.util.Log;
 
-public class UiEventHandler extends ActionEventHandler implements WindowListener
+public class UiEventHandler	extends ActionEventHandler
+	implements WindowListener, FileDrop.Listener
 {
 	public static final String APK_COMPARER_KEY	= AbstractApkScannerAction.APK_COMPARER_KEY;
 	public static final String OWNER_WINDOW_KEY	= AbstractApkScannerAction.OWNER_WINDOW_KEY;
 
-	public static final String ACT_CMD_SHOW_ABOUT				= ShowAboutAction.ACTION_COMMAND;
-	public static final String ACT_CMD_SHOW_LOGS				= ShowLogsAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OPEN_APK				= OpenApkAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OEPN_DIFFTREE_FILE	= OpenDiffTreeFileAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_ABOUT			= ShowAboutAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_LOGS			= ShowLogsAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_SETTINGS		= ShowSettingDlgAction.ACTION_COMMAND;
 
 	public UiEventHandler(ApkComparer apkComparer) {
+		super(AbstractApkScannerAction.class.getPackage(), RAct.class);
 		setApkComparer(apkComparer);
-		loadAllActions();
-	}
-
-	private void loadAllActions() {
-		try {
-			for(Class<?> cls : ClassFinder.getClasses(AbstractUIAction.class.getPackage().getName())) {
-				if(cls.isMemberClass() || cls.isInterface()
-					|| !AbstractUIAction.class.isAssignableFrom(cls)) continue;
-				AbstractUIAction action = null;
-				try {
-					action = (AbstractUIAction) cls.getDeclaredConstructor(ActionEventHandler.class).newInstance(this);
-				} catch (Exception e) { }
-				if(action == null) {
-					try {
-						action = (AbstractUIAction) cls.getDeclaredConstructor().newInstance();
-					} catch (Exception e1) { }
-				}
-				if(action != null) {
-					addAction(action);
-				}
-			}
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void registerKeyStrokeAction(JComponent c) {
 		// Shortcut key event processing
-		KeyStrokeAction.registerKeyStrokeActions(c, JComponent.WHEN_IN_FOCUSED_WINDOW,
+		KeyStrokeAction.registerKeyStrokeActions(c,
+			JComponent.WHEN_IN_FOCUSED_WINDOW,
 			new KeyStroke[] {
 				KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
 				KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0)
@@ -92,30 +76,32 @@ public class UiEventHandler extends ActionEventHandler implements WindowListener
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		String actCmd = e.getActionCommand();
-		if(actCmd != null) {
-			Action act = actionMap.get(actCmd);
-			if(act != null) {
-				act.actionPerformed(e);
-				return;
-			}
+	public void filesDropped(File[] files) {
+		AWTEvent evt = EventQueue.getCurrentEvent();
+		if(evt == null || evt.getSource() == null) return;
 
-			IPlugIn plugin = PlugInManager.getPlugInByActionCommand(actCmd);
-			if(plugin != null) {
-				plugin.launch();
-				return;
-			}
+		JComponent c = null;
+		if("FILE_DROP_TOP".equals(((Component)evt.getSource()).getName())) {
+			c = (JComponent) evt.getSource();
+		} else {
+			c = (JComponent) SwingUtilities.getAncestorNamed("FILE_DROP_TOP",
+					(Component) evt.getSource());
 		}
-		Log.e("Unknown action command : " + actCmd);
+		if(c == null) return;
+
+		actionPerformed(new UIActionEvent(c,
+				ActionEvent.ACTION_PERFORMED, ACT_CMD_OPEN_APK, files));
 	}
+
+	@Override public void dragEnter() { }
+	@Override public void dragExit() { }
 
 	private void finished(AWTEvent e) {
 		Log.v("finished()");
 
 		Object source = e.getSource();
 		if(source instanceof Component) {
-			Window window = SwingUtilities.getWindowAncestor((Component) source);
+			Window window = SwingUtilities.getWindowAncestor((Component)source);
 			if(window != null) {
 				window.setVisible(false);
 			}

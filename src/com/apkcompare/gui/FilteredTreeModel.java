@@ -12,11 +12,11 @@ class FilteredTreeModel extends DefaultTreeModel {
 	 
     private static final long serialVersionUID = 5632874215454365848L;
     
-    public static int FLAG_IDEN = 0x01;
-    public static int FLAG_ADD = 0x02;
-    public static int FLAG_DIFF = 0x04;
+    public static final int FLAG_IDEN = 0x01;
+    public static final int FLAG_ADD = 0x02;
+    public static final int FLAG_DIFF = 0x04;
     
-    public static int FLAG_ALL = FLAG_IDEN | FLAG_ADD | FLAG_DIFF;
+    public static final int FLAG_ALL = FLAG_IDEN | FLAG_ADD | FLAG_DIFF;
     
     private int flag;
     

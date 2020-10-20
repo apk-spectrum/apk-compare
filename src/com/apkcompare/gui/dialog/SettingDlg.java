@@ -250,7 +250,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 		contentConst.gridy++;
 
 		if(SystemUtil.isWindows()) {
-			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.getPath();
 			String shortCutName = RStr.APP_NAME.get();
 
 			JPanel etcBtnPanel = new JPanel();
@@ -310,7 +310,7 @@ public class SettingDlg extends JDialog implements ActionListener{
 				jcbEditors.setSelectedItem(path);
 			}
 		} else if(ACT_CMD_CREATE_SHORTCUT.equals(actCommand)) {
-			String exePath = RFile.ETC_APKCOMPARE_EXE.get();
+			String exePath = RFile.ETC_APKCOMPARE_EXE.getPath();
 			String shortCutName = RStr.APP_NAME.get();
 			SystemUtil.createShortCut(exePath, shortCutName);
 			((JButton)e.getSource()).setEnabled(!SystemUtil.hasShortCut(exePath, shortCutName));
@@ -386,20 +386,22 @@ public class SettingDlg extends JDialog implements ActionListener{
 				}
 			}
 			if(!hasBeyond) {
-				String[] expectPaths = new String[] {
-					"C:\\Program Files (x86)\\Beyond Compare\\BCompare.exe",
-					"C:\\Program Files (x86)\\Beyond Compare 5\\BCompare.exe",
-					"C:\\Program Files (x86)\\Beyond Compare 4\\BCompare.exe",
-					"C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe",
-					"C:\\Program Files\\Beyond Compare\\BCompare.exe",
-					"C:\\Program Files\\Beyond Compare 5\\BCompare.exe",
-					"C:\\Program Files\\Beyond Compare 4\\BCompare.exe",
-					"C:\\Program Files\\Beyond Compare 3\\BCompare.exe"
-				};
-				for(String path: SystemUtil.getRealPaths(expectPaths)) {
-					if(!compareList.contains(path)) {
-						compareList.add(path);
-						hasBeyond = true;
+				String[] expectPaths = SystemUtil.getRealPaths(new String[] {
+						"C:\\Program Files (x86)\\Beyond Compare\\BCompare.exe",
+						"C:\\Program Files (x86)\\Beyond Compare 5\\BCompare.exe",
+						"C:\\Program Files (x86)\\Beyond Compare 4\\BCompare.exe",
+						"C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe",
+						"C:\\Program Files\\Beyond Compare\\BCompare.exe",
+						"C:\\Program Files\\Beyond Compare 5\\BCompare.exe",
+						"C:\\Program Files\\Beyond Compare 4\\BCompare.exe",
+						"C:\\Program Files\\Beyond Compare 3\\BCompare.exe"
+					});
+				if(expectPaths != null) {
+					for(String path: expectPaths) {
+						if(!compareList.contains(path)) {
+							compareList.add(path);
+							hasBeyond = true;
+						}
 					}
 				}
 			}
@@ -417,14 +419,16 @@ public class SettingDlg extends JDialog implements ActionListener{
 				}
 			}
 			if(!hasP4merge) {
-				String[] expectPaths = new String[] {
+				String[] expectPaths = SystemUtil.getRealPaths(new String[] {
 					"C:\\Program Files (x86)\\Perforce\\p4merge.exe",
 					"C:\\Program Files\\Perforce\\p4merge.exe"
-				};
-				for(String path: SystemUtil.getRealPaths(expectPaths)) {
-					if(!compareList.contains(path)) {
-						compareList.add(path);
-						hasP4merge = true;
+				});
+				if(expectPaths != null) {
+					for(String path: expectPaths) {
+						if(!compareList.contains(path)) {
+							compareList.add(path);
+							hasP4merge = true;
+						}
 					}
 				}
 			}
