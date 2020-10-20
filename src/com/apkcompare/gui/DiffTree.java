@@ -370,7 +370,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 		if(node.getUserObject() instanceof DiffTreeUserData) {
 			DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
-			linkedTree.expandPath(temp.other);
+			linkedTree.collapsePath(temp.other);
 			//scrollpane.revalidate();
 			//scrollpane.repaint();
 		}
