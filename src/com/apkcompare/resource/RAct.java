@@ -7,7 +7,8 @@ import com.apkspectrum.resource.ResString;
 
 public enum RAct implements ResAction<ResAction<?>>
 {
-	// Empty
+	ACT_CMD_OPEN_SETTINGS			(null, RImg.DIFF_TOOLBAR_SETTING),
+	ACT_CMD_SHOW_ABOUT				(null, RImg.DIFF_TOOLBAR_INFO)
 	; // ENUM END
 
 	private DefaultResAction res;

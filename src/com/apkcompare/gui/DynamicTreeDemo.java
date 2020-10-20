@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,8 +65,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
 
-	private static Boolean Difflock = false;
-
 	//https://www.shareicon.net/diff-94479
 	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
 	//https://www.shareicon.net/setting-598385
@@ -112,37 +111,25 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		JPanel temppanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		temppanel.setPreferredSize(new Dimension(0, 48));
 
-		btnadd = new JToggleButton();
-		btndiff = new JToggleButton();
-		btniden = new JToggleButton();
-
-		JButton btnsetting = new JButton();
-		JButton btninfo = new JButton();
-
-		btnadd.setIcon(RImg.DIFF_TOOLBAR_ADD.getImageIcon());
-		btndiff.setIcon(RImg.DIFF_TOOLBAR_EDITOR.getImageIcon());
-		btniden.setIcon(RImg.DIFF_TOOLBAR_IDEN.getImageIcon());
-
-		btnsetting.setIcon(RImg.DIFF_TOOLBAR_SETTING.getImageIcon());
-		btninfo.setIcon(RImg.DIFF_TOOLBAR_INFO.getImageIcon());
+		btnadd = new JToggleButton(RImg.DIFF_TOOLBAR_ADD.getImageIcon());
+		btndiff = new JToggleButton(RImg.DIFF_TOOLBAR_EDITOR.getImageIcon());
+		btniden = new JToggleButton(RImg.DIFF_TOOLBAR_IDEN.getImageIcon());
 
 		btnadd.setActionCommand(CMD_TOGGLE_ADD);
 		btndiff.setActionCommand(CMD_TOGGLE_EDITOR);
 		btniden.setActionCommand(CMD_TOGGLE_IDEN);
 
-		btnsetting.setActionCommand(UiEventHandler.ACT_CMD_SHOW_SETTINGS);
-		btninfo.setActionCommand(UiEventHandler.ACT_CMD_SHOW_ABOUT);
+		JButton btnsetting = new JButton(
+				uiEvtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS));
+		JButton btninfo = new JButton(
+				uiEvtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT));
 
 		for(AbstractButton btn: Arrays.asList(btniden, btnadd, btndiff, btnsetting, btninfo)) {
 			//btn.setBorderPainted( false );
 			//btn.setContentAreaFilled( false );
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 			btn.setFocusPainted(false);
-			if(uiEvtHandler.getAction(btn.getActionCommand()) != null) {
-				btn.addActionListener(uiEvtHandler);	
-			} else {
-				btn.addActionListener(this);				
-			}
+			btn.addActionListener(this);
 			btn.setSelected(true);
 			temppanel.add(btn);
 		}
@@ -160,26 +147,6 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 			btn.setEnabled(enable);
 		}
 		repaint();
-	}
-
-	private class ApkComparerListener implements ApkComparer.StatusListener {
-		@Override
-		public void onStart(int position) {
-			loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
-			showCardpanel(CARD_LAYOUT_LOADING, position);
-			Log.w("change loading");
-		}
-
-		@Override
-		public void onSuccess(int position) { }
-
-		@Override
-		public void onError(int position, int error) { }
-
-		@Override
-		public void onCompleted(int position) {
-			createTreeNode(apkComparer.getApkInfo(position), position);
-		}
 	}
 
 	private void setCardPanel(ActionListener listener) {
@@ -228,85 +195,89 @@ public class DynamicTreeDemo extends JPanel implements ActionListener
 		}
 	}
 
+	private class ApkComparerListener implements ApkComparer.StatusListener {
+		@Override
+		public void onStart(final int position) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
+					showCardpanel(CARD_LAYOUT_LOADING, position);
+					Log.w("change loading");
+				}
+			});
+		}
+
+		@Override
+		public void onSuccess(int position) { }
+
+		@Override
+		public void onError(int position, int error) { }
+
+		@Override
+		public void onCompleted(final int position) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					createTreeNode(apkComparer.getApkInfo(position), position);
+				}
+			});
+		}
+	}
+
 	private void createTreeNode(final ApkInfo apkinfodiff1, final int index) {
 		int otherindex = index == LEFT ? RIGHT : LEFT;
 
-		synchronized (arrayTree[index].lock) {
-			//Log.w("start create Tree :" + index);
-			//arrayTree[index].lock.valueOf(true);
-			pathtextfiled[index].setText(apkinfodiff1.filePath);
-			pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
+		//Log.w("start create Tree :" + index);
+		pathtextfiled[index].setText(apkinfodiff1.filePath);
+		pathtextfiled[index].setCaretPosition(pathtextfiled[index].getDocument().getLength());
 
-			arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1));
-			arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
+		arraytreeNode[index] = new SortNode(new RootDiffTreeUserData(apkinfodiff1));
+		arrayTreemodel[index] = new FilteredTreeModel(arraytreeNode[index]);
 
-			DiffMappingTree mappingtree = new DiffMappingTree();
-			mappingtree.createTree(apkinfodiff1, arraytreeNode[index]);
+		DiffMappingTree mappingtree = new DiffMappingTree();
+		mappingtree.createTree(apkinfodiff1, arraytreeNode[index]);
 
-			arrayTree[index].setModel(arrayTreemodel[index]);
-			showCardpanel(CARD_LAYOUT_TREE, index);
+		arrayTree[index].setModel(arrayTreemodel[index]);
+		showCardpanel(CARD_LAYOUT_TREE, index);
 
-			//arrayTree[index].lock.valueOf(false);
-			arrayTree[index].lock.notify();
-			Log.w("end create Tree :" + index);
-		}
+		Log.w("end create Tree :" + index);
 
-		synchronized (arrayTree[otherindex].lock) {
-			try {
-				while (arrayTree[otherindex].lock) {
-					Log.w("wait other tree :" + index);
-					arrayTree[otherindex].lock.wait();
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		Log.w("pass lock" + index);
-
-		synchronized (Difflock) {
-			if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null && !Difflock) {
-
-				if (CurrentmergeapkfilePath[LEFT] != null && CurrentmergeapkfilePath[RIGHT] != null
-						&& CurrentmergeapkfilePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath)
-						&& CurrentmergeapkfilePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
-					arrayTreemodel[index].reload();
-					Log.w("in sync Create end... not diff:" + index);
-					return;
-				}
-
-				CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
-				CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
-				// Log.w("change filepath" + index);
-
-				//Difflock.valueOf(true);
-				for (int i = 0; i < 2; i++) {
-					// loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
-					// showCardpanel(CARD_LAYOUT_LOADING, index);
-					arrayTree[i].setpaintingFlag(false);
-				}
-				clearnodepath(arraytreeNode[otherindex]);
-				arrayTree[otherindex].setModel(arrayTreemodel[otherindex]);
-
-				// new Thread(){
-				// public void run(){
-				this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				Log.w("start diff :" + index);
-
-				startDiff();
-
-				this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-				for (int i = 0; i < 2; i++) {
-					arrayTreemodel[i].reload();
-					arrayTree[i].setpaintingFlag(true);
-				}
-				//Difflock.valueOf(false);
-				Log.w("end diff :" + index);
-				setEnableToggleBtn(true);
+		if (arraytreeNode[LEFT] != null && arraytreeNode[RIGHT] != null) {
+			if (CurrentmergeapkfilePath[LEFT] != null && CurrentmergeapkfilePath[RIGHT] != null
+					&& CurrentmergeapkfilePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath)
+					&& CurrentmergeapkfilePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
+				arrayTreemodel[index].reload();
+				Log.w("in sync Create end... not diff:" + index);
 				return;
 			}
-			// }}.start();
+
+			CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
+			CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
+			// Log.w("change filepath" + index);
+
+			for (int i = 0; i < 2; i++) {
+				// loadingpanel[i].setshow(DiffLoadingPanel.LOADING);
+				// showCardpanel(CARD_LAYOUT_LOADING, index);
+				arrayTree[i].setpaintingFlag(false);
+			}
+			clearnodepath(arraytreeNode[otherindex]);
+			arrayTree[otherindex].setModel(arrayTreemodel[otherindex]);
+
+			// new Thread(){
+			// public void run(){
+			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Log.w("start diff :" + index);
+
+			startDiff();
+
+			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+			for (int i = 0; i < 2; i++) {
+				arrayTreemodel[i].reload();
+				arrayTree[i].setpaintingFlag(true);
+			}
+			Log.w("end diff :" + index);
+			setEnableToggleBtn(true);
+			return;
 		}
 
 		Log.w("Create end... not diff :" + index);

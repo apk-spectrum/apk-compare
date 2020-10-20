@@ -64,8 +64,6 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 
 	boolean painting = true;
 
-	public Boolean lock= false;
-
 	public DiffTree(ActionListener listener) {
 		super();
 		actListener = listener;
