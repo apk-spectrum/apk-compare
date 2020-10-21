@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP_PATH="/opt/APKCompare"
-APP_VERSION="1.1"
+APP_VERSION="1.2"
 APP_FILE="ApkCompare.jar"
 
 DEBIAN_DATA_PATH="./debian"$APP_PATH
@@ -35,21 +35,25 @@ cp -f "res/icons/AppIcon.png" "$TARGET_PATH"
 
 TARGET_PATH="$DEBIAN_DATA_PATH/lib/"
 mkdir -p "$TARGET_PATH"
+cp -f "release/lib/apksig-3.5.0.jar" "$TARGET_PATH"
 cp -f "release/lib/commons-cli-1.3.1.jar" "$TARGET_PATH"
 cp -f "release/lib/jna-4.4.0.jar" "$TARGET_PATH"
 cp -f "release/lib/jna-platform-4.4.0.jar" "$TARGET_PATH"
 cp -f "release/lib/json-simple-1.1.1.jar" "$TARGET_PATH"
-cp -f "release/lib/libwebp-imageio64.so" "$TARGET_PATH"
 cp -f "release/lib/luciad-webp-imageio.jar" "$TARGET_PATH"
 cp -f "release/lib/mslinks.jar" "$TARGET_PATH"
 
+TARGET_PATH="$DEBIAN_DATA_PATH/lib/lib/"
+mkdir -p "$TARGET_PATH"
+cp -f "release/lib/lib/libwebp-imageio.so" "$TARGET_PATH"
+
+TARGET_PATH="$DEBIAN_DATA_PATH/lib/lib64/"
+mkdir -p "$TARGET_PATH"
+cp -f "release/lib/lib64/libwebp-imageio.so" "$TARGET_PATH"
+
 TARGET_PATH="$DEBIAN_DATA_PATH/tool/"
 mkdir -p "$TARGET_PATH"
-cp -f "release/tool/aapt" "$TARGET_PATH"
-cp -f "release/tool/libAaptNativeWrapper32.so" "$TARGET_PATH"
-cp -f "release/tool/libAaptNativeWrapper64.so" "$TARGET_PATH"
-cp -f "release/tool/libc++32.so" "$TARGET_PATH"
-cp -f "release/tool/libc++64.so" "$TARGET_PATH"
+cp -rf "release/tool/linux" "$TARGET_PATH"
 
 ##############################
 # etc
@@ -116,6 +120,7 @@ cat << EOF > ./vnd.android.package-archive.xml
     <comment xml:lang="zh_TW">Android 套件</comment>
     <sub-class-of type="application/x-java-archive"/>
     <glob pattern="*.apk"/>
+    <glob pattern="*.apex"/>
   </mime-type>
 </mime-info>
 EOF
@@ -148,4 +153,5 @@ chmod 775 ./debian/DEBIAN/postinst
 # build
 ##############################
 dpkg-deb --build debian
-mv debian.deb APKCompare.deb
+mv ./debian.deb ./APKCompare.deb
+rm -rf ./debian
