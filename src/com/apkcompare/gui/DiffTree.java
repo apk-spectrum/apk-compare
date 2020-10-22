@@ -13,6 +13,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -29,18 +30,23 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.apkcompare.core.DiffMappingTree;
 import com.apkcompare.data.ImageDiffTreeUserData;
 import com.apkcompare.data.ImagePassKeyDiffTreeUserData;
 import com.apkcompare.data.RootDiffTreeUserData;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.resource.RImg;
+import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.util.Log;
 
 
 @SuppressWarnings("serial")
-class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionListener, MouseListener {
+public class DiffTree extends JTree
+	implements TreeExpansionListener, TreeSelectionListener, MouseListener
+{
 
 	public static final int UNASSIGNED = -1;
 	public static final int LEFT = 0;
@@ -53,7 +59,10 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public static final Color nomal = Color.white;
 	public static final Color nomalselect = new Color(109,120,128);
 
-	public static final Color[] colorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
+	public static final Color[] colorarray = {
+			Color.lightGray, nomalselect, addcolor,
+			addcolorselect, diffcolor, diffcolorselect
+		};
 	//public static final Color[] focuscolorarray = {Color.lightGray, nomalselect, addcolor, addcolorselect, diffcolor, diffcolorselect};
 	private static final Image foldericon = RImg.DIFF_TREE_FOLDER_ICON.getImage(16, 16);
 	private static final Image rooticon = RImg.DIFF_TREE_APK_ICON.getImage(16, 16);
@@ -89,7 +98,7 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 	public boolean getpaintingFlag() {
 		return this.painting;
 	}
-	
+
 	public void setActionListener(ActionListener listener) {
 		actListener = listener;
 	}
@@ -126,7 +135,45 @@ class DiffTree extends JTree implements TreeExpansionListener, TreeSelectionList
 		this.linkedTree = linkedTree;
 	}
 
-	public Color getnodeColor(int row, DefaultMutableTreeNode node, boolean selected, boolean forsplitpane) {
+	public void createTreeNode(ApkInfo info) {
+		SortNode arraytreeNode = new SortNode(new RootDiffTreeUserData(info));
+		FilteredTreeModel arrayTreemodel = new FilteredTreeModel(arraytreeNode);
+
+		DiffMappingTree mappingtree = new DiffMappingTree();
+		mappingtree.createTree(info, arraytreeNode);
+
+		setModel(arrayTreemodel);
+	}
+
+	public List<TreePath> getPaths() {
+		ArrayList<TreePath> expandedpath = new ArrayList<TreePath>();
+		DefaultMutableTreeNode rootNode =
+				(DefaultMutableTreeNode) getModel().getRoot();
+		getPaths(new TreePath(rootNode.getPath()), expandedpath);
+		return expandedpath;
+	}
+
+	private void getPaths(TreePath parent, List<TreePath> list) {
+		if (!isVisible(parent)) {
+			return;
+		}
+
+		if(isExpanded(parent)) {
+			list.add(parent);
+		}
+
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0) {
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				getPaths(path, list);
+			}
+		}
+	}
+
+	public Color getnodeColor(int row, DefaultMutableTreeNode node,
+			boolean selected, boolean forsplitpane) {
 		DiffTreeUserData temp = (DiffTreeUserData)node.getUserObject();
 
 		if(isExpanded(row) && !node.isLeaf()){
