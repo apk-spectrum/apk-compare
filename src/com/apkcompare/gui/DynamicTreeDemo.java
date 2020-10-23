@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.AbstractButton;
@@ -36,13 +37,12 @@ public class DynamicTreeDemo extends JPanel
 	private static final String CARD_LAYOUT_LOADING = "CARD_LAYOUT_LOADING";
 
 	private ApkComparer apkComparer;
-
+	private UiEventHandler evtHandler;
 	private DiffTreePair diffTrees;
 
 	private DiffLoadingPanel[] loadingpanel = {null, null};
 	private String CurrentmergeapkfilePath[] = {null, null};
 
-	private JToggleButton btnadd, btndiff, btniden;
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
 
@@ -53,17 +53,19 @@ public class DynamicTreeDemo extends JPanel
 	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler uiEvtHandler) {
 		super(new BorderLayout());
 		setOpaque(true);
-		uiEvtHandler.registerKeyStrokeAction(this);
+
+		evtHandler = uiEvtHandler;
+		evtHandler.registerKeyStrokeAction(this);
 
 		this.apkComparer = apkComparer;
 		if(apkComparer != null) {
 			apkComparer.setStatusListener(new ApkComparerListener());
 		}
 
-		diffTrees = new DiffTreePair(uiEvtHandler);
+		diffTrees = new DiffTreePair(evtHandler);
 
-		JPanel[] contentPanel = setCardPanel(uiEvtHandler);
-		setFileDrop(uiEvtHandler);
+		JPanel[] contentPanel = setCardPanel(evtHandler);
+		setFileDrop(evtHandler);
 
 		final JSplitPaneWithZeroSizeDivider splitPane = new JSplitPaneWithZeroSizeDivider();
 		//splitPane.setDividerLocation(400);
@@ -90,16 +92,22 @@ public class DynamicTreeDemo extends JPanel
 		JPanel temppanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		temppanel.setPreferredSize(new Dimension(0, 48));
 
-		btnadd = new JToggleButton(new FilterAction(diffTrees, FilteredTreeModel.FLAG_ADD));
-		btndiff = new JToggleButton(new FilterAction(diffTrees, FilteredTreeModel.FLAG_DIFF));
-		btniden = new JToggleButton(new FilterAction(diffTrees, FilteredTreeModel.FLAG_IDEN));
+		ArrayList<AbstractButton> buttons = new ArrayList<>();
 
-		JButton btnsetting = new JButton(
-				uiEvtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS));
-		JButton btninfo = new JButton(
-				uiEvtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT));
+		FilterAction.addToEventHandler(evtHandler, diffTrees);
+		buttons.add(new JToggleButton(evtHandler.getAction(
+				FilterAction.getActionCommand(FilteredTreeModel.FLAG_ADD))));
+		buttons.add(new JToggleButton(evtHandler.getAction(
+				FilterAction.getActionCommand(FilteredTreeModel.FLAG_DIFF))));
+		buttons.add(new JToggleButton(evtHandler.getAction(
+				FilterAction.getActionCommand(FilteredTreeModel.FLAG_IDEN))));
 
-		for(AbstractButton btn: Arrays.asList(btniden, btnadd, btndiff, btnsetting, btninfo)) {
+		buttons.add(new JButton(
+				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
+		buttons.add(new JButton(
+				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT)));
+
+		for(AbstractButton btn: buttons) {
 			//btn.setBorderPainted( false );
 			//btn.setContentAreaFilled( false );
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
@@ -108,18 +116,9 @@ public class DynamicTreeDemo extends JPanel
 			temppanel.add(btn);
 		}
 
-		setEnableToggleBtn(false);
-
 		add(temppanel, BorderLayout.NORTH);
 		add(scrollpane, BorderLayout.CENTER);
 
-		repaint();
-	}
-
-	private void setEnableToggleBtn(boolean enable) {
-		for(JToggleButton btn: Arrays.asList(btniden, btnadd, btndiff)) {
-			btn.setEnabled(enable);
-		}
 		repaint();
 	}
 
@@ -174,6 +173,7 @@ public class DynamicTreeDemo extends JPanel
 		public void onStart(final int position) {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
+					evtHandler.unsetFlag(position+1);
 					loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
 					showCardpanel(CARD_LAYOUT_LOADING, position);
 					Log.w("change loading");
@@ -192,6 +192,7 @@ public class DynamicTreeDemo extends JPanel
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					setData(apkComparer.getApkInfo(position), position);
+					evtHandler.setFlag(position+1);
 				}
 			});
 		}
@@ -237,7 +238,6 @@ public class DynamicTreeDemo extends JPanel
 			diffTrees.setPaintingFlag(true);
 
 			Log.w("end diff :" + position);
-			setEnableToggleBtn(true);
 			return;
 		}
 
