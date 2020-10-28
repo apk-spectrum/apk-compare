@@ -8,15 +8,16 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
@@ -45,6 +46,7 @@ public class DynamicTreeDemo extends JPanel
 
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
+	private JSplitPane contentSplitePane;
 
 	//https://www.shareicon.net/diff-94479
 	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
@@ -62,17 +64,15 @@ public class DynamicTreeDemo extends JPanel
 			apkComparer.setStatusListener(new ApkComparerListener());
 		}
 
-		diffTrees = new DiffTreePair(evtHandler);
-
-		JPanel[] contentPanel = setCardPanel(evtHandler);
-		setFileDrop(evtHandler);
-
-		final JSplitPaneWithZeroSizeDivider splitPane = new JSplitPaneWithZeroSizeDivider();
-		//splitPane.setDividerLocation(400);
-		splitPane.setLeftComponent(contentPanel[LEFT]);
-		splitPane.setRightComponent(contentPanel[RIGHT]);
-		splitPane.setResizeWeight(0.5);
-		splitPane.setY(TEXTFIELD_HEIGHT+1);
+		final JSplitPane[] splitPanels = createSyncedSplitePanes(
+			JSplitPaneWithZeroSizeDivider.class,
+			JSplitPane.HORIZONTAL_SPLIT,
+			new JPanel[][] {
+				createPathPanel(evtHandler),
+				createDiffPanel(evtHandler),
+				createDetailPanel(evtHandler)
+			}
+		);
 
 		AdjustmentListener scrollListener = new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent evt) {
@@ -80,17 +80,26 @@ public class DynamicTreeDemo extends JPanel
 //				if (evt.getValueIsAdjusting()) {
 //				  return;
 //				}
-				splitPane.repaint();
+				splitPanels[1].repaint();
 			}
 		};
 
-		JScrollPane scrollpane = new JScrollPane(splitPane);
+		JScrollPane scrollpane = new JScrollPane(splitPanels[1]);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
 		scrollpane.getVerticalScrollBar().addAdjustmentListener(scrollListener);
 		scrollpane.getHorizontalScrollBar().addAdjustmentListener(scrollListener);
 
-		JPanel temppanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		temppanel.setPreferredSize(new Dimension(0, 48));
+		contentSplitePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
+		contentSplitePane.setTopComponent(scrollpane);
+		contentSplitePane.setBottomComponent(splitPanels[2]);
+		contentSplitePane.setDividerLocation(1000);
+
+		JPanel contentPane = new JPanel(new BorderLayout());
+		contentPane.add(splitPanels[0], BorderLayout.NORTH);
+		contentPane.add(contentSplitePane, BorderLayout.CENTER);
+
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		toolbar.setPreferredSize(new Dimension(0, 48));
 
 		ArrayList<AbstractButton> buttons = new ArrayList<>();
 
@@ -113,59 +122,117 @@ public class DynamicTreeDemo extends JPanel
 			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 			btn.setFocusPainted(false);
 			btn.setSelected(true);
-			temppanel.add(btn);
+			toolbar.add(btn);
 		}
 
-		add(temppanel, BorderLayout.NORTH);
-		add(scrollpane, BorderLayout.CENTER);
+		add(toolbar, BorderLayout.NORTH);
+		add(contentPane, BorderLayout.CENTER);
 
 		repaint();
 	}
 
-	private JPanel[] setCardPanel(UiEventHandler handler) {
-		JPanel []bordertreepanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
-		JPanel []pathpanel = {new JPanel(new BorderLayout()), new JPanel(new BorderLayout())};
-		JButton[] btnfileopen = {null, null};
+	private JPanel[] createPathPanel(UiEventHandler handler) {
+		JPanel[] pathpanel = new JPanel[2];
+		JButton[] btnfileopen = new JButton[2];
 
-		for(int index=0;index <2; index++) {
-			cardpanel[index] = new JPanel(new CardLayout());
-			loadingpanel[index] = new DiffLoadingPanel();
+		for(int index = 0; index < 2; index++) {
+			Integer pos = Integer.valueOf(index);
+
 			pathtextfiled[index] = new JTextField();
+			pathtextfiled[index].setPreferredSize(
+					new Dimension(0, TEXTFIELD_HEIGHT));
+			pathtextfiled[index].setAction(
+					handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
+			pathtextfiled[index].putClientProperty("POSITION", pos);
 
-			btnfileopen[index] = new JButton(handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
-			btnfileopen[index].setBorder(BorderFactory.createEmptyBorder ( 1, 1, 1, 1 ));
-			btnfileopen[index].setPreferredSize(new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
-			btnfileopen[index].putClientProperty("POSITION", Integer.valueOf(index));
+			btnfileopen[index] = new JButton(
+					handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
+			btnfileopen[index].setBorder(
+					BorderFactory.createEmptyBorder(1, 1, 1, 1));
+			btnfileopen[index].setPreferredSize(
+					new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
+			btnfileopen[index].putClientProperty("POSITION", pos);
 
-			pathtextfiled[index].setPreferredSize(new Dimension(0, TEXTFIELD_HEIGHT));
-			pathtextfiled[index].setAction(handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
-			pathtextfiled[index].putClientProperty("POSITION", Integer.valueOf(index));
-
+			pathpanel[index] = new JPanel(new BorderLayout());
 			pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
 			pathpanel[index].add(btnfileopen[index], BorderLayout.EAST);
+		}
+		return pathpanel;
+	}
 
+	private JPanel[] createDiffPanel(UiEventHandler handler) {
+		final JPanel[] bordertreepanel = new JPanel[2];
+		diffTrees = new DiffTreePair(evtHandler);
+
+		for(int index=0;index <2; index++) {
+			final Integer pos = Integer.valueOf(index);
+
+			loadingpanel[index] = new DiffLoadingPanel();
+
+			cardpanel[index] = new JPanel(new CardLayout());
 			cardpanel[index].add(diffTrees.get(index), CARD_LAYOUT_TREE);
 			cardpanel[index].add(loadingpanel[index], CARD_LAYOUT_LOADING);
 
-			((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],CARD_LAYOUT_LOADING);
+			showCardpanel(CARD_LAYOUT_LOADING, index);
 
-			bordertreepanel[index].add(pathpanel[index], BorderLayout.NORTH);
+			bordertreepanel[index] = new JPanel(new BorderLayout());
 			bordertreepanel[index].add(cardpanel[index], BorderLayout.CENTER);
+
+			bordertreepanel[index].setName("FILE_DROP_TOP");
+			bordertreepanel[index].putClientProperty("POSITION", pos);
+			new FileDrop(bordertreepanel[index], handler);
 		}
 		return bordertreepanel;
 	}
 
-	private void setFileDrop(FileDrop.Listener listener) {
-		for(JComponent com: Arrays.asList(loadingpanel[LEFT].getEmptyPanel(), diffTrees.get(LEFT))) {
-			com.setName("FILE_DROP_TOP");
-			com.putClientProperty("POSITION", Integer.valueOf(LEFT));
-			new FileDrop(com, listener);
+	private JPanel[] createDetailPanel(UiEventHandler handler) {
+		final JPanel[] detailPanel = new JPanel[2];
+
+		for(int index=0;index <2; index++) {
+			final Integer pos = Integer.valueOf(index);
+			detailPanel[index] = new JPanel(new BorderLayout());
+			detailPanel[index].setName("FILE_DROP_TOP");
+			detailPanel[index].putClientProperty("POSITION", pos);
+			new FileDrop(detailPanel[index], handler);
 		}
-		for(JComponent com: Arrays.asList(loadingpanel[RIGHT].getEmptyPanel(), diffTrees.get(RIGHT))) {
-			com.setName("FILE_DROP_TOP");
-			com.putClientProperty("POSITION", Integer.valueOf(RIGHT));
-			new FileDrop(com, listener);
+		return detailPanel;
+	}
+
+	private JSplitPane[] createSyncedSplitePanes(
+			Class<? extends JSplitPane> clazz,
+			final int orientation, final JPanel[][] panels) {
+
+		final JSplitPane[] splitPanels = new JSplitPane[panels.length];
+		for(int i = 0; i < panels.length; i++) {
+			try {
+				splitPanels[i] = clazz.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+				return null;
+			}
+			splitPanels[i].setOrientation(orientation);
+			splitPanels[i].setContinuousLayout(true);
+			splitPanels[i].setLeftComponent(panels[i][0]);
+			splitPanels[i].setRightComponent(panels[i][1]);
+			splitPanels[i].setResizeWeight(0.5);
+			if(panels.length == 1) break;
+			splitPanels[i].addPropertyChangeListener(
+					JSplitPane.DIVIDER_LOCATION_PROPERTY,
+					new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if(evt.getOldValue().equals(-1)) return;
+					int location = ((Integer) evt.getNewValue()).intValue();
+					for(int j = 0; j < panels.length; j++) {
+						if(evt.getSource() == splitPanels[j]) continue;
+						if(splitPanels[j].getDividerLocation() != location) {
+							splitPanels[j].setDividerLocation(location);
+						}
+					}
+				}
+			});
 		}
+		return splitPanels;
 	}
 
 	private class ApkComparerListener implements ApkComparer.StatusListener {
@@ -176,6 +243,7 @@ public class DynamicTreeDemo extends JPanel
 					evtHandler.unsetFlag(position+1);
 					loadingpanel[position].setshow(DiffLoadingPanel.LOADING);
 					showCardpanel(CARD_LAYOUT_LOADING, position);
+					contentSplitePane.setDividerLocation(1.);
 					Log.w("change loading");
 				}
 			});
@@ -193,6 +261,11 @@ public class DynamicTreeDemo extends JPanel
 				public void run() {
 					setData(apkComparer.getApkInfo(position), position);
 					evtHandler.setFlag(position+1);
+					int checkFlag = UiEventHandler.FLAG_SET_LEFT_TREE
+							| UiEventHandler.FLAG_SET_RIGHT_TREE;
+					if((evtHandler.getFlag() & checkFlag) == checkFlag) {
+						contentSplitePane.setDividerLocation(.7);
+					}
 				}
 			});
 		}
@@ -201,7 +274,8 @@ public class DynamicTreeDemo extends JPanel
 	private void setData(final ApkInfo apkinfodiff1, final int position) {
 		//Log.w("start create Tree :" + index);
 		pathtextfiled[position].setText(apkinfodiff1.filePath);
-		pathtextfiled[position].setCaretPosition(pathtextfiled[position].getDocument().getLength());
+		pathtextfiled[position].setCaretPosition(
+				pathtextfiled[position].getDocument().getLength());
 
 		diffTrees.createTreeNode(position, apkinfodiff1);
 		showCardpanel(CARD_LAYOUT_TREE, position);
