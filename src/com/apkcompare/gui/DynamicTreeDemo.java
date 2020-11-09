@@ -14,12 +14,17 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.apkcompare.ApkComparer;
 import com.apkspectrum.data.apkinfo.ApkInfo;
@@ -42,7 +47,7 @@ public class DynamicTreeDemo extends JPanel
 	private DiffTreePair diffTrees;
 
 	private DiffLoadingPanel[] loadingpanel = {null, null};
-	private String CurrentmergeapkfilePath[] = {null, null};
+	private String filePath[] = {null, null};
 
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
@@ -64,33 +69,34 @@ public class DynamicTreeDemo extends JPanel
 			apkComparer.setStatusListener(new ApkComparerListener());
 		}
 
+		JScrollBar veticalScrollBar = new JScrollBar();
 		final JSplitPane[] splitPanels = createSyncedSplitePanes(
 			JSplitPaneWithZeroSizeDivider.class,
 			JSplitPane.HORIZONTAL_SPLIT,
 			new JPanel[][] {
 				createPathPanel(evtHandler),
-				createDiffPanel(evtHandler),
+				createDiffPanel(evtHandler, veticalScrollBar),
 				createDetailPanel(evtHandler)
 			}
 		);
-
-		AdjustmentListener scrollListener = new AdjustmentListener() {
+		veticalScrollBar.setUnitIncrement(10);
+		veticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent evt) {
-//				Adjustable source = evt.getAdjustable();
-//				if (evt.getValueIsAdjusting()) {
-//				  return;
-//				}
 				splitPanels[1].repaint();
 			}
-		};
+		});
 
-		JScrollPane scrollpane = new JScrollPane(splitPanels[1]);
-		scrollpane.getVerticalScrollBar().setUnitIncrement(10);
-		scrollpane.getVerticalScrollBar().addAdjustmentListener(scrollListener);
-		scrollpane.getHorizontalScrollBar().addAdjustmentListener(scrollListener);
+		JPanel diffTreePane = new JPanel(new BorderLayout());
+		diffTreePane.add(splitPanels[1], BorderLayout.CENTER);
+		diffTreePane.add(veticalScrollBar, BorderLayout.EAST);
+
+		int width = ((Integer) UIManager.get("ScrollBar.width")).intValue();
+		splitPanels[0].setBorder(BorderFactory.createEmptyBorder(0,0,0,width));
+		splitPanels[1].setBorder(BorderFactory.createEmptyBorder());
+		splitPanels[2].setBorder(BorderFactory.createEmptyBorder(0,0,0,width));
 
 		contentSplitePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-		contentSplitePane.setTopComponent(scrollpane);
+		contentSplitePane.setTopComponent(diffTreePane);
 		contentSplitePane.setBottomComponent(splitPanels[2]);
 		contentSplitePane.setDividerLocation(1000);
 
@@ -160,28 +166,80 @@ public class DynamicTreeDemo extends JPanel
 		return pathpanel;
 	}
 
-	private JPanel[] createDiffPanel(UiEventHandler handler) {
+	private JPanel[] createDiffPanel(UiEventHandler handler,
+			final JScrollBar vertical) {
 		final JPanel[] bordertreepanel = new JPanel[2];
+		final JScrollPane[] scrollPane = new JScrollPane[2];
 		diffTrees = new DiffTreePair(evtHandler);
 
-		for(int index=0;index <2; index++) {
-			final Integer pos = Integer.valueOf(index);
+		for(int idx=0;idx <2; idx++) {
+			final Integer pos = Integer.valueOf(idx);
 
-			loadingpanel[index] = new DiffLoadingPanel();
+			loadingpanel[idx] = new DiffLoadingPanel();
+			scrollPane[idx] = new JScrollPane(diffTrees.get(idx),
+					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			final JScrollBar vsb = scrollPane[idx].getVerticalScrollBar();
+			vsb.setPreferredSize(new Dimension(0, 0));
+			vsb.addAdjustmentListener(
+					new AdjustmentListener() {
+				@Override
+				public void adjustmentValueChanged(AdjustmentEvent e) {
+					scrollPane[pos == LEFT ? RIGHT : LEFT]
+						.getVerticalScrollBar().setValue(e.getValue());
+				}
+			});
+			vsb.getModel().addChangeListener(
+				new ChangeListener() {
+					int preMax = -1;
+					@Override
+					public void stateChanged(ChangeEvent e) {
+						BoundedRangeModel model, otherModel;
+						model = (BoundedRangeModel) e.getSource();
+						if(model.getValueIsAdjusting()
+								|| preMax == model.getMaximum()) {
+							return;
+						}
+						preMax = model.getMaximum();
+						otherModel = scrollPane[pos == LEFT ? RIGHT : LEFT]
+								.getVerticalScrollBar().getModel();
+						if(model.getMaximum() >= otherModel.getMaximum()) {
+							vertical.setModel(model);
+						} else {
+							vertical.setModel(otherModel);
+						}
+					}
+				}
+			);
+			scrollPane[idx].getHorizontalScrollBar().addAdjustmentListener(
+					new AdjustmentListener() {
+				@Override
+				public void adjustmentValueChanged(AdjustmentEvent e) {
+					scrollPane[pos == LEFT ? RIGHT : LEFT]
+						.getHorizontalScrollBar().setValue(e.getValue());
+				}
+			});
+			vertical.addAdjustmentListener(new AdjustmentListener() {
+				@Override
+				public void adjustmentValueChanged(AdjustmentEvent e) {
+					vsb.setValue(e.getValue());
+				}
+			});
 
-			cardpanel[index] = new JPanel(new CardLayout());
-			cardpanel[index].add(diffTrees.get(index), CARD_LAYOUT_TREE);
-			cardpanel[index].add(loadingpanel[index], CARD_LAYOUT_LOADING);
+			cardpanel[idx] = new JPanel(new CardLayout());
+			cardpanel[idx].add(scrollPane[idx], CARD_LAYOUT_TREE);
+			cardpanel[idx].add(loadingpanel[idx], CARD_LAYOUT_LOADING);
 
-			showCardpanel(CARD_LAYOUT_LOADING, index);
+			showCardpanel(CARD_LAYOUT_LOADING, idx);
 
-			bordertreepanel[index] = new JPanel(new BorderLayout());
-			bordertreepanel[index].add(cardpanel[index], BorderLayout.CENTER);
+			bordertreepanel[idx] = new JPanel(new BorderLayout());
+			bordertreepanel[idx].add(cardpanel[idx], BorderLayout.CENTER);
 
-			bordertreepanel[index].setName("FILE_DROP_TOP");
-			bordertreepanel[index].putClientProperty("POSITION", pos);
-			new FileDrop(bordertreepanel[index], handler);
+			bordertreepanel[idx].setName("FILE_DROP_TOP");
+			bordertreepanel[idx].putClientProperty("POSITION", pos);
+			new FileDrop(bordertreepanel[idx], handler);
 		}
+
 		return bordertreepanel;
 	}
 
@@ -212,10 +270,18 @@ public class DynamicTreeDemo extends JPanel
 			}
 			splitPanels[i].setOrientation(orientation);
 			splitPanels[i].setContinuousLayout(true);
-			splitPanels[i].setLeftComponent(panels[i][0]);
-			splitPanels[i].setRightComponent(panels[i][1]);
+			if(panels[i] != null) {
+				if(panels[i].length > 0 && panels[i][0] != null) {
+					splitPanels[i].setLeftComponent(panels[i][0]);
+				}
+				if(panels[i].length > 1 && panels[i][1] != null) {
+					splitPanels[i].setRightComponent(panels[i][1]);
+				}
+			}
 			splitPanels[i].setResizeWeight(0.5);
+
 			if(panels.length == 1) break;
+
 			splitPanels[i].addPropertyChangeListener(
 					JSplitPane.DIVIDER_LOCATION_PROPERTY,
 					new PropertyChangeListener() {
@@ -283,16 +349,16 @@ public class DynamicTreeDemo extends JPanel
 		Log.w("end create Tree :" + position);
 
 		if (diffTrees.hasDataInBoth()) {
-			if (CurrentmergeapkfilePath[LEFT] != null && CurrentmergeapkfilePath[RIGHT] != null
-					&& CurrentmergeapkfilePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath)
-					&& CurrentmergeapkfilePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
+			if (filePath[LEFT] != null && filePath[RIGHT] != null
+					&& filePath[LEFT].equals(apkComparer.getApkInfo(LEFT).filePath)
+					&& filePath[RIGHT].equals(apkComparer.getApkInfo(RIGHT).filePath)) {
 				diffTrees.reload(position);
 				Log.w("in sync Create end... not diff:" + position);
 				return;
 			}
 
-			CurrentmergeapkfilePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
-			CurrentmergeapkfilePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
+			filePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
+			filePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
 			// Log.w("change filepath" + index);
 
 			diffTrees.setPaintingFlag(false);

@@ -3,6 +3,7 @@ package com.apkcompare.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -71,7 +72,7 @@ public class DiffTree extends JTree
 	private DiffTree linkedTree;
 	private ActionListener actListener;
 
-	boolean painting = true;
+	private boolean painting = true;
 
 	public DiffTree(ActionListener listener) {
 		super();
@@ -392,6 +393,19 @@ public class DiffTree extends JTree
 			}
 			return l;
 		}
+	}
+
+	private Dimension getSuperPreferredSize() {
+		return super.getPreferredSize();
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension dim = super.getPreferredSize();
+		int marginHeight = linkedTree.getSuperPreferredSize().height
+				- getSuperPreferredSize().height;
+		if(marginHeight > 0) dim.height += marginHeight;
+		return dim; 
 	}
 
 	@Override
