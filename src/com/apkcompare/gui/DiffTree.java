@@ -92,6 +92,10 @@ public class DiffTree extends JTree
 		right.linkedTree = left;
 	}
 
+	public int getPosition() {
+		return position;
+	}
+
 	public void setpaintingFlag(boolean flag) {
 		this.painting = flag;
 	}

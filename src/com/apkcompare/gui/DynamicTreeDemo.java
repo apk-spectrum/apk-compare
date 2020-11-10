@@ -16,6 +16,7 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -25,13 +26,17 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.ApkComparer;
+import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.util.Log;
 
-public class DynamicTreeDemo extends JPanel
+public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 {
 	private static final long serialVersionUID = -8110312211026585408L;
 
@@ -52,6 +57,8 @@ public class DynamicTreeDemo extends JPanel
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
 	private JSplitPane contentSplitePane;
+
+	private JLabel[] content = new JLabel[2];
 
 	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler uiEvtHandler) {
 		super(new BorderLayout());
@@ -170,6 +177,7 @@ public class DynamicTreeDemo extends JPanel
 
 		for(int idx=0;idx <2; idx++) {
 			final Integer pos = Integer.valueOf(idx);
+			diffTrees.get(idx).addTreeSelectionListener(this);
 
 			loadingpanel[idx] = new DiffLoadingPanel();
 			scrollPane[idx] = new JScrollPane(diffTrees.get(idx),
@@ -244,7 +252,12 @@ public class DynamicTreeDemo extends JPanel
 
 		for(int index=0;index <2; index++) {
 			final Integer pos = Integer.valueOf(index);
+
+			// TODO Make content panels
+			content[index] = new JLabel();
+
 			detailPanel[index] = new JPanel(new BorderLayout());
+			detailPanel[index].add(content[index]);
 			detailPanel[index].setName("FILE_DROP_TOP");
 			detailPanel[index].putClientProperty("POSITION", pos);
 			new FileDrop(detailPanel[index], handler);
@@ -383,5 +396,27 @@ public class DynamicTreeDemo extends JPanel
 	private void showCardpanel(String str, int index) {
 		((CardLayout)cardpanel[index].getLayout()).show(cardpanel[index],str);
 		cardpanel[index].repaint();
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		if(!(e.getSource() instanceof DiffTree)) return;
+
+		DiffTree tree = (DiffTree) e.getSource();
+		if(tree.getSelectionPath() == null) return;
+
+		int position = tree.getPosition();
+
+		DefaultMutableTreeNode node;
+		node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+
+		Object usrObj = node.getUserObject();
+		if(usrObj instanceof DiffTreeUserData) {
+			DiffTreeUserData data = (DiffTreeUserData) usrObj;
+			Log.i(position + ", " + data.toString());
+
+			// TODO set data to content panel
+			content[position].setText(data.toString());
+		}
 	}
 }
