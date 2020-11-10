@@ -12,20 +12,12 @@ public enum RFile implements ResFile<File>
 
 	DATA_PATH					(Type.DATA, ""),
 	DATA_STRINGS_EN				(Type.DATA, "strings.xml"),
-	DATA_CERT_PEM_FILE			(Type.DATA, "build-master-target-product-security" + File.separator + "platform.x509.pem"),
-	DATA_CERT_PK8_FILE			(Type.DATA, "build-master-target-product-security" + File.separator + "platform.pk8"),
 
 	RAW_ROOT_PATH				(Type.RES_ROOT, ""),
 
 	RAW_VALUES_PATH				(Type.RES_VALUE, ""),
 	RAW_STRINGS_EN				(Type.RES_VALUE, "strings.xml"),
 	RAW_STRINGS_KO				(Type.RES_VALUE, "strings-ko.xml"),
-
-	RAW_ABUOT_HTML				(Type.RES_VALUE, "AboutLayout.html"),
-	RAW_APEX_INFO_LAYOUT_HTML	(Type.RES_VALUE, "ApexInfoLayout.html"),
-	RAW_BASIC_INFO_LAYOUT_HTML	(Type.RES_VALUE, "BasicInfoLayout.html"),
-	RAW_PACKAGE_INFO_LAYOUT_HTML(Type.RES_VALUE, "PackageInfoLayout.html"),
-	RAW_ADB_INSTALL_BUTTON_HTML	(Type.RES_VALUE, "AdbInstallButton.html"),
 
 	ETC_APKCOMPARE_EXE			(Type.ETC, "ApkCompare.exe"),
 	ETC_SETTINGS_FILE			(Type.ETC, "settings.txt"),

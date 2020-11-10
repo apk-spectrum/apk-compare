@@ -12,9 +12,6 @@ public enum RStr implements ResString<String>
 	APP_MAKER					("Jinhyeong Lee / Sunggyu Kam"),
 	APP_MAKER_EMAIL				("jacsaldevil@gmail.com;sunggyu.kam@gmail.com"),
 
-	TITLE_INSTALL_WIZARD		("@title_install_wizard"),
-	TITLE_APK_SIGNER			("@title_apk_signer"),
-
 	BTN_OPEN					("@btn_open"),
 	BTN_OPEN_PACKAGE			("@btn_open_pacakge"),
 	BTN_MANIFEST				("@btn_manifest"),
@@ -94,27 +91,6 @@ public enum RStr implements ResString<String>
 	BTN_REMOVE					("@btn_remove"),
 	BTN_CHECK_UPDATE			("@btn_check_update"),
 
-	MENU_NEW					("@menu_new"),
-	MENU_NEW_WINDOW				("@menu_new_window"),
-	MENU_NEW_APK_FILE			("@menu_new_apk_file"),
-	MENU_NEW_PACKAGE			("@menu_new_package"),
-	MENU_APK_FILE				("@menu_apk_file"),
-	MENU_PACKAGE				("@menu_package"),
-	MENU_INSTALL				("@menu_install"),
-	MENU_UNINSTALL				("@menu_uninstall"),
-	MENU_CLEAR_DATA				("@menu_clear_data"),
-	MENU_CHECK_INSTALLED		("@menu_check_installed"),
-	MENU_DECODER_JD_GUI			("@menu_decorder_jd_gui"),
-	MENU_DECODER_JADX_GUI		("@menu_decorder_jadx_gui"),
-	MENU_DECODER_BYTECODE		("@menu_decorder_bytecode_viewer"),
-	MENU_SEARCH_RESOURCE		("@menu_search_resource"),
-	MENU_EXPLORER_ARCHIVE		("@menu_explorer_archive"),
-	MENU_EXPLORER_FOLDER		("@menu_explorer_folder"),
-	MENU_LAUNCH_LAUNCHER		("@menu_launch_lanucher"),
-	MENU_LAUNCH_SELECT			("@menu_launch_select"),
-	MENU_SELECT_DEFAULT			("@menu_select_default"),
-	MENU_VISIBLE_TO_BASIC_EACH	("@menu_visible_to_basic_each"),
-
 	TAB_BASIC_INFO				("@tab_basic_info"),
 	TAB_APEX_INFO				("@tab_apex_info"),
 	TAB_WIDGETS					("@tab_widgets"),
@@ -122,26 +98,6 @@ public enum RStr implements ResString<String>
 	TAB_RESOURCES				("@tab_resources"),
 	TAB_COMPONENTS				("@tab_components"),
 	TAB_SIGNATURES				("@tab_signatures"),
-	TAB_PACAKGE_INFO			("@tab_package_info"),
-	TAB_DUMPSYS					("@tab_dumpsys"),
-	TAB_SYS_PACAKGE_INFO		("@tab_sys_package_info"),
-	TAB_ABOUT					("@tab_about"),
-	TAB_UPDATE					("@tab_update"),
-
-	TAB_SETTING_GENERIC			("@tab_setting_generic"),
-	TAB_SETTING_GENERIC_LAB		("@tab_setting_generic_lab"),
-	TAB_SETTING_ANALYSIS		("@tab_setting_analysis"),
-	TAB_SETTING_ANALYSIS_LAB	("@tab_setting_analysis_lab"),
-	TAB_SETTING_DEVICE			("@tab_setting_device"),
-	TAB_SETTING_DEVICE_LAB		("@tab_setting_device_lab"),
-	TAB_SETTING_DISPLAY			("@tab_setting_display"),
-	TAB_SETTING_DISPLAY_LAB		("@tab_setting_display_lab"),
-	TAB_SETTING_PLUGINS			("@tab_setting_plugins"),
-	TAB_SETTING_PLUGINS_LAB		("@tab_setting_plugins_lab"),
-
-	BASIC_PERMISSIONS			("@basic_permissions"),
-	BASIC_PERMLAB_DISPLAY		("@basic_permlab_display_list"),
-	BASIC_PERMDESC_DISPLAY		("@basic_permdesc_display_list"),
 
 	FEATURE_LAB					("@feature_lab"),
 	FEATURE_ILOCATION_INTERNAL_LAB	("@feature_install_location_internal_only_lab"),
@@ -342,11 +298,6 @@ public enum RStr implements ResString<String>
 	QUESTION_PACK_INFO_REFRESH	("@question_pack_info_refresh"),
 	QUESTION_REMOVE_SYSTEM_APK	("@question_remove_system_apk"),
 	QUESTION_REMOVED_REBOOT		("@question_removed_reboot"),
-
-	EASY_GUI_FEATURE1			("@easy_gui_feature1"),
-	EASY_GUI_FEATURE2			("@easy_gui_feature2"),
-	EASY_GUI_FEATURE3			("@easy_gui_feature3"),
-	EASY_GUI_UES_QUESTION		("@easy_gui_use_question"),
 	; // ENUM END
 	private DefaultResString res;
 

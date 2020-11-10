@@ -53,10 +53,6 @@ public class DynamicTreeDemo extends JPanel
 	private JPanel[] cardpanel = {null, null};
 	private JSplitPane contentSplitePane;
 
-	//https://www.shareicon.net/diff-94479
-	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003
-	//https://www.shareicon.net/setting-598385
-
 	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler uiEvtHandler) {
 		super(new BorderLayout());
 		setOpaque(true);
