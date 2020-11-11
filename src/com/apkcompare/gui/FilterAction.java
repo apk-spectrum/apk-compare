@@ -7,12 +7,13 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.tree.TreePath;
 
+import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RImg;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.UIAction;
 
 @SuppressWarnings("serial")
-public class FilterAction extends AbstractAction
+public class FilterAction extends AbstractAction implements RConst
 {
 	private final DiffTreePair treePair;
 
@@ -48,10 +49,10 @@ public class FilterAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (treePair.hasDataInBoth()) {
-			List<TreePath> expandedpath = treePair.getPaths(DiffTree.LEFT);
+			List<TreePath> expandedpath = treePair.getPaths(LEFT);
 			treePair.setFilter(flag);
 			for (int i = 0; i < expandedpath.size(); i++) {
-				treePair.expandPath(DiffTree.LEFT, expandedpath.get(i));
+				treePair.expandPath(LEFT, expandedpath.get(i));
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
 
 import com.apkcompare.ApkComparer;
+import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.ApkFileChooser;
@@ -17,6 +18,7 @@ import com.apkspectrum.util.Log;
 
 @SuppressWarnings("serial")
 public class OpenApkAction extends AbstractApkScannerAction
+	implements RConst
 {
 	public static final String ACTION_COMMAND = "ACT_CMD_OPEN_APK";
 
@@ -27,7 +29,8 @@ public class OpenApkAction extends AbstractApkScannerAction
 		Object source = e.getSource();
 		int position = -1;
 		if(source != null && source instanceof JComponent) {
-			Integer posProp = (Integer) ((JComponent) source).getClientProperty("POSITION");
+			JComponent comp = (JComponent) source;
+			Integer posProp = (Integer) comp.getClientProperty(POSITION_KEY);
 			if(posProp != null) position = posProp.intValue();
 		}
 		if(position == -1) {

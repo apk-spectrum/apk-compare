@@ -22,6 +22,7 @@ import com.apkcompare.gui.action.ShowAboutAction;
 import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
 import com.apkcompare.resource.RAct;
+import com.apkcompare.resource.RConst;
 import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
@@ -29,7 +30,7 @@ import com.apkspectrum.swing.UIActionEvent;
 import com.apkspectrum.util.Log;
 
 public class UiEventHandler	extends ActionEventHandler
-	implements WindowListener, FileDrop.Listener
+	implements WindowListener, FileDrop.Listener, RConst
 {
 	public static final String APK_COMPARER_KEY	= AbstractApkScannerAction.APK_COMPARER_KEY;
 	public static final String OWNER_WINDOW_KEY	= AbstractApkScannerAction.OWNER_WINDOW_KEY;
@@ -84,10 +85,10 @@ public class UiEventHandler	extends ActionEventHandler
 		if(evt == null || evt.getSource() == null) return;
 
 		JComponent c = null;
-		if("FILE_DROP_TOP".equals(((Component)evt.getSource()).getName())) {
+		if(FILE_DROP_TOP_KEY.equals(((Component)evt.getSource()).getName())) {
 			c = (JComponent) evt.getSource();
 		} else {
-			c = (JComponent) SwingUtilities.getAncestorNamed("FILE_DROP_TOP",
+			c = (JComponent) SwingUtilities.getAncestorNamed(FILE_DROP_TOP_KEY,
 					(Component) evt.getSource());
 		}
 		if(c == null) return;

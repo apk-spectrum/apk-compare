@@ -10,13 +10,11 @@ import javax.swing.tree.TreePath;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.data.base.PassKeyDiffTreeUserData;
+import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 
-class DiffTreePair
+class DiffTreePair implements RConst
 {
-	static final int LEFT = DiffTree.LEFT;
-	static final int RIGHT = DiffTree.RIGHT;
-
 	private DiffTree[] arrayTree = new DiffTree[2];
 
 	DiffTreePair(UiEventHandler uiEvtHandler) {

@@ -32,16 +32,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.util.Log;
 
-public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
+public class DynamicTreeDemo extends JPanel
+	implements TreeSelectionListener, RConst
 {
 	private static final long serialVersionUID = -8110312211026585408L;
 
-	private static final int LEFT = DiffTree.LEFT;
-	private static final int RIGHT = DiffTree.RIGHT;
 	private static final int TEXTFIELD_HEIGHT = 28;
 
 	private static final String CARD_LAYOUT_TREE = "CARD_LAYOUT_TREE";
@@ -136,8 +136,6 @@ public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 
 		add(toolbar, BorderLayout.NORTH);
 		add(contentPane, BorderLayout.CENTER);
-
-		repaint();
 	}
 
 	private JPanel[] createPathPanel(UiEventHandler handler) {
@@ -160,7 +158,7 @@ public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 					BorderFactory.createEmptyBorder(1, 1, 1, 1));
 			btnfileopen[index].setPreferredSize(
 					new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
-			btnfileopen[index].putClientProperty("POSITION", pos);
+			btnfileopen[index].putClientProperty(POSITION_KEY, pos);
 
 			pathpanel[index] = new JPanel(new BorderLayout());
 			pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
@@ -239,8 +237,8 @@ public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 			bordertreepanel[idx] = new JPanel(new BorderLayout());
 			bordertreepanel[idx].add(cardpanel[idx], BorderLayout.CENTER);
 
-			bordertreepanel[idx].setName("FILE_DROP_TOP");
-			bordertreepanel[idx].putClientProperty("POSITION", pos);
+			bordertreepanel[idx].setName(FILE_DROP_TOP_KEY);
+			bordertreepanel[idx].putClientProperty(POSITION_KEY, pos);
 			new FileDrop(bordertreepanel[idx], handler);
 		}
 
@@ -258,8 +256,8 @@ public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 
 			detailPanel[index] = new JPanel(new BorderLayout());
 			detailPanel[index].add(content[index]);
-			detailPanel[index].setName("FILE_DROP_TOP");
-			detailPanel[index].putClientProperty("POSITION", pos);
+			detailPanel[index].setName(FILE_DROP_TOP_KEY);
+			detailPanel[index].putClientProperty(POSITION_KEY, pos);
 			new FileDrop(detailPanel[index], handler);
 		}
 		return detailPanel;
@@ -403,9 +401,12 @@ public class DynamicTreeDemo extends JPanel implements TreeSelectionListener
 		if(!(e.getSource() instanceof DiffTree)) return;
 
 		DiffTree tree = (DiffTree) e.getSource();
-		if(tree.getSelectionPath() == null) return;
-
 		int position = tree.getPosition();
+
+		if(tree.getSelectionPath() == null) {
+			content[position].setText("No have resource");
+			return;
+		}
 
 		DefaultMutableTreeNode node;
 		node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
