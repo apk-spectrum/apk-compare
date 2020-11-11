@@ -13,6 +13,7 @@ public enum RImg implements ResImage<Image>
 {
 	APP_ICON					("AppIcon.png"),
 	APK_FILE_ICON				("apk_file_icon.png"),
+	APK_SCANNER_ICON			("ApkScannerIcon.png"),
 	LOADING						("loading.gif"),
 	APK_LOGO					("Logo.png"),
 	WAIT_BAR					("wait_bar.gif"),

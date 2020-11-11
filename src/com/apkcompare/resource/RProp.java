@@ -12,6 +12,7 @@ public enum RProp implements ResProp<Object>
 	SAVE_WINDOW_SIZE			(true),
 	PREFERRED_LANGUAGE,			/* see getDefualtValue() */
 
+	APK_SCANNER_PATH,
 	DIFF_TOOL					(""),
 	RECENT_DIFF_TOOL			(""),
 	; // ENUM END
@@ -49,6 +50,7 @@ public enum RProp implements ResProp<Object>
 	public enum S implements ResProp<String> {
 		LANGUAGE,
 		PREFERRED_LANGUAGE,
+		APK_SCANNER_PATH,
 		DIFF_TOOL,
 		RECENT_DIFF_TOOL,
 		; // ENUM END

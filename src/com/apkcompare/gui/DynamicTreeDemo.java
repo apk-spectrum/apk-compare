@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.gui.action.RunApkScannerAction;
 import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.FileDrop;
@@ -138,9 +140,16 @@ public class DynamicTreeDemo extends JPanel
 		add(contentPane, BorderLayout.CENTER);
 	}
 
+	private JButton makeButtonForPathPanel(Action action, int position) {
+		JButton btn = new JButton(action);
+		btn.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		btn.setPreferredSize(new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
+		btn.putClientProperty(POSITION_KEY, position);
+		return btn;
+	}
+
 	private JPanel[] createPathPanel(UiEventHandler handler) {
 		JPanel[] pathpanel = new JPanel[2];
-		JButton[] btnfileopen = new JButton[2];
 
 		for(int index = 0; index < 2; index++) {
 			Integer pos = Integer.valueOf(index);
@@ -150,19 +159,17 @@ public class DynamicTreeDemo extends JPanel
 					new Dimension(0, TEXTFIELD_HEIGHT));
 			pathtextfiled[index].setAction(
 					handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
-			pathtextfiled[index].putClientProperty("POSITION", pos);
+			pathtextfiled[index].putClientProperty(POSITION_KEY, pos);
 
-			btnfileopen[index] = new JButton(
-					handler.getAction(UiEventHandler.ACT_CMD_OPEN_APK));
-			btnfileopen[index].setBorder(
-					BorderFactory.createEmptyBorder(1, 1, 1, 1));
-			btnfileopen[index].setPreferredSize(
-					new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
-			btnfileopen[index].putClientProperty(POSITION_KEY, pos);
+			JPanel tools = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+			tools.add(makeButtonForPathPanel(handler.getAction(
+					UiEventHandler.ACT_CMD_OPEN_APK), pos));
+			tools.add(makeButtonForPathPanel(handler.getAction(
+					RunApkScannerAction.getActionCommand(pos)), pos));
 
 			pathpanel[index] = new JPanel(new BorderLayout());
 			pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
-			pathpanel[index].add(btnfileopen[index], BorderLayout.EAST);
+			pathpanel[index].add(tools, BorderLayout.EAST);
 		}
 		return pathpanel;
 	}
