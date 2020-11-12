@@ -25,6 +25,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -35,6 +36,7 @@ import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.action.RunApkScannerAction;
 import com.apkcompare.resource.RConst;
+import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.util.Log;
@@ -65,6 +67,13 @@ public class DynamicTreeDemo extends JPanel
 	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler uiEvtHandler) {
 		super(new BorderLayout());
 		setOpaque(true);
+
+		try {
+			UIManager.setLookAndFeel(RProp.S.CURRENT_THEME.get());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+		}
 
 		evtHandler = uiEvtHandler;
 		evtHandler.registerKeyStrokeAction(this);
@@ -109,12 +118,9 @@ public class DynamicTreeDemo extends JPanel
 		contentPane.add(splitPanels[0], BorderLayout.NORTH);
 		contentPane.add(contentSplitePane, BorderLayout.CENTER);
 
-		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		toolbar.setPreferredSize(new Dimension(0, 48));
+		FilterAction.addToEventHandler(evtHandler, diffTrees);
 
 		ArrayList<AbstractButton> buttons = new ArrayList<>();
-
-		FilterAction.addToEventHandler(evtHandler, diffTrees);
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.getActionCommand(FilteredTreeModel.FLAG_ADD))));
 		buttons.add(new JToggleButton(evtHandler.getAction(
@@ -127,12 +133,10 @@ public class DynamicTreeDemo extends JPanel
 		buttons.add(new JButton(
 				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT)));
 
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
 		for(AbstractButton btn: buttons) {
-			//btn.setBorderPainted( false );
-			//btn.setContentAreaFilled( false );
-			btn.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-			btn.setFocusPainted(false);
-			btn.setSelected(true);
+			btn.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			btn.setFocusable(false);
 			toolbar.add(btn);
 		}
 

@@ -2,6 +2,8 @@ package com.apkcompare.resource;
 
 import java.beans.PropertyChangeListener;
 
+import javax.swing.UIManager;
+
 import com.apkspectrum.resource.DefaultResProp;
 import com.apkspectrum.resource.ResProp;
 import com.apkspectrum.util.SystemUtil;
@@ -10,6 +12,7 @@ public enum RProp implements ResProp<Object>
 {
 	LANGUAGE					(SystemUtil.getUserLanguage()),
 	SAVE_WINDOW_SIZE			(true),
+	CURRENT_THEME				(UIManager.getSystemLookAndFeelClassName()),
 	PREFERRED_LANGUAGE,			/* see getDefualtValue() */
 
 	APK_SCANNER_PATH,
@@ -49,6 +52,7 @@ public enum RProp implements ResProp<Object>
 
 	public enum S implements ResProp<String> {
 		LANGUAGE,
+		CURRENT_THEME,
 		PREFERRED_LANGUAGE,
 		APK_SCANNER_PATH,
 		DIFF_TOOL,
