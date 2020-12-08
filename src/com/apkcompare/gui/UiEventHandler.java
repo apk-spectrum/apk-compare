@@ -23,23 +23,26 @@ import com.apkcompare.gui.action.ShowLogsAction;
 import com.apkcompare.gui.action.ShowSettingDlgAction;
 import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
-import com.apkspectrum.swing.ActionEventHandler;
+import com.apkspectrum.core.scanner.ApkScanner;
+import com.apkspectrum.swing.ApkActionEventHandler;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.KeyStrokeAction;
 import com.apkspectrum.swing.UIActionEvent;
 import com.apkspectrum.util.Log;
 
-public class UiEventHandler	extends ActionEventHandler
+public class UiEventHandler	extends ApkActionEventHandler
 	implements WindowListener, FileDrop.Listener, RConst
 {
-	public static final String APK_COMPARER_KEY	= AbstractApkScannerAction.APK_COMPARER_KEY;
-	public static final String OWNER_WINDOW_KEY	= AbstractApkScannerAction.OWNER_WINDOW_KEY;
-
-	public static final String ACT_CMD_OPEN_APK				= OpenApkAction.ACTION_COMMAND;
-	public static final String ACT_CMD_OEPN_DIFFTREE_FILE	= OpenDiffTreeFileAction.ACTION_COMMAND;
-	public static final String ACT_CMD_SHOW_ABOUT			= ShowAboutAction.ACTION_COMMAND;
-	public static final String ACT_CMD_SHOW_LOGS			= ShowLogsAction.ACTION_COMMAND;
-	public static final String ACT_CMD_SHOW_SETTINGS		= ShowSettingDlgAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OPEN_APK
+								= OpenApkAction.ACTION_COMMAND;
+	public static final String ACT_CMD_OEPN_DIFFTREE_FILE
+								= OpenDiffTreeFileAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_ABOUT
+								= ShowAboutAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_LOGS
+								= ShowLogsAction.ACTION_COMMAND;
+	public static final String ACT_CMD_SHOW_SETTINGS
+								= ShowSettingDlgAction.ACTION_COMMAND;
 
 	public static final int FLAG_SET_LEFT_TREE		= 0x01;
 	public static final int FLAG_SET_RIGHT_TREE		= 0x02;
@@ -72,6 +75,10 @@ public class UiEventHandler	extends ActionEventHandler
 	}
 
 	public void setApkComparer(ApkComparer apkComparer) {
+		ApkScanner[] scanners = new ApkScanner[2];
+		scanners[LEFT] = apkComparer.getApkScanner(LEFT);
+		scanners[RIGHT] = apkComparer.getApkScanner(RIGHT);
+		putData(MULTI_APK_SCANNER_KEY, scanners);
 		putData(APK_COMPARER_KEY, apkComparer);
 	}
 

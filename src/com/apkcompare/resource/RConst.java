@@ -11,4 +11,7 @@ public interface RConst extends _RConst
 	public static final int UNASSIGNED = DiffTree.UNASSIGNED;
 	public static final int LEFT = DiffTree.LEFT;
 	public static final int RIGHT = DiffTree.RIGHT;
+
+	// @see UiEventHandler
+	public static final String APK_COMPARER_KEY = "APK_COMPARER_KEY";
 }

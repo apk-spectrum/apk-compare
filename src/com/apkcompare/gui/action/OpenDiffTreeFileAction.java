@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.resource.RProp;
-import com.apkspectrum.swing.ActionEventHandler;
+import com.apkspectrum.swing.ApkActionEventHandler;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
 
@@ -16,7 +16,7 @@ public class OpenDiffTreeFileAction extends AbstractApkScannerAction
 {
 	public static final String ACTION_COMMAND = "ACT_CMD_OPEN_DIFF_TREE_FILE";
 
-	public OpenDiffTreeFileAction(ActionEventHandler h) { super(h); }
+	public OpenDiffTreeFileAction(ApkActionEventHandler h) { super(h); }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

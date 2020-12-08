@@ -10,7 +10,7 @@ import javax.swing.text.JTextComponent;
 import com.apkcompare.ApkComparer;
 import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
-import com.apkspectrum.swing.ActionEventHandler;
+import com.apkspectrum.swing.ApkActionEventHandler;
 import com.apkspectrum.swing.ApkFileChooser;
 import com.apkspectrum.swing.MessageBoxPane;
 import com.apkspectrum.swing.UIActionEvent;
@@ -22,7 +22,7 @@ public class OpenApkAction extends AbstractApkScannerAction
 {
 	public static final String ACTION_COMMAND = "ACT_CMD_OPEN_APK";
 
-	public OpenApkAction(ActionEventHandler h) { super(h); }
+	public OpenApkAction(ApkActionEventHandler h) { super(h); }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -95,7 +95,7 @@ public class OpenApkAction extends AbstractApkScannerAction
 			return;
 		}
 
-		ApkInfo info = getApkInfo(position);
+		ApkInfo info = compare.getApkInfo(position);
 		if(info != null && apkFilePath.equals(info.filePath)) {
 			MessageBoxPane.showError(owner, "same APK file");
 			return;

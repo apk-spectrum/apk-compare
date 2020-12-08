@@ -12,7 +12,7 @@ import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
-import com.apkspectrum.swing.ActionEventHandler;
+import com.apkspectrum.swing.ApkActionEventHandler;
 import com.apkspectrum.util.ConsolCmd;
 import com.apkspectrum.util.Log;
 import com.apkspectrum.util.SystemUtil;
@@ -36,7 +36,7 @@ public class RunApkScannerAction extends AbstractApkScannerAction
 		return ACTION_COMMAND;
 	}
 
-	public RunApkScannerAction(ActionEventHandler h) {
+	public RunApkScannerAction(ApkActionEventHandler h) {
 		super(h);
 		if(h != null) {
 			h.addAction(new RunApkScannerAction(h, LEFT));
@@ -44,7 +44,7 @@ public class RunApkScannerAction extends AbstractApkScannerAction
 		}
 	}
 
-	protected RunApkScannerAction(ActionEventHandler h, int position) {
+	protected RunApkScannerAction(ApkActionEventHandler h, int position) {
 		super(h);
 		switch(position) {
 		case LEFT:

@@ -38,6 +38,9 @@ import com.apkcompare.gui.action.RunApkScannerAction;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.plugin.PlugInEventAdapter;
+import com.apkspectrum.plugin.PlugInManager;
+import com.apkspectrum.plugin.UpdateChecker;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.util.Log;
 
@@ -142,6 +145,21 @@ public class DynamicTreeDemo extends JPanel
 
 		add(toolbar, BorderLayout.NORTH);
 		add(contentPane, BorderLayout.CENTER);
+
+		PlugInManager.addPlugInEventListener(new PlugInEventAdapter() {
+			@Override
+			public void onPluginLoaded() {
+		        PlugInManager.checkForUpdatesWithUI(DynamicTreeDemo.this, 1000);
+			}
+
+			@Override
+			public void onPluginUpdated(UpdateChecker[] list) {
+				if(list != null && list.length > 0) {
+					// TODO Updated Badge Count
+					// setUpdatedBadgeCount(list.length);	
+				}
+			}
+		});
 	}
 
 	private JButton makeButtonForPathPanel(Action action, int position) {
