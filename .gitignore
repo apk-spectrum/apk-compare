@@ -16,8 +16,17 @@ hs_err_pid*
 /.project
 /.settings
 
-# APK Scanner preference file
+# APK Compare preference file
 /settings.txt
+/APKCompare.deb
+/APKCompare.exe
+/plugin/
+/release/plugin/
 
 # p4merge
 *.orig
+
+# mac
+.DS_Store
+/bundles/
+/*.app.*
