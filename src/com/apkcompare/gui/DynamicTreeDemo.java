@@ -38,10 +38,13 @@ import com.apkcompare.gui.action.RunApkScannerAction;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
+import com.apkspectrum.plugin.PackageSearcher;
+import com.apkspectrum.plugin.PlugIn;
 import com.apkspectrum.plugin.PlugInEventAdapter;
 import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.plugin.UpdateChecker;
 import com.apkspectrum.swing.FileDrop;
+import com.apkspectrum.swing.UIAction;
 import com.apkspectrum.util.Log;
 
 public class DynamicTreeDemo extends JPanel
@@ -163,7 +166,9 @@ public class DynamicTreeDemo extends JPanel
 	}
 
 	private JButton makeButtonForPathPanel(Action action, int position) {
+		Log.e(action);
 		JButton btn = new JButton(action);
+		btn.setHideActionText(true);
 		btn.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		btn.setPreferredSize(new Dimension(TEXTFIELD_HEIGHT, TEXTFIELD_HEIGHT));
 		btn.putClientProperty(POSITION_KEY, position);
@@ -188,6 +193,21 @@ public class DynamicTreeDemo extends JPanel
 					UiEventHandler.ACT_CMD_OPEN_APK), pos));
 			tools.add(makeButtonForPathPanel(handler.getAction(
 					RunApkScannerAction.getActionCommand(pos)), pos));
+
+			for(PlugIn plugin: PlugInManager.getPlugInAll()) {
+				if(plugin instanceof UpdateChecker
+						|| (plugin instanceof PackageSearcher
+						&& !((PackageSearcher) plugin).isVisibleToBasic())) {
+					continue;
+				}
+				Action action = plugin.makeAction();
+				String actCmd = plugin.getActionCommand() + "_" + pos;
+				action.putValue(Action.ACTION_COMMAND_KEY, actCmd);
+				action.putValue(UIAction.ACTION_REQUIRED_CONDITIONS, 1 << pos);
+				action.putValue(UIAction.ICON_SIZE_KEY, new Dimension(16,16));
+				handler.addAction(action);
+				tools.add(makeButtonForPathPanel(action, pos));
+			}
 
 			pathpanel[index] = new JPanel(new BorderLayout());
 			pathpanel[index].add(pathtextfiled[index], BorderLayout.CENTER);
