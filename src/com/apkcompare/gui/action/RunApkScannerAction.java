@@ -7,6 +7,7 @@ import java.io.File;
 
 import javax.swing.JComponent;
 
+import com.apkcompare.gui.ApkScannerSelecter;
 import com.apkcompare.gui.UiEventHandler;
 import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
@@ -172,8 +173,7 @@ public class RunApkScannerAction extends AbstractApkScannerAction
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Make ApkScannerSelecter
-				//new ApkScannerSelecter().setVisible(true);
+				new ApkScannerSelecter().setVisible(true);
 			}
 		});
 	}

@@ -90,6 +90,7 @@ public enum RStr implements ResString<String>
 	BTN_FAIL					("@btn_fail"),
 	BTN_REMOVE					("@btn_remove"),
 	BTN_CHECK_UPDATE			("@btn_check_update"),
+	BTN_GOTO_DOWNLOAD_URL		("@btn_goto_download_url"),
 
 	TAB_BASIC_INFO				("@tab_basic_info"),
 	TAB_APEX_INFO				("@tab_apex_info"),
@@ -275,6 +276,9 @@ public enum RStr implements ResString<String>
 	LABEL_CHANGE_UI_SHORTKEY	("@label_change_ui_shortkey"),
 	LABEL_UI_BOOSTER			("@label_ui_booster"),
 	LABEL_ESC_KEY				("@label_esc_key"),
+	LABEL_NO_SUCH_APKSCANNER	("@label_no_such_apkscanner"),
+	LABEL_SET_APKSCANNER_PATH	("@label_set_apksacanner_path"),
+	LABEL_INTRO_APKSCANNER		("@label_intro_apkscanner"),
 
 	TREE_NODE_DEVICE			("@tree_node_device"),
 	TREE_NODE_DISPLAYED			("@tree_node_displayed"),
@@ -299,6 +303,7 @@ public enum RStr implements ResString<String>
 	MSG_DISABLED_PACKAGE		("@msg_disabled_package"),
 	MSG_SUCCESS_CLEAR_DATA		("@msg_success_clear_data"),
 	MSG_FAILURE_CLEAR_DATA		("@msg_failure_clear_data"),
+	MSG_INTRO_APKSCANNER_DESC	("@msg_intro_apkscanner_desc"),
 
 	QUESTION_SAVE_OVERWRITE		("@question_save_overwrite"),
 	QUESTION_PACK_INFO_CLOSE	("@question_pack_info_close"),

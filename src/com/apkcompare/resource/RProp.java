@@ -16,6 +16,7 @@ public enum RProp implements ResProp<Object>
 	PREFERRED_LANGUAGE,			/* see getDefualtValue() */
 
 	APK_SCANNER_PATH,
+	APK_SCANNER_DOWNLOAD_URL	("https://github.com/apk-spectrum/apk-scanner/releases"),
 	DIFF_TOOL					(""),
 	RECENT_DIFF_TOOL			(""),
 	; // ENUM END
@@ -55,6 +56,7 @@ public enum RProp implements ResProp<Object>
 		CURRENT_THEME,
 		PREFERRED_LANGUAGE,
 		APK_SCANNER_PATH,
+		APK_SCANNER_DOWNLOAD_URL,
 		DIFF_TOOL,
 		RECENT_DIFF_TOOL,
 		; // ENUM END

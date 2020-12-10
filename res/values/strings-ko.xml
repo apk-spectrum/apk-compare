@@ -59,6 +59,7 @@
     <string name="btn_waiting">처리중..</string>
     <string name="btn_success">성공</string>	
     <string name="btn_fail">실패</string>
+    <string name="btn_goto_download_url">다운로드 바로가기</string>
 
 	<string name="btn_open_lab">APK 파일에서 정보를 가져옵니다. (Ctrl+O)</string>
 	<string name="btn_open_pacakge_lab">디바이스 패키지 열기(Ctrl+P)</string>
@@ -282,6 +283,9 @@ eng 바이너리 또는 PBS user 바이너리에 사용 됩니다.</string>
 	<string name="label_apk_install_finish">FINISH</string>
 	<string name="label_do_not_look_again">다시 보지 않기</string>
 	<string name="label_show_update_at_startup">시작시 업데이트 목록 표시</string>
+	<string name="label_no_such_apkscanner">APK 스캐너 프로그램을 찾을 수 없습니다.</string>
+	<string name="label_set_apksacanner_path">APK 스캐너 프로그램 지정</string>
+	<string name="label_intro_apkscanner">APK 스캐너 프로그램 소개</string>
 
 	<string name="msg_failure_open_apk">APK 파일을 열수 없습니다.</string>
 	<string name="msg_no_such_apk">APK 파일이 존재하지 않습니다.</string>
@@ -309,6 +313,7 @@ eng 바이너리 또는 PBS user 바이너리에 사용 됩니다.</string>
 	<string name="msg_disabled_package">패키지가 비활성화 되어 있어 실행할 수 없습니다.</string>
 	<string name="msg_success_clear_data">앱 데이터를 삭제 하였습니다.</string>
 	<string name="msg_failure_clear_data">앱 데이터 삭제에 실패 하였습니다.</string>
+	<string name="msg_intro_apkscanner_desc">APK의 정보를 분석하고 출력해주는 프로그램입니다.</string>
 
 	<string name="question_reboot_device">장치를 다시 시작 하시겠습니까?</string>
 	<string name="question_continue_install">설치를 계속 하시겠습니까?</string>

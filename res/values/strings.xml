@@ -74,6 +74,7 @@
 	<string name="btn_waiting">Waiting...</string>
 	<string name="btn_success">Success</string>
 	<string name="btn_fail">Fail</string>
+	<string name="btn_goto_download_url">Go to download</string>
 	
 	<string name="menu_new">New Window...</string>
 	<string name="menu_new_window">New window(N)</string>
@@ -259,6 +260,9 @@ they're removed before the application is published</string>
 	<string name="label_apk_install_finish">FINISH</string>
 	<string name="label_do_not_look_again">Do not show again</string>
 	<string name="label_show_update_at_startup">Show update list at startup</string>
+	<string name="label_no_such_apkscanner">No such APK Scanner.</string>
+	<string name="label_set_apksacanner_path">Select APK Compare Program</string>
+	<string name="label_intro_apkscanner">Introduce APK Scanner</string>
 
 	<string name="tree_node_device">Device</string>
 	<string name="tree_node_displayed">Currently Displayed Packages</string>
@@ -284,6 +288,7 @@ Please check the confirmation dialog on your device.</string>
 	<string name="msg_disabled_package">Can not launch, This package was disabled.</string>
 	<string name="msg_success_clear_data">Success clear data.</string>
 	<string name="msg_failure_clear_data">Fail clear data.</string>
+	<string name="msg_intro_apkscanner_desc">It is a program that analyse information of APK.</string>
 
 	<string name="question_save_overwrite">Overwrite file?</string>
 	<string name="question_pack_info_close">Success uninstall package.
