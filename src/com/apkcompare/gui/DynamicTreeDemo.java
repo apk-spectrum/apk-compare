@@ -166,7 +166,6 @@ public class DynamicTreeDemo extends JPanel
 	}
 
 	private JButton makeButtonForPathPanel(Action action, int position) {
-		Log.e(action);
 		JButton btn = new JButton(action);
 		btn.setHideActionText(true);
 		btn.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));

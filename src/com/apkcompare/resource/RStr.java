@@ -98,6 +98,13 @@ public enum RStr implements ResString<String>
 	TAB_RESOURCES				("@tab_resources"),
 	TAB_COMPONENTS				("@tab_components"),
 	TAB_SIGNATURES				("@tab_signatures"),
+	TAB_ABOUT					("@tab_about"),
+	TAB_UPDATE					("@tab_update"),
+
+	TAB_SETTING_GENERIC			("@tab_setting_generic"),
+	TAB_SETTING_GENERIC_LAB		("@tab_setting_generic_lab"),
+	TAB_SETTING_PLUGINS			("@tab_setting_plugins"),
+	TAB_SETTING_PLUGINS_LAB		("@tab_setting_plugins_lab"),
 
 	FEATURE_LAB					("@feature_lab"),
 	FEATURE_ILOCATION_INTERNAL_LAB	("@feature_install_location_internal_only_lab"),

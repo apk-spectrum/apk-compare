@@ -19,6 +19,8 @@ public enum RFile implements ResFile<File>
 	RAW_STRINGS_EN				(Type.RES_VALUE, "strings.xml"),
 	RAW_STRINGS_KO				(Type.RES_VALUE, "strings-ko.xml"),
 
+	RAW_ABUOT_HTML				(Type.RES_VALUE, "AboutLayout.html"),
+
 	ETC_APKCOMPARE_EXE			(Type.ETC, "ApkCompare.exe"),
 	ETC_SETTINGS_FILE			(Type.ETC, "settings.txt"),
 	; // ENUM END

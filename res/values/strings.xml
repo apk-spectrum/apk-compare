@@ -96,6 +96,8 @@
 	<string name="tab_package_info">Package Info</string>
 	<string name="tab_dumpsys">Dumpsys</string>
 	<string name="tab_sys_package_info">System Package Info</string>
+	<string name="tab_about">About</string>
+	<string name="tab_update">Update(%d)</string>
 
 	<string name="tab_setting_generic">Generic</string>
 	<string name="tab_setting_generic_lab">Set generic options</string>
@@ -105,6 +107,8 @@
 	<string name="tab_setting_device_lab">Set device options</string>
 	<string name="tab_setting_display">Display</string>
 	<string name="tab_setting_display_lab">Set display options</string>
+	<string name="tab_setting_plugins">PlugIns</string>
+	<string name="tab_setting_plugins_lab">Set PlugIns options</string>
 
 	<string name="basic_permissions">Permissions</string>
 	<string name="basic_permlab_display_list">Display the entire list</string>
@@ -253,6 +257,8 @@ they're removed before the application is published</string>
 	<string name="label_apk_install_option">OPTIONS</string>
 	<string name="label_apk_installing">INSTALLING</string>
 	<string name="label_apk_install_finish">FINISH</string>
+	<string name="label_do_not_look_again">Do not show again</string>
+	<string name="label_show_update_at_startup">Show update list at startup</string>
 
 	<string name="tree_node_device">Device</string>
 	<string name="tree_node_displayed">Currently Displayed Packages</string>
