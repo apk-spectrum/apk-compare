@@ -25,7 +25,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -43,6 +42,7 @@ import com.apkspectrum.plugin.PlugIn;
 import com.apkspectrum.plugin.PlugInEventAdapter;
 import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.plugin.UpdateChecker;
+import com.apkspectrum.swing.ExtensionButton;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.UIAction;
 import com.apkspectrum.util.Log;
@@ -70,18 +70,19 @@ public class DynamicTreeDemo extends JPanel
 
 	private JLabel[] content = new JLabel[2];
 
-	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler uiEvtHandler) {
+	private ExtensionButton aboutButton;
+
+	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler handler) {
 		super(new BorderLayout());
 		setOpaque(true);
 
 		try {
 			UIManager.setLookAndFeel(RProp.S.CURRENT_THEME.get());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 
-		evtHandler = uiEvtHandler;
+		evtHandler = handler;
 		evtHandler.registerKeyStrokeAction(this);
 
 		this.apkComparer = apkComparer;
@@ -136,7 +137,7 @@ public class DynamicTreeDemo extends JPanel
 
 		buttons.add(new JButton(
 				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
-		buttons.add(new JButton(
+		buttons.add(aboutButton = new ExtensionButton(
 				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT)));
 
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
@@ -158,8 +159,7 @@ public class DynamicTreeDemo extends JPanel
 			@Override
 			public void onPluginUpdated(UpdateChecker[] list) {
 				if(list != null && list.length > 0) {
-					// TODO Updated Badge Count
-					// setUpdatedBadgeCount(list.length);	
+					aboutButton.setBadge(list.length);
 				}
 			}
 		});
