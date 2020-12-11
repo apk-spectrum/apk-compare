@@ -14,4 +14,10 @@ public interface RConst extends _RConst
 
 	// @see UiEventHandler
 	public static final String APK_COMPARER_KEY = "APK_COMPARER_KEY";
+	public static final String DIFF_TREE_PAIR_KEY = "DIFF_TREE_PAIR_KEY";
+
+	public static final int FLAG_SET_LEFT_TREE	= 0x01;
+	public static final int FLAG_SET_RIGHT_TREE	= 0x02;
+	public static final int FLAG_SET_BOTH_TREE	= FLAG_SET_LEFT_TREE
+												| FLAG_SET_RIGHT_TREE;
 }

@@ -8,7 +8,6 @@ import java.io.File;
 import javax.swing.JComponent;
 
 import com.apkcompare.gui.ApkScannerSelecter;
-import com.apkcompare.gui.UiEventHandler;
 import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
@@ -49,12 +48,12 @@ public class RunApkScannerAction extends AbstractApkScannerAction
 		super(h);
 		switch(position) {
 		case LEFT:
-			putValue(ACTION_COMMAND_KEY, ACTION_COMMAND_LEFT);
-			setRequiredConditions(UiEventHandler.FLAG_SET_LEFT_TREE);
+			setActionCommand(ACTION_COMMAND_LEFT);
+			setRequiredConditions(FLAG_SET_LEFT_TREE);
 			break;
 		case RIGHT:
-			putValue(ACTION_COMMAND_KEY, ACTION_COMMAND_RIGHT);
-			setRequiredConditions(UiEventHandler.FLAG_SET_RIGHT_TREE);
+			setActionCommand(ACTION_COMMAND_RIGHT);
+			setRequiredConditions(FLAG_SET_RIGHT_TREE);
 			break;
 		}
 		RAct.ACT_CMD_RUN_APKSCANNER.set(this);

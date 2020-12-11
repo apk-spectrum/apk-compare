@@ -8,7 +8,7 @@ import javax.swing.tree.TreeNode;
 
 import com.apkcompare.data.base.DiffTreeUserData;
 
-class FilteredTreeModel extends DefaultTreeModel {
+public class FilteredTreeModel extends DefaultTreeModel {
 	 
     private static final long serialVersionUID = 5632874215454365848L;
     

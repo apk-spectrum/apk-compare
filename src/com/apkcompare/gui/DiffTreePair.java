@@ -13,7 +13,7 @@ import com.apkcompare.data.base.PassKeyDiffTreeUserData;
 import com.apkcompare.resource.RConst;
 import com.apkspectrum.data.apkinfo.ApkInfo;
 
-class DiffTreePair implements RConst
+public class DiffTreePair implements RConst
 {
 	private DiffTree[] arrayTree = new DiffTree[2];
 
@@ -21,6 +21,8 @@ class DiffTreePair implements RConst
 		arrayTree[LEFT] = new DiffTree(uiEvtHandler);
 		arrayTree[RIGHT] = new DiffTree(uiEvtHandler);
 		DiffTree.setLinkedPosition(arrayTree[LEFT], arrayTree[RIGHT]);
+
+		uiEvtHandler.putData(DIFF_TREE_PAIR_KEY, this);
 	}
 
 	DiffTreePair(DiffTree leftTree, DiffTree rightTree) {
@@ -48,8 +50,16 @@ class DiffTreePair implements RConst
 	}
 
 	public void setFilter(int flag) {
+		if(!hasDataInBoth()) return;
+
+		List<TreePath> expandedpath = getPaths(LEFT);
+
 		getModel(LEFT).setFilter(flag);
 		getModel(RIGHT).setFilter(flag);
+
+		for (int i = 0; i < expandedpath.size(); i++) {
+			expandPath(LEFT, expandedpath.get(i));
+		}
 	}
 
 	public FilteredTreeModel[] getModels() {

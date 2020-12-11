@@ -44,9 +44,6 @@ public class UiEventHandler	extends ApkActionEventHandler
 	public static final String ACT_CMD_SHOW_SETTINGS
 								= ShowSettingDlgAction.ACTION_COMMAND;
 
-	public static final int FLAG_SET_LEFT_TREE		= 0x01;
-	public static final int FLAG_SET_RIGHT_TREE		= 0x02;
-
 	public UiEventHandler(ApkComparer apkComparer) {
 		super(AbstractApkScannerAction.class.getPackage(), RAct.class);
 		setApkComparer(apkComparer);

@@ -33,6 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
+import com.apkcompare.gui.action.FilterAction;
 import com.apkcompare.gui.action.RunApkScannerAction;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
@@ -125,15 +126,13 @@ public class DynamicTreeDemo extends JPanel
 		contentPane.add(splitPanels[0], BorderLayout.NORTH);
 		contentPane.add(contentSplitePane, BorderLayout.CENTER);
 
-		FilterAction.addToEventHandler(evtHandler, diffTrees);
-
 		ArrayList<AbstractButton> buttons = new ArrayList<>();
 		buttons.add(new JToggleButton(evtHandler.getAction(
-				FilterAction.getActionCommand(FilteredTreeModel.FLAG_ADD))));
+				FilterAction.ACTION_COMMAND_ADD)));
 		buttons.add(new JToggleButton(evtHandler.getAction(
-				FilterAction.getActionCommand(FilteredTreeModel.FLAG_DIFF))));
+				FilterAction.ACTION_COMMAND_DIFF)));
 		buttons.add(new JToggleButton(evtHandler.getAction(
-				FilterAction.getActionCommand(FilteredTreeModel.FLAG_IDEN))));
+				FilterAction.ACTION_COMMAND_IDEN)));
 
 		buttons.add(new JButton(
 				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
@@ -382,8 +381,7 @@ public class DynamicTreeDemo extends JPanel
 				public void run() {
 					setData(apkComparer.getApkInfo(position), position);
 					evtHandler.setFlag(position+1);
-					int checkFlag = UiEventHandler.FLAG_SET_LEFT_TREE
-							| UiEventHandler.FLAG_SET_RIGHT_TREE;
+					int checkFlag = FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE;
 					if((evtHandler.getFlag() & checkFlag) == checkFlag) {
 						contentSplitePane.setDividerLocation(.7);
 					}
