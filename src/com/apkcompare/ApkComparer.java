@@ -16,12 +16,15 @@ public class ApkComparer {
 		public void onCompleted(int position);
 	}
 
-	private ApkScanner scanner[] = { new AaptScanner(null), new AaptScanner(null) };
+	private ApkScanner scanner[] = {
+		new AaptScanner(null),
+		new AaptScanner(null)
+	};
 	private StatusListener listener;
 
 	public ApkComparer() {
-		scanner[LEFT].setStatusListener(new ApkScannerDiffListener(LEFT));
-		scanner[RIGHT].setStatusListener(new ApkScannerDiffListener(RIGHT));
+		scanner[LEFT].setStatusListener(new ScannerListener(LEFT));
+		scanner[RIGHT].setStatusListener(new ScannerListener(RIGHT));
 	}
 
 	public ApkComparer(String path1, String path2) {
@@ -46,6 +49,15 @@ public class ApkComparer {
 		scanner[position].openApk(path);
 	}
 
+	public void swap() {
+		ApkScanner temp;
+		temp = scanner[LEFT];
+		scanner[LEFT] = scanner[RIGHT];
+		scanner[RIGHT] = temp;
+		((ScannerListener) scanner[LEFT].getStatusListener()).position = LEFT;
+		((ScannerListener) scanner[RIGHT].getStatusListener()).position = RIGHT;
+	}
+
 	public void clear(boolean sync) {
 		scanner[LEFT].clear(sync);
 		scanner[RIGHT].clear(sync);
@@ -55,11 +67,11 @@ public class ApkComparer {
 		this.listener = listener;
 	}
 
-    class ApkScannerDiffListener implements ApkScanner.StatusListener {
+    class ScannerListener implements ApkScanner.StatusListener {
     	private int position;
     	private int error;
 
-    	public ApkScannerDiffListener(int position) {
+    	public ScannerListener(int position) {
     		this.position = position;
     		this.error = 0;
 		}
@@ -87,7 +99,9 @@ public class ApkComparer {
 		@Override
 		public void onCompleted() {
 			Log.d("onCompleted() : " + error);
-			if(listener != null && this.error == 0) listener.onCompleted(position);
+			if(listener != null && this.error == 0) {
+				listener.onCompleted(position);
+			}
 		}
 
 		@Override

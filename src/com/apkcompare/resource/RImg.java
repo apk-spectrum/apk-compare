@@ -31,6 +31,9 @@ public enum RImg implements ResImage<Image>
 	DIFF_TOOLBAR_IDEN			("diff_toolbar_iden.png"),
 	DIFF_DRAG_AND_DROP			("diff_draganddrop.png"),	
 
+	//https://www.shareicon.net/git-compare-94498
+	DIFF_TREE_SWAP				("tree_swap.png"),
+
 	//https://www.shareicon.net/setting-598385
 	DIFF_TOOLBAR_SETTING		("diff_toolbar_setting.png"),
 	//https://www.shareicon.net/interface-letter-i-info-circle-help-735003

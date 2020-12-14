@@ -6,10 +6,12 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
@@ -35,6 +37,7 @@ import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.action.FilterAction;
 import com.apkcompare.gui.action.RunApkScannerAction;
+import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
 import com.apkspectrum.data.apkinfo.ApkInfo;
@@ -43,6 +46,8 @@ import com.apkspectrum.plugin.PlugIn;
 import com.apkspectrum.plugin.PlugInEventAdapter;
 import com.apkspectrum.plugin.PlugInManager;
 import com.apkspectrum.plugin.UpdateChecker;
+import com.apkspectrum.swing.AbstractUIAction;
+import com.apkspectrum.swing.ActionEventHandler;
 import com.apkspectrum.swing.ExtensionButton;
 import com.apkspectrum.swing.FileDrop;
 import com.apkspectrum.swing.UIAction;
@@ -63,7 +68,6 @@ public class DynamicTreeDemo extends JPanel
 	private DiffTreePair diffTrees;
 
 	private DiffLoadingPanel[] loadingpanel = {null, null};
-	private String filePath[] = {null, null};
 
 	private JTextField[] pathtextfiled = {null, null};
 	private JPanel[] cardpanel = {null, null};
@@ -71,7 +75,7 @@ public class DynamicTreeDemo extends JPanel
 
 	private JLabel[] content = new JLabel[2];
 
-	private ExtensionButton aboutButton;
+	private ExtensionButton aboutButton; 
 
 	public DynamicTreeDemo(ApkComparer apkComparer, UiEventHandler handler) {
 		super(new BorderLayout());
@@ -134,10 +138,12 @@ public class DynamicTreeDemo extends JPanel
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.ACTION_COMMAND_IDEN)));
 
-		buttons.add(new JButton(
-				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
-		buttons.add(aboutButton = new ExtensionButton(
-				evtHandler.getAction(UiEventHandler.ACT_CMD_SHOW_ABOUT)));
+		buttons.add(new JButton(new TreeSwapAction(evtHandler)));
+
+		buttons.add(new JButton(evtHandler.getAction(
+				UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
+		buttons.add(aboutButton = new ExtensionButton(evtHandler.getAction(
+				UiEventHandler.ACT_CMD_SHOW_ABOUT)));
 
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
 		for(AbstractButton btn: buttons) {
@@ -317,8 +323,8 @@ public class DynamicTreeDemo extends JPanel
 		final JSplitPane[] splitPanels = new JSplitPane[panels.length];
 		for(int i = 0; i < panels.length; i++) {
 			try {
-				splitPanels[i] = clazz.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
+				splitPanels[i] = clazz.getConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				return null;
 			}
@@ -380,7 +386,7 @@ public class DynamicTreeDemo extends JPanel
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					setData(apkComparer.getApkInfo(position), position);
-					evtHandler.setFlag(position+1);
+					evtHandler.setFlag(1 << position);
 					int checkFlag = FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE;
 					if((evtHandler.getFlag() & checkFlag) == checkFlag) {
 						contentSplitePane.setDividerLocation(.7);
@@ -391,6 +397,11 @@ public class DynamicTreeDemo extends JPanel
 	}
 
 	private void setData(final ApkInfo apkinfodiff1, final int position) {
+		String filePath[] = {
+			pathtextfiled[LEFT].getText(),
+			pathtextfiled[RIGHT].getText()
+		};
+
 		//Log.w("start create Tree :" + index);
 		pathtextfiled[position].setText(apkinfodiff1.filePath);
 		pathtextfiled[position].setCaretPosition(
@@ -409,10 +420,6 @@ public class DynamicTreeDemo extends JPanel
 				Log.w("in sync Create end... not diff:" + position);
 				return;
 			}
-
-			filePath[LEFT] = apkComparer.getApkInfo(LEFT).filePath;
-			filePath[RIGHT] = apkComparer.getApkInfo(RIGHT).filePath;
-			// Log.w("change filepath" + index);
 
 			diffTrees.setPaintingFlag(false);
 			diffTrees.clearNodePath(position == LEFT ? RIGHT : LEFT);
@@ -464,6 +471,28 @@ public class DynamicTreeDemo extends JPanel
 
 			// TODO set data to content panel
 			content[position].setText(data.toString());
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class TreeSwapAction extends AbstractUIAction implements RConst
+	{
+		public TreeSwapAction(ActionEventHandler h) {
+			super(h);
+			RAct.ACT_CMD_TREE_SWAP.set(this);
+			setRequiredConditions(FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String path = pathtextfiled[LEFT].getText();
+			pathtextfiled[LEFT].setText(pathtextfiled[RIGHT].getText());
+			pathtextfiled[RIGHT].setText(path);
+
+			apkComparer.swap();
+			diffTrees.swap();
+
+			evtHandler.setApkComparer(apkComparer);
 		}
 	}
 }

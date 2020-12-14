@@ -1,9 +1,12 @@
 package com.apkcompare.gui;
 
+import java.awt.Container;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -60,6 +63,24 @@ public class DiffTreePair implements RConst
 		for (int i = 0; i < expandedpath.size(); i++) {
 			expandPath(LEFT, expandedpath.get(i));
 		}
+	}
+
+	public void swap() {
+		if(!hasDataInBoth()) return;
+
+		List<TreePath> expandedpath = getPaths(LEFT);
+
+		FilteredTreeModel model = getModel(LEFT);
+		get(LEFT).setModel(getModel(RIGHT));
+		get(RIGHT).setModel(model);
+
+		for (int i = 0; i < expandedpath.size(); i++) {
+			expandPath(RIGHT, expandedpath.get(i));
+		}
+
+		Container splitPanel = SwingUtilities.getAncestorOfClass(
+				JSplitPane.class, get(LEFT));
+		if(splitPanel != null) splitPanel.repaint();
 	}
 
 	public FilteredTreeModel[] getModels() {
