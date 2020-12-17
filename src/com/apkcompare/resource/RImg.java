@@ -25,7 +25,6 @@ public enum RImg implements ResImage<Image>
 
 	ADD_TO_DESKTOP				("add-to-desktop.png"),
 
-	//https://www.shareicon.net/diff-94479
 	DIFF_TOOLBAR_ADD			("diff_toolbar_add.png"),
 	DIFF_TOOLBAR_EDITOR			("diff_toolbar_editor.png"),
 	DIFF_TOOLBAR_IDEN			("diff_toolbar_iden.png"),
