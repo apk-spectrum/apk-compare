@@ -33,7 +33,7 @@
 	<string name="btn_create_shortcut">Create Shortcut on Desktop</string>
 	<string name="btn_self_search">Search...</string>
 
-	<string name="btn_open_lab">Open APK file (Ctrl+O)</string>
+	<string name="btn_open_lab">Open APK file</string>
 	<string name="btn_open_pacakge_lab">Open package(Ctrl+P)</string>
 	<string name="btn_manifest_lab">Show AndroidManifest.xml (Ctrl+M)</string>
 	<string name="btn_explorer_lab">Open APK file into Explorer. (Ctrl+E)</string>
@@ -75,7 +75,18 @@
 	<string name="btn_success">Success</string>
 	<string name="btn_fail">Fail</string>
 	<string name="btn_goto_download_url">Go to download</string>
-	
+
+	<string name="btn_filter_unique">Unique</string>
+	<string name="btn_filter_unique_lab">Show item without counterparts(Unique)</string>
+	<string name="btn_filter_different">Different</string>
+	<string name="btn_filter_different_lab">Show item pairs with content differences</string>
+	<string name="btn_filter_identical">Identical</string>
+	<string name="btn_filter_identical_lab">Show identical item pairs</string>
+	<string name="btn_tree_swap">Swap</string>
+	<string name="btn_tree_swap_lab">Swap sides</string>
+	<string name="btn_open_apkscanner">APK Scanner</string>
+	<string name="btn_open_apkscanner_lab">Open by APK Scanner</string>
+
 	<string name="menu_new">New Window...</string>
 	<string name="menu_new_window">New window(N)</string>
 	<string name="menu_new_apk_file">Open APK file to new window(O)</string>

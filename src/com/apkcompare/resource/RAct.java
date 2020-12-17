@@ -7,11 +7,14 @@ import com.apkspectrum.resource.ResString;
 
 public enum RAct implements ResAction<ResAction<?>>
 {
-	ACT_CMD_OPEN_APK				(null, RImg.DIFF_APK_OPEN_ICON),
-	ACT_CMD_RUN_APKSCANNER			(null, RImg.APK_SCANNER_ICON.getImageIcon(22,22)),
-	ACT_CMD_TREE_SWAP				(null, RImg.DIFF_TREE_SWAP),
-	ACT_CMD_OPEN_SETTINGS			(null, RImg.DIFF_TOOLBAR_SETTING),
-	ACT_CMD_SHOW_ABOUT				(null, RImg.DIFF_TOOLBAR_INFO)
+	ACT_CMD_FILTER_ADD				(RStr.BTN_FILTER_UNIQUE, RImg.DIFF_TOOLBAR_ADD, RStr.BTN_FILTER_UNIQUE_LAB),
+	ACT_CMD_FILTER_DIFF				(RStr.BTN_FILTER_DIFFERENT, RImg.DIFF_TOOLBAR_EDITOR, RStr.BTN_FILTER_DIFFERENT_LAB),
+	ACT_CMD_FILTER_IDEN				(RStr.BTN_FILTER_IDENTICAL, RImg.DIFF_TOOLBAR_IDEN, RStr.BTN_FILTER_IDENTICAL_LAB),
+	ACT_CMD_TREE_SWAP				(RStr.BTN_TREE_SWAP, RImg.DIFF_TREE_SWAP, RStr.BTN_TREE_SWAP_LAB),
+	ACT_CMD_OPEN_APK				(RStr.BTN_OPEN, RImg.DIFF_APK_OPEN_ICON, RStr.BTN_OPEN_LAB),
+	ACT_CMD_RUN_APKSCANNER			(RStr.BTN_OPEN_APK_SCANNER, RImg.APK_SCANNER_ICON.getImageIcon(22,22), RStr.BTN_OPEN_APK_SCANNER_LAB),
+	ACT_CMD_OPEN_SETTINGS			(RStr.BTN_SETTING, RImg.DIFF_TOOLBAR_SETTING, RStr.BTN_SETTING),
+	ACT_CMD_SHOW_ABOUT				(RStr.BTN_ABOUT, RImg.DIFF_TOOLBAR_INFO, RStr.BTN_ABOUT)
 	; // ENUM END
 
 	private DefaultResAction res;
@@ -67,6 +70,14 @@ public enum RAct implements ResAction<ResAction<?>>
 
 	@Override
 	public void set(javax.swing.Action a) {
+		res.set(a);
+	}
+
+	public static void setAction(javax.swing.Action a) {
+		String cmd = (String) a.getValue(javax.swing.Action.ACTION_COMMAND_KEY);
+		if(cmd == null) return;
+		ResAction<?> res = valueOf(cmd);
+		if(res == null) return;
 		res.set(a);
 	}
 }

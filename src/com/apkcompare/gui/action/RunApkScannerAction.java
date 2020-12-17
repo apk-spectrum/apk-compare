@@ -45,7 +45,7 @@ public class RunApkScannerAction extends AbstractApkScannerAction
 	}
 
 	protected RunApkScannerAction(ApkActionEventHandler h, int position) {
-		super(h);
+		setHandler(h);
 		switch(position) {
 		case LEFT:
 			setActionCommand(ACTION_COMMAND_LEFT);

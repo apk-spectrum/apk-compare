@@ -24,8 +24,8 @@ public abstract class AbstractApkScannerAction extends AbstractUIAction
 
 	@Override
 	public void setHandler(ActionEventHandler h) {
-		if(!(h instanceof ApkActionEventHandler)) {
-			Log.w("The event handler must be type ApkActionEventHandler.");
+		if(!(h instanceof ApkActionEventHandler) && h != null) {
+			Log.w("The event handler must be type ApkActionEventHandler. " + h);
 			return;
 		}
 		super.setHandler(h);

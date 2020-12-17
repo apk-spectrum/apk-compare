@@ -61,7 +61,18 @@
     <string name="btn_fail">실패</string>
     <string name="btn_goto_download_url">다운로드 바로가기</string>
 
-	<string name="btn_open_lab">APK 파일에서 정보를 가져옵니다. (Ctrl+O)</string>
+	<string name="btn_filter_unique">유일</string>
+	<string name="btn_filter_unique_lab">각각 유일하게 가지고 있는 항목을 보여줍니다</string>
+	<string name="btn_filter_different">다름</string>
+	<string name="btn_filter_different_lab">내용이 다른 항목을 보여줍니다</string>
+	<string name="btn_filter_identical">동일</string>
+	<string name="btn_filter_identical_lab">내용이 동일한 항목을 보여줍니다</string>
+	<string name="btn_tree_swap">교환</string>
+	<string name="btn_tree_swap_lab">좌우 파일 위치를 교환 합니다</string>
+	<string name="btn_open_apkscanner">APK 스캐너</string>
+	<string name="btn_open_apkscanner_lab">APK 스캐너 열기</string>
+
+	<string name="btn_open_lab">APK 파일 열기</string>
 	<string name="btn_open_pacakge_lab">디바이스 패키지 열기(Ctrl+P)</string>
 	<string name="btn_manifest_lab">AndroidManifest.xml 전문을 편집기에서 확인 합니다. (Ctrl+M)</string>
 	<string name="btn_explorer_lab">APK 파일 내부에 압축된 파일을 확인합니다. (Ctrl+E)</string>

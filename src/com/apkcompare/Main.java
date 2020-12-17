@@ -79,7 +79,6 @@ public class Main
 	private static void loadPlugIn() {
 		PlugInManager.setAppPackage(Main.class.getPackage().getName(),
 				RStr.APP_VERSION.get(), RStr.APP_NAME, RImg.APP_ICON);
-		PlugInManager.setLang(RStr.getLanguage());
 		PlugInManager.loadPlugIn();
 		PlugInManager.setActionEventHandler(evtHandler);
 	}

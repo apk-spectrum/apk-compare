@@ -2,52 +2,55 @@ package com.apkcompare.resource;
 
 import java.beans.PropertyChangeListener;
 
-import javax.swing.UIManager;
-
 import com.apkspectrum.resource.DefaultResProp;
 import com.apkspectrum.resource.ResProp;
-import com.apkspectrum.util.SystemUtil;
+import com.apkspectrum.resource._RProp;
 
 public enum RProp implements ResProp<Object>
 {
-	LANGUAGE					(SystemUtil.getUserLanguage()),
-	SAVE_WINDOW_SIZE			(true),
-	CURRENT_THEME				(UIManager.getSystemLookAndFeelClassName()),
-	PREFERRED_LANGUAGE,			/* see getDefualtValue() */
+	LANGUAGE,
+	SAVE_WINDOW_SIZE,
+	CURRENT_THEME,
+	PREFERRED_LANGUAGE,
 
 	APK_SCANNER_PATH,
-	APK_SCANNER_DOWNLOAD_URL	("https://github.com/apk-spectrum/apk-scanner/releases"),
-	DIFF_TOOL					(""),
-	RECENT_DIFF_TOOL			(""),
+	APK_SCANNER_DOWNLOAD_URL,
+	DIFF_TOOL,
+	RECENT_DIFF_TOOL,
 	; // ENUM END
 
 	public enum B implements ResProp<Boolean> {
-		SAVE_WINDOW_SIZE,
+		SAVE_WINDOW_SIZE(true),
 		; // ENUM END
+
+		private B() {}
+		private B(boolean defValue) {
+			getProp(name()).setDefaultValue(Boolean.valueOf(defValue));
+		}
 
 		@Override
 		public Boolean get() {
-			return RProp.valueOf(name()).getBoolean();
+			return getProp(name()).getBoolean();
 		}
 
 		@Override
 		public void set(Boolean data) {
-			RProp.valueOf(name()).setData(data);
+			getProp(name()).setData(data);
 		}
 
 		@Override
 		public String getValue() {
-			return RProp.valueOf(name()).getValue();
+			return getProp(name()).getValue();
 		}
 
 		@Override
-		public void addPropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).addPropertyChangeListener(listener);
+		public void addPropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).addPropertyChangeListener(l);
 		}
 
 		@Override
-		public void removePropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).removePropertyChangeListener(listener);
+		public void removePropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).removePropertyChangeListener(l);
 		}
 	}
 
@@ -56,75 +59,90 @@ public enum RProp implements ResProp<Object>
 		CURRENT_THEME,
 		PREFERRED_LANGUAGE,
 		APK_SCANNER_PATH,
-		APK_SCANNER_DOWNLOAD_URL,
+		APK_SCANNER_DOWNLOAD_URL ("https://github.com/apk-spectrum/apk-scanner/releases"),
 		DIFF_TOOL,
 		RECENT_DIFF_TOOL,
 		; // ENUM END
 
+		private S() {}
+		private S(String defValue) {
+			getProp(name()).setDefaultValue(defValue);
+		}
+
 		@Override
 		public String get() {
-			return RProp.valueOf(name()).getString();
+			return getProp(name()).getString();
 		}
 
 		@Override
 		public void set(String data) {
-			RProp.valueOf(name()).setData(data);
+			getProp(name()).setData(data);
 		}
 
 		@Override
 		public String getValue() {
-			return RProp.valueOf(name()).getValue();
+			return getProp(name()).getValue();
 		}
 
 		@Override
-		public void addPropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).addPropertyChangeListener(listener);
+		public void addPropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).addPropertyChangeListener(l);
 		}
 
 		@Override
-		public void removePropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).removePropertyChangeListener(listener);
+		public void removePropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).removePropertyChangeListener(l);
 		}
 	}
 
 	public enum I implements ResProp<Integer> {
-
+		// EMPTY
 		; // ENUM END
+
+		private I() {}
+		private I(int defValue) {
+			getProp(name()).setDefaultValue(Integer.valueOf(defValue));
+		}
 
 		@Override
 		public Integer get() {
-			return RProp.valueOf(name()).getInt();
+			return getProp(name()).getInt();
 		}
 
 		@Override
 		public void set(Integer data) {
-			RProp.valueOf(name()).setData(data);
+			getProp(name()).setData(data);
 		}
 
 		@Override
 		public String getValue() {
-			return RProp.valueOf(name()).getValue();
+			return getProp(name()).getValue();
 		}
 
 		@Override
-		public void addPropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).addPropertyChangeListener(listener);
+		public void addPropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).addPropertyChangeListener(l);
 		}
 
 		@Override
-		public void removePropertyChangeListener(PropertyChangeListener listener) {
-			RProp.valueOf(name()).removePropertyChangeListener(listener);
+		public void removePropertyChangeListener(PropertyChangeListener l) {
+			getProp(name()).removePropertyChangeListener(l);
 		}
 	}
 
 	private DefaultResProp res;
 
 	private RProp() {
-		res = new DefaultResProp(name(), getDefaultValue());
+		Object defValue = getDefaultValue();
+		res = _RProp.getProp(name());
+		if(defValue != null) {
+			res.setDefaultValue(defValue);
+		}
 	}
 
 	private RProp(Object defValue) {
-		res = new DefaultResProp(name(), defValue);
+		res = _RProp.getProp(name());
+		res.setDefaultValue(defValue);
 	}
 
 	public Object getDefaultValue() {
@@ -153,13 +171,13 @@ public enum RProp implements ResProp<Object>
 	}
 
 	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		res.addPropertyChangeListener(listener);
+	public void addPropertyChangeListener(PropertyChangeListener l) {
+		res.addPropertyChangeListener(l);
 	}
 
 	@Override
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		res.removePropertyChangeListener(listener);
+	public void removePropertyChangeListener(PropertyChangeListener l) {
+		res.removePropertyChangeListener(l);
 	}
 
 	public Object getData() {
@@ -194,6 +212,18 @@ public enum RProp implements ResProp<Object>
 		res.setData(data);
 	}
 
+	public DefaultResProp getProp() {
+		return res;
+	}
+
+	public static DefaultResProp getProp(String name) {
+		RProp prop = null;
+		try {
+			prop = valueOf(name);
+		} catch (Exception e) {}
+		return prop != null ? prop.res : _RProp.getProp(name);
+	}
+
 	public static Object getPropData(String key) {
 		return DefaultResProp.getPropData(key);
 	}
@@ -206,11 +236,13 @@ public enum RProp implements ResProp<Object>
 		DefaultResProp.setPropData(key, data);
 	}
 
-    public static void addPropertyChangeListener(ResProp<?> prop, PropertyChangeListener listener) {
-    	DefaultResProp.addPropertyChangeListener(prop, listener);
+    public static void addPropertyChangeListener(ResProp<?> prop,
+    		PropertyChangeListener l) {
+    	DefaultResProp.addPropertyChangeListener(prop, l);
     }
 
-    public static void removePropertyChangeListener(ResProp<?> prop, PropertyChangeListener listener) {
-    	DefaultResProp.removePropertyChangeListener(prop, listener);
+    public static void removePropertyChangeListener(ResProp<?> prop,
+    		PropertyChangeListener l) {
+    	DefaultResProp.removePropertyChangeListener(prop, l);
     }
 }

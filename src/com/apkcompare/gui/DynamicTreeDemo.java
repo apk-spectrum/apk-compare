@@ -19,10 +19,12 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -130,15 +132,17 @@ public class DynamicTreeDemo extends JPanel
 		contentPane.add(splitPanels[0], BorderLayout.NORTH);
 		contentPane.add(contentSplitePane, BorderLayout.CENTER);
 
-		ArrayList<AbstractButton> buttons = new ArrayList<>();
+		ArrayList<JComponent> buttons = new ArrayList<>();
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.ACTION_COMMAND_ADD)));
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.ACTION_COMMAND_DIFF)));
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.ACTION_COMMAND_IDEN)));
+		buttons.add(new JSeparator(JSeparator.VERTICAL));
 
 		buttons.add(new JButton(new TreeSwapAction(evtHandler)));
+		buttons.add(new JSeparator(JSeparator.VERTICAL));
 
 		buttons.add(new JButton(evtHandler.getAction(
 				UiEventHandler.ACT_CMD_SHOW_SETTINGS)));
@@ -146,9 +150,14 @@ public class DynamicTreeDemo extends JPanel
 				UiEventHandler.ACT_CMD_SHOW_ABOUT)));
 
 		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
-		for(AbstractButton btn: buttons) {
-			btn.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			btn.setFocusable(false);
+		for(JComponent btn: buttons) {
+			if(btn instanceof AbstractButton) {
+				btn.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+				btn.setFocusable(false);
+				((AbstractButton) btn).setHideActionText(true);
+			} else if(btn instanceof JSeparator) {
+				btn.setPreferredSize(new Dimension(1,36));
+			}
 			toolbar.add(btn);
 		}
 

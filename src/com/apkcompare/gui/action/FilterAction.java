@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 
 import com.apkcompare.gui.DiffTreePair;
 import com.apkcompare.gui.FilteredTreeModel;
+import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
-import com.apkcompare.resource.RImg;
 import com.apkspectrum.swing.AbstractUIAction;
 import com.apkspectrum.swing.ActionEventHandler;
 
@@ -30,24 +30,22 @@ public class FilterAction extends AbstractUIAction implements RConst
 	}
 
 	protected FilterAction(ActionEventHandler h, int flag) {
-		super(h);
+		setHandler(h);
 		this.flag = flag;
-
 		switch(flag) {
 		case FilteredTreeModel.FLAG_ADD:
 			setActionCommand(ACTION_COMMAND_ADD);
-			setIcon(RImg.DIFF_TOOLBAR_ADD.getImageIcon());
 			break;
 		case FilteredTreeModel.FLAG_DIFF:
 			setActionCommand(ACTION_COMMAND_DIFF);
-			setIcon(RImg.DIFF_TOOLBAR_EDITOR.getImageIcon());
 			break;
 		case FilteredTreeModel.FLAG_IDEN:
 			setActionCommand(ACTION_COMMAND_IDEN);
-			setIcon(RImg.DIFF_TOOLBAR_IDEN.getImageIcon());
 			break;
 		}
 		setRequiredConditions(FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE);
+
+		RAct.setAction(this);
 	}
 
 	@Override

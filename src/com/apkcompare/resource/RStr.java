@@ -92,6 +92,19 @@ public enum RStr implements ResString<String>
 	BTN_CHECK_UPDATE			("@btn_check_update"),
 	BTN_GOTO_DOWNLOAD_URL		("@btn_goto_download_url"),
 
+	BTN_FILTER_UNIQUE			("@btn_filter_unique"),
+	BTN_FILTER_UNIQUE_LAB		("@btn_filter_unique_lab"),
+	BTN_FILTER_DIFFERENT		("@btn_filter_different"),
+	BTN_FILTER_DIFFERENT_LAB	("@btn_filter_different_lab"),
+	BTN_FILTER_IDENTICAL		("@btn_filter_identical"),
+	BTN_FILTER_IDENTICAL_LAB	("@btn_filter_identical_lab"),
+
+	BTN_TREE_SWAP				("@btn_tree_swap"),
+	BTN_TREE_SWAP_LAB			("@btn_tree_swap_lab"),
+
+	BTN_OPEN_APK_SCANNER		("@btn_open_apkscanner"),
+	BTN_OPEN_APK_SCANNER_LAB	("@btn_open_apkscanner_lab"),
+
 	TAB_BASIC_INFO				("@tab_basic_info"),
 	TAB_APEX_INFO				("@tab_apex_info"),
 	TAB_WIDGETS					("@tab_widgets"),
