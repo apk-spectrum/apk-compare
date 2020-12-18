@@ -43,6 +43,7 @@ public class FilterAction extends AbstractUIAction implements RConst
 			setActionCommand(ACTION_COMMAND_IDEN);
 			break;
 		}
+		setSelected(true);
 		setRequiredConditions(FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE);
 
 		RAct.setAction(this);
@@ -52,7 +53,11 @@ public class FilterAction extends AbstractUIAction implements RConst
 	public void actionPerformed(ActionEvent e) {
 		Object data = getHandlerData(DIFF_TREE_PAIR_KEY);
 		if(data instanceof DiffTreePair) {
-			((DiffTreePair) data).setFilter(flag);
+			if(isSelected()) {
+				((DiffTreePair) data).setFilter(flag);
+			} else {
+				((DiffTreePair) data).unsetFilter(flag);
+			}
 		}
 	}
 }

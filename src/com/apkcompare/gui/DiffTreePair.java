@@ -65,6 +65,19 @@ public class DiffTreePair implements RConst
 		}
 	}
 
+	public void unsetFilter(int flag) {
+		if(!hasDataInBoth()) return;
+
+		List<TreePath> expandedpath = getPaths(LEFT);
+
+		getModel(LEFT).unsetFilter(flag);
+		getModel(RIGHT).unsetFilter(flag);
+
+		for (int i = 0; i < expandedpath.size(); i++) {
+			expandPath(LEFT, expandedpath.get(i));
+		}
+	}
+
 	public void swap() {
 		if(!hasDataInBoth()) return;
 
@@ -305,5 +318,10 @@ public class DiffTreePair implements RConst
 
 		// No match at this branch
 		return null;
+	}
+
+	public void navigate(int direction) {
+		// TODO 
+		
 	}
 }

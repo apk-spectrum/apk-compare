@@ -108,26 +108,23 @@ public class FilteredTreeModel extends DefaultTreeModel {
      * @param filter a string to filter nodes in our model with
      */
     public void setFilter(int flag) {
-        if (flag == 0) {
-        	this.flag = FLAG_ALL;
-        } else {
-        	this.flag ^= flag;
-        }
-        
-        Object[] path = { root };
-        int[] childIndices = new int[root.getChildCount()];
-        Object[] children = new Object[root.getChildCount()];
-        for (int i = 0; i < root.getChildCount(); i++) {
-            childIndices[i] = i;
-            children[i] = root.getChildAt(i);
-        }
-        fireTreeStructureChanged(this, path, childIndices, children);
+       	this.flag |= (flag & FLAG_ALL);
+       	fireFilterChanged();
     }
-    
+
+    public void unsetFilter(int flag) {
+       	this.flag &= ~(flag & FLAG_ALL);
+        fireFilterChanged();
+    }
+
     public void setFilter(String filter) {
         if (filter == null || filter.trim().toLowerCase().equals(this.filter.toLowerCase().trim()))
             return;
         this.filter = filter == null ? "" : filter.trim();
+        fireFilterChanged();
+    }
+
+    private void fireFilterChanged() {
         Object[] path = { root };
         int[] childIndices = new int[root.getChildCount()];
         Object[] children = new Object[root.getChildCount()];
