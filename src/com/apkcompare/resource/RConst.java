@@ -20,4 +20,9 @@ public interface RConst extends _RConst
 	public static final int FLAG_SET_RIGHT_TREE	= 0x02;
 	public static final int FLAG_SET_BOTH_TREE	= FLAG_SET_LEFT_TREE
 												| FLAG_SET_RIGHT_TREE;
+	public static final int FLAG_AVAILABLE_MOVE_NEXT = 0x100;
+	public static final int FLAG_AVAILABLE_MOVE_PREV = 0x200;
+
+	public static final int DIRECTION_NEXT = 0;
+	public static final int DIRECTION_PREV = 1;
 }

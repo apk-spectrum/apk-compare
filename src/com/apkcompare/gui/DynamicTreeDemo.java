@@ -11,7 +11,6 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
@@ -39,6 +38,7 @@ import com.apkcompare.ApkComparer;
 import com.apkcompare.data.base.DiffTreeUserData;
 import com.apkcompare.gui.action.FilterAction;
 import com.apkcompare.gui.action.RunApkScannerAction;
+import com.apkcompare.gui.action.TreeNavigationAction;
 import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkcompare.resource.RProp;
@@ -139,6 +139,12 @@ public class DynamicTreeDemo extends JPanel
 				FilterAction.ACTION_COMMAND_DIFF)));
 		buttons.add(new JToggleButton(evtHandler.getAction(
 				FilterAction.ACTION_COMMAND_IDEN)));
+		buttons.add(new JSeparator(JSeparator.VERTICAL));
+
+		buttons.add(new JButton(evtHandler.getAction(
+				TreeNavigationAction.ACTION_COMMAND_PREV)));
+		buttons.add(new JButton(evtHandler.getAction(
+				TreeNavigationAction.ACTION_COMMAND_NEXT)));
 		buttons.add(new JSeparator(JSeparator.VERTICAL));
 
 		buttons.add(new JButton(new TreeSwapAction(evtHandler)));
@@ -333,7 +339,7 @@ public class DynamicTreeDemo extends JPanel
 		for(int i = 0; i < panels.length; i++) {
 			try {
 				splitPanels[i] = clazz.getConstructor().newInstance();
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
 			}

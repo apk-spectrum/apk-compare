@@ -26,6 +26,7 @@ public class DiffTreePair implements RConst
 		DiffTree.setLinkedPosition(arrayTree[LEFT], arrayTree[RIGHT]);
 
 		uiEvtHandler.putData(DIFF_TREE_PAIR_KEY, this);
+		uiEvtHandler.setFlag(FLAG_AVAILABLE_MOVE_NEXT | FLAG_AVAILABLE_MOVE_PREV);
 	}
 
 	DiffTreePair(DiffTree leftTree, DiffTree rightTree) {

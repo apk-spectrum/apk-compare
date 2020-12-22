@@ -1,7 +1,5 @@
 package com.apkcompare.resource;
 
-import javax.swing.Icon;
-
 import com.apkspectrum.resource.DefaultResComp;
 import com.apkspectrum.resource.ResComp;
 import com.apkspectrum.resource.ResImage;
@@ -14,26 +12,26 @@ public enum RComp implements ResComp<Object>
 	DefaultResComp res;
 
 	private RComp(ResString<?> text) {
-		this(text, (Icon) null, null);
+		res = new DefaultResComp(text);
 	}
 
 	private RComp(ResString<?> text, ResString<?> toolTipText) {
-		this(text, (Icon) null, toolTipText);
+		res = new DefaultResComp(text, toolTipText);
 	}
 
 	private RComp(ResString<?> text, ResImage<?> image) {
-		this(text, image, null);
+		res = new DefaultResComp(text, image);
 	}
 
-	private RComp(ResString<?> text, Icon icon) {
-		this(text, icon, null);
+	private RComp(ResString<?> text, javax.swing.Icon icon) {
+		res = new DefaultResComp(text, icon);
 	}
 
 	private RComp(ResString<?> text, ResImage<?> image, ResString<?> toolTipText) {
 		res = new DefaultResComp(text, image, toolTipText);
 	}
 
-	private RComp(ResString<?> text, Icon icon, ResString<?> toolTipText) {
+	private RComp(ResString<?> text, javax.swing.Icon icon, ResString<?> toolTipText) {
 		res = new DefaultResComp(text, icon, toolTipText);
 	}
 
@@ -48,7 +46,7 @@ public enum RComp implements ResComp<Object>
 	}
 
 	@Override
-	public Icon getIcon() {
+	public javax.swing.Icon getIcon() {
 		return res.getIcon();
 	}
 

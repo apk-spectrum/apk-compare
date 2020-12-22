@@ -67,6 +67,10 @@
 	<string name="btn_filter_different_lab">내용이 다른 항목을 보여줍니다</string>
 	<string name="btn_filter_identical">동일</string>
 	<string name="btn_filter_identical_lab">내용이 동일한 항목을 보여줍니다</string>
+	<string name="btn_tree_next">다음</string>
+	<string name="btn_tree_next_lab">다음 항목으로 이동</string>
+	<string name="btn_tree_prev">이전</string>
+	<string name="btn_tree_prev_lab">이전 항목으로 이동</string>
 	<string name="btn_tree_swap">교환</string>
 	<string name="btn_tree_swap_lab">좌우 파일 위치를 교환 합니다</string>
 	<string name="btn_open_apkscanner">APK 스캐너</string>

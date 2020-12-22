@@ -82,6 +82,10 @@
 	<string name="btn_filter_different_lab">Show item pairs with content differences</string>
 	<string name="btn_filter_identical">Identical</string>
 	<string name="btn_filter_identical_lab">Show identical item pairs</string>
+	<string name="btn_tree_next">Next</string>
+	<string name="btn_tree_next_lab">Move to next different item</string>
+	<string name="btn_tree_prev">Previous</string>
+	<string name="btn_tree_prev_lab">Move to previous different item</string>
 	<string name="btn_tree_swap">Swap</string>
 	<string name="btn_tree_swap_lab">Swap sides</string>
 	<string name="btn_open_apkscanner">APK Scanner</string>

@@ -99,6 +99,11 @@ public enum RStr implements ResString<String>
 	BTN_FILTER_IDENTICAL		("@btn_filter_identical"),
 	BTN_FILTER_IDENTICAL_LAB	("@btn_filter_identical_lab"),
 
+	BTN_TREE_NEXT				("@btn_tree_next"),
+	BTN_TREE_NEXT_LAB			("@btn_tree_next_lab"),
+	BTN_TREE_PREV				("@btn_tree_prev"),
+	BTN_TREE_PREV_LAB			("@btn_tree_prev_lab"),
+
 	BTN_TREE_SWAP				("@btn_tree_swap"),
 	BTN_TREE_SWAP_LAB			("@btn_tree_swap_lab"),
 
