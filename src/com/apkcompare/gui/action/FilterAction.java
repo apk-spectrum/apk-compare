@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 
 import com.apkcompare.gui.DiffTreePair;
 import com.apkcompare.gui.FilteredTreeModel;
-import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkspectrum.swing.AbstractUIAction;
 import com.apkspectrum.swing.ActionEventHandler;
@@ -45,8 +44,6 @@ public class FilterAction extends AbstractUIAction implements RConst
 		}
 		setSelected(true);
 		setRequiredConditions(FLAG_SET_LEFT_TREE | FLAG_SET_RIGHT_TREE);
-
-		RAct.setAction(this);
 	}
 
 	@Override

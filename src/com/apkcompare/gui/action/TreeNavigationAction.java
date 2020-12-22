@@ -3,7 +3,6 @@ package com.apkcompare.gui.action;
 import java.awt.event.ActionEvent;
 
 import com.apkcompare.gui.DiffTreePair;
-import com.apkcompare.resource.RAct;
 import com.apkcompare.resource.RConst;
 import com.apkspectrum.swing.AbstractUIAction;
 import com.apkspectrum.swing.ActionEventHandler;
@@ -42,7 +41,6 @@ public class TreeNavigationAction extends AbstractUIAction implements RConst
 		setRequiredConditions(reqCond);
 
 		setActionCommand(actCmd);
-		RAct.setAction(this);
 	}
 
 	@Override

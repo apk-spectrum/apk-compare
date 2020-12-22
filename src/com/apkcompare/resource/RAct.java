@@ -4,6 +4,7 @@ import com.apkspectrum.resource.DefaultResAction;
 import com.apkspectrum.resource.ResAction;
 import com.apkspectrum.resource.ResImage;
 import com.apkspectrum.resource.ResString;
+import com.apkspectrum.resource._RAct;
 
 public enum RAct implements ResAction<ResAction<?>>
 {
@@ -75,11 +76,14 @@ public enum RAct implements ResAction<ResAction<?>>
 		res.set(a);
 	}
 
-	public static void setAction(javax.swing.Action a) {
-		String cmd = (String) a.getValue(javax.swing.Action.ACTION_COMMAND_KEY);
-		if(cmd == null) return;
-		ResAction<?> res = valueOf(cmd);
-		if(res == null) return;
-		res.set(a);
+	public static ResAction<?> getResAction(String name) {
+		ResAction<?> res = null;
+		try {
+			res = valueOf(name);
+			if(res == null) {
+				res = _RAct.valueOf(name);
+			}
+		} catch (Exception e) {}
+		return res;
 	}
 }
